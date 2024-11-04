@@ -1,7 +1,8 @@
 "use client";
 
 import Image from 'next/image';
-import { auth, signInWithGoogle, logout } from '@/app/lib/firebase';
+import { signInWithGoogle, logout } from '@/app/api/auth/google';
+import { auth } from '@/app/lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -18,9 +19,7 @@ export default function GmailSign() {
     const handleLogin = async () => {
         try {
             await signInWithGoogle();
-            alert('Login with Google successful!');
         } catch (error) {
-            console.error(error);
             alert('Failed to login');
         }
     };
@@ -28,9 +27,7 @@ export default function GmailSign() {
     const handleLogout = async () => {
         try {
             await logout();
-            alert('Logged out successfully!');
         } catch (error) {
-            console.error(error);
             alert('Failed to logout');
         }
     };

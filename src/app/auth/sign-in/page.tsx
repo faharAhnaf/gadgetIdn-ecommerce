@@ -6,15 +6,63 @@ import PasswordInput from '@/components/core/Input/password'
 import GmailSign from '@/components/core/Button/GmailSign'
 import { useState } from 'react';
 
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
+import { loginUser } from '@/app/api/auth/login';
+
 export default function Sign_In() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const router = useRouter();
 
   const handlePasswordChange = (newPassword: string) => {
     setPassword(newPassword);
   };
 
-  const handleSubmit = () => {
-    console.log("Password yang dimasukkan:", password);
+  const handleSubmit = async () => {
+
+    try {
+      setError('');
+      setSuccess('');
+
+      Swal.fire({
+          title: 'Validation...',
+          text: 'Please wait, the system is processing.',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+      });
+
+      const response = await loginUser({ email, password });
+
+      setSuccess(response.message || "Verification successful!");
+
+      Swal.fire({
+          title: 'Successful Verification!',
+          text: 'Happy Exploring.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+      }).then((result) => {
+          if (result.isConfirmed || result.isDismissed) {
+              router.push('/');
+          }
+      });
+      
+    } catch (error: any) {
+      setError(error.message);
+
+      Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${error.message}`,
+          footer: '<a href="#">Why do I have this issue?</a>'
+      });
+    }
+
   };
 
     return (
@@ -40,6 +88,8 @@ export default function Sign_In() {
             <input
               type="email"
               id="name"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="JohnDoe@gmail.com"
               className="border border-gray-300 rounded-lg shadow-sm px-3 py-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />

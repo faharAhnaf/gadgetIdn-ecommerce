@@ -6,22 +6,70 @@ import PasswordInput from '@/components/core/Input/password'
 import GmailSign from '@/components/core/Button/GmailSign'
 import { useState } from 'react';
 
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
+import { registerUser } from '@/app/api/auth/register';
+
 export default function Sign_Up() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const router = useRouter();
 
     const handlePasswordChange = (newPassword: string) => {
       setPassword(newPassword);
     };
   
-    const handleSubmit = () => {
-      console.log("Password yang dimasukkan:", password);
+    const handleSubmit = async () => {
+
+      try {
+        setError('');
+        setSuccess('');
+
+        Swal.fire({
+            title: 'Registering...',
+            text: 'Please wait while we create your account.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+        });
+  
+        const response = await registerUser({ name, email, password });
+  
+        setSuccess(response.message || "Registration successful!");
+
+        Swal.fire({
+            title: 'Successfully created account!',
+            text: 'Data has been saved.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+        }).then((result) => {
+            if (result.isConfirmed || result.isDismissed) {
+                router.push('/');
+            }
+        });
+        
+      } catch (error: any) {
+        setError(error.message);
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `${error.message}`,
+            footer: '<a href="#">Why do I have this issue?</a>'
+        });
+      }
+
     };
 
     return (
       <div className="flex justify-center items-center h-screen px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center rounded-[12px] shadow-lg w-full max-w-[1000px] lg:h-[500px] bg-white p-5">
 
-            {/* Bagian Form */}
             <div className="p-5 w-full lg:w-1/2">
                 <h1 className="mb-4 text-2xl font-semibold text-center lg:text-left">Come Join The Wanderer, ✍🏻️</h1>
 
@@ -31,6 +79,8 @@ export default function Sign_Up() {
                         type="text"
                         id="name"
                         placeholder="John Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="border border-gray-300 rounded-lg shadow-sm px-3 py-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -40,6 +90,8 @@ export default function Sign_Up() {
                         <input
                         type="email"
                         id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="JohnDoe@gmail.com"
                         className="border border-gray-300 rounded-lg shadow-sm px-3 py-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />

@@ -3,15 +3,16 @@ import "@/app/assets/css/detail_produk.css";
 import QuantitySelector from "@/components/core/Input/QuantitySelector";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
+import Link from "next/link";
 
 export default function DetailProduk() {
   return (
     <div>
 
-      <div className='fixed top-10 left-20 flex items-center cursor-pointer'>
+      <Link href="/" className='fixed top-10 left-20 flex items-center cursor-pointer'>
         <FontAwesomeIcon icon={faArrowLeft } className="text-gray-700 hover:text-black" />
         <p className='ml-3'>Kembali</p>
-      </div>
+      </Link>
 
       <div className="bg-[#f4f1eb] min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="bg-white shadow-lg rounded-xl flex flex-col md:flex-row w-full max-w-screen-xl">
@@ -70,13 +71,11 @@ export default function DetailProduk() {
                         </div>
                     </div>
 
-                    {/* Follow Button */}
                     <button className="px-4 py-1 border border-green-500 text-green-500 font-semibold rounded-lg hover:bg-green-50">
                         Follow
                     </button>
                 </div>
 
-                {/* Rating and Processing Time */}
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center text-gray-500 text-sm space-x-1">
                         <span>⭐️ 5.0</span>
@@ -148,8 +147,6 @@ export default function DetailProduk() {
                     </button>
                 </div>
             </div>
-
-
 
             </div>
         </div>
