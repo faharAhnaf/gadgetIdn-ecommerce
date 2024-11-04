@@ -1,6 +1,13 @@
 import GrearMarket from "../../core/Label/GrearMarket";
 import Link from "next/link";
-import { FiHeart, FiShoppingCart, FiUser, FiSearch, FiMenu, FiX } from "react-icons/fi";
+import {
+  FiHeart,
+  FiShoppingCart,
+  FiUser,
+  FiSearch,
+  FiMenu,
+  FiX,
+} from "react-icons/fi";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
@@ -18,7 +25,6 @@ export default function Navbar() {
     <nav className="bg-[#f4f1eb] border-b border-gray-200 shadow-lg fixed top-0 w-full z-50">
       <div className="flex items-center justify-between mx-6 lg:mx-20 py-4">
         <div className="flex items-center">
-
           {/* Logo */}
 
           <GrearMarket />
@@ -43,7 +49,6 @@ export default function Navbar() {
 
         {/* Search Bar and Icons */}
         <div className="flex items-center gap-8">
-
           {/* Search Bar */}
           <div className="relative hidden md:flex items-center w-[300px]">
             <input
@@ -65,7 +70,10 @@ export default function Navbar() {
 
           {/* Mobile Menu Icon */}
           <div className="lg:hidden">
-            <FiMenu onClick={toggleMobileMenu} className="cursor-pointer text-xl" />
+            <FiMenu
+              onClick={toggleMobileMenu}
+              className="cursor-pointer text-xl"
+            />
           </div>
         </div>
       </div>
@@ -73,7 +81,9 @@ export default function Navbar() {
       {/* Mobile Sidebar Menu */}
       <div
         className={`fixed top-0 right-0 h-full bg-[#f4f1eb] shadow-lg transition-transform duration-300 ${
-          isMobileMenuOpen ? "transform translate-x-0" : "transform translate-x-full"
+          isMobileMenuOpen
+            ? "transform translate-x-0"
+            : "transform translate-x-full"
         } w-64 z-50`}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
@@ -83,19 +93,38 @@ export default function Navbar() {
 
         <div className="flex flex-col p-6 space-y-4 text-black overflow-y-auto h-[calc(100vh-64px)]">
           <Link href="/">
-            <p onClick={toggleMobileMenu} className="hover:text-blue-500 hover:duration-700">Home</p>
+            <p
+              onClick={toggleMobileMenu}
+              className="hover:text-blue-500 hover:duration-700"
+            >
+              Home
+            </p>
           </Link>
           <Link href="/shop">
-            <p onClick={toggleMobileMenu} className="hover:text-blue-500 hover:duration-700">Shop</p>
+            <p
+              onClick={toggleMobileMenu}
+              className="hover:text-blue-500 hover:duration-700"
+            >
+              Shop
+            </p>
           </Link>
           <Link href="/contact">
-            <p onClick={toggleMobileMenu} className="hover:text-blue-500 hover:duration-700">Contact</p>
+            <p
+              onClick={toggleMobileMenu}
+              className="hover:text-blue-500 hover:duration-700"
+            >
+              Contact
+            </p>
           </Link>
           <Link href="/chatbot">
-            <p onClick={toggleMobileMenu} className="hover:text-blue-500 hover:duration-700">Chatbot</p>
+            <p
+              onClick={toggleMobileMenu}
+              className="hover:text-blue-500 hover:duration-700"
+            >
+              Chatbot
+            </p>
           </Link>
         </div>
-
       </div>
     </nav>
   );
