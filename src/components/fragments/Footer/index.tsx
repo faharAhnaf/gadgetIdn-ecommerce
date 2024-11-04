@@ -7,7 +7,6 @@ export default function Footer() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center">
             
-            {/* Logo and Social Media */}
             <div className="flex items-center space-x-4">
               <span className="text-2xl font-bold">GearMarket.</span>
               <div className="flex items-center space-x-3 text-xl">
@@ -23,7 +22,6 @@ export default function Footer() {
               </div>
             </div>
   
-            {/* Quick Links */}
             <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-10 mt-4 lg:mt-0">
               <a href="#home" className="text-gray-600 hover:text-gray-900">Home</a>
               <a href="#shop" className="text-gray-600 hover:text-gray-900">Shop</a>
@@ -31,7 +29,6 @@ export default function Footer() {
               <a href="#chatbot" className="text-gray-600 hover:text-gray-900">Chatbot</a>
             </div>
             
-            {/* Newsletter Subscription */}
             <div className="mt-6 lg:mt-0">
               <form className="flex space-x-2">
                 <input
@@ -46,7 +43,6 @@ export default function Footer() {
             </div>
           </div>
   
-          {/* Footer Bottom */}
           <div className="mt-8 border-t border-gray-300 pt-4 text-center text-sm text-gray-500">
             <p>&copy; {new Date().getFullYear()} GearMarket. All rights reserved.</p>
           </div>

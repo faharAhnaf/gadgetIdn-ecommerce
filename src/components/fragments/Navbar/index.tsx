@@ -45,18 +45,17 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
 
           {/* Search Bar */}
-          <div className="relative hidden md:flex items-center w-[300px]">
+          <div className="relative hidden md:flex items-center w-[350px]">
             <input
               type="text"
               placeholder="What are you looking for?"
-              className="bg-gray-100 border rounded-full px-5 py-2 text-sm w-full max-w-[300px] focus:outline-none"
+              className="bg-gray-100 border rounded-full px-5 py-2 text-sm w-full max-w-[350px] focus:outline-none"
             />
             <FiSearch className="absolute right-3 text-gray-500" />
           </div>
 
           {/* Icons */}
           <div className="flex items-center gap-4 text-black text-lg">
-            <FiHeart className="cursor-pointer" />
             <FiShoppingCart className="cursor-pointer" />
             <div className="rounded-full w-[35px] h-[35px] bg-black flex items-center justify-center">
               <FiUser className="cursor-pointer text-white" />
