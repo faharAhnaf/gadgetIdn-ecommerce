@@ -30,12 +30,10 @@ const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Check if user is already in Firestore
     const userRef = doc(db, 'users', user.uid);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      // Add new user data to Firestore if not found
       const userData = {
         user_id: user.uid,
         name: user.displayName,

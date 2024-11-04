@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Keranjang() {
 
   return (
     <div></div>
