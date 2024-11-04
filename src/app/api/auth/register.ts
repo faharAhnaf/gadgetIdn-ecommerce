@@ -58,7 +58,8 @@ export const registerUser = async (data: RegisterData) => {
       name: name,
       password: hashedPassword,
       salt: salt,
-      role: true,
+      role: false,
+      isGmail: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };

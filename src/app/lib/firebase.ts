@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
@@ -20,20 +20,4 @@ const storage = getStorage(app);
 
 const provider = new GoogleAuthProvider();
 
-const signInWithGoogle = async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    console.log('User logged in:', result.user);
-    return result.user;
-  } catch (error) {
-    console.error('Error during Google sign-in:', error);
-    throw error;
-  }
-};
-
-const logout = async () => {
-  await signOut(auth);
-  console.log('User logged out');
-};
-
-export { app, auth, db, storage, signInWithGoogle, logout };
+export { app, auth, db, storage, provider };
