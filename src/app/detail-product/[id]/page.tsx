@@ -92,7 +92,7 @@ export default function DetailProduct() {
                 {product ? product.description : <SkeletonText width="90%" />}
             </div>
 
-            <div className="mt-6 flex flex-col bg-white shadow-md p-4 rounded-lg border border-gray-200">
+            {/* <div className="mt-6 flex flex-col bg-white shadow-md p-4 rounded-lg border border-gray-200">
                 <div className='flex justify-between mb-3'>
                     <div className="flex items-center space-x-4">
                         <img
@@ -127,7 +127,7 @@ export default function DetailProduct() {
                         <span>pesanan diproses</span>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="mt-6">
                 <p className="text-lg font-semibold">Select Size:</p>
