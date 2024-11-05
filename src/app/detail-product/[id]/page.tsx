@@ -1,11 +1,58 @@
-import React from 'react';
+"use client"
+
+import React, { useState, useEffect } from "react";
 import "@/app/assets/css/detail_produk.css";
+import "@/app/assets/css/skeleton-loading.css";
+
 import QuantitySelector from "@/components/core/Input/QuantitySelector";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
+import Swal from 'sweetalert2';
 
-export default function DetailProduk() {
+import { useRouter, useParams } from 'next/navigation';
+import { getProductByProductId } from "@/app/api/detail_product";
+
+import Product from '@/app/lib/model/product'
+
+const SkeletonText = ({ width }: { width: string }) => (
+    <span className="skeleton-loading" style={{ width }}></span>
+  );
+
+export default function DetailProduct() {
+    const [product, setProduct] = useState<Product | null>(null);
+    const router = useRouter();
+    const { id } = useParams();
+  
+    useEffect(() => {
+      const fetchProduct = async () => {
+        
+        if (id) {
+          const fetchedProduct = await getProductByProductId(id as string);
+         
+          if (fetchedProduct) {
+            setProduct(fetchedProduct);
+            console.log(fetchedProduct);
+            
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: `Product Not Found`,
+              confirmButtonText: 'OK',
+            }).then((result) => {
+              if (result.isConfirmed || result.isDismissed) {
+                router.push('/');
+              }
+            });
+          }
+        }
+      };
+  
+      fetchProduct();
+
+    }, [id, router]);
+
   return (
     <div>
 
@@ -31,24 +78,18 @@ export default function DetailProduk() {
                 HOTSALE
                 </span>
                 <h1 className="text-xl md:text-2xl font-bold">
-                    Samsung Galaxy S24 FE 5G 8/128GB 8/256GB Blue Black Gray Original [8/256GB] - Blue, 8/256GB
+                    {product ? product.name : <SkeletonText width="50%" />}
                 </h1>
             </div>
 
             <p className="text-gray-500 text-sm mb-5">
-                Electronic | ⭐️ 4.9 (2130 reviews)
+                {product ? `${product.category?.name} | ⭐️ 4.9 (2130 reviews) | ${product.price}` : <SkeletonText width="70%" />}
             </p>
 
             <h1 className="text-lg font-semibold">Description :</h1>
 
             <div className="mt-2 space-y-2 text-gray-700 text-sm md:text-base">
-                <p>
-                Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book. It usually begins with:
-                <br /><br />
-                “Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.”
-                <br /><br />
-                The purpose of lorem ipsum is to create a natural looking block of text (sentence, paragraph, page, etc.) that doesn't distract from the layout. A practice not without controversy, laying out pages with meaningless filler text can be very useful when the focus is meant to be on design, not content.
-                </p>
+                {product ? product.description : <SkeletonText width="90%" />}
             </div>
 
             <div className="mt-6 flex flex-col bg-white shadow-md p-4 rounded-lg border border-gray-200">
@@ -132,8 +173,8 @@ export default function DetailProduk() {
                         className="w-12 h-12 rounded-md"
                     />
                     <div className="text-center md:text-left">
-                        <p className="font-semibold text-sm md:text-base">Samsung Galaxy S24 FE 5G 8/128GB 8/256GB Blue Black Gray Original [8/256GB] - Blue, 8/256GB</p>
-                        <p className="text-xs md:text-sm text-blue-400 font-semibold">Electronic</p>
+                        <p className="font-semibold text-sm md:text-base">{product ? product.name : <SkeletonText width="150px" />}</p>
+                        <p className="text-xs md:text-sm text-blue-400 font-semibold">{product ? `${product!.category!.name} | ${product!.quantityInStock}`  : <SkeletonText width="75px" />}</p>
                     </div>
                 </div>
 

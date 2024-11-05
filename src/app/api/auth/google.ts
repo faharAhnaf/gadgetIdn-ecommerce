@@ -48,17 +48,6 @@ const signInWithGoogle = async () => {
 
     saveToSession(user);
 
-    Swal.fire({
-      title: 'Login Successful!',
-      text: 'You have successfully logged in.',
-      icon: 'success',
-      confirmButtonText: 'OK',
-    }).then((result) => {
-      if (result.isConfirmed || result.isDismissed) {
-        router.push('/');
-      }
-    });
-
     return user;
   } catch (error) {
     Swal.fire({

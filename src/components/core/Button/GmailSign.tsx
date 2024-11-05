@@ -5,9 +5,12 @@ import { signInWithGoogle, logout } from '@/app/api/auth/google';
 import { auth } from '@/app/lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 export default function GmailSign() {
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<any>(null)
+    const router = useRouter();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -19,6 +22,17 @@ export default function GmailSign() {
     const handleLogin = async () => {
         try {
             await signInWithGoogle();
+
+            Swal.fire({
+                title: 'Login Successful!',
+                text: 'You have successfully logged in.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+              }).then((result) => {
+                if (result.isConfirmed || result.isDismissed) {
+                  router.push('/');
+                }
+              });
         } catch (error) {
             alert('Failed to login');
         }
