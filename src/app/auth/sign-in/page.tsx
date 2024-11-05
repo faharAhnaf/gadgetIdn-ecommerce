@@ -108,7 +108,7 @@ export default function Sign_In() {
 
           <h4 className="text-base font-medium text-center">
             Forgot Your Password?
-            <Link href="/auth/sign_up" className="ml-3 text-base duration-300 text-sky-400 hover:text-sky-500">
+            <Link href="/auth/sign-up" className="ml-3 text-base duration-300 text-sky-400 hover:text-sky-500">
               Sign Up
             </Link>
           </h4>

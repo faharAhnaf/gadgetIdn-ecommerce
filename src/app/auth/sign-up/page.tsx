@@ -110,7 +110,7 @@ export default function Sign_Up() {
 
                 <h4 className="text-base font-medium text-center">
                     Already Have an Account?
-                    <Link href="/auth/sign_in" className="ml-3 text-base duration-300 text-sky-400 hover:text-sky-500">
+                    <Link href="/auth/sign-in" className="ml-3 text-base duration-300 text-sky-400 hover:text-sky-500">
                     Sign In
                     </Link>
                 </h4>

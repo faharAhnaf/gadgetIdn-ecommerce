@@ -54,7 +54,11 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4 text-black text-lg">
-            <FiShoppingCart className="cursor-pointer" />
+            
+            <Link href="/keranjang">
+              <FiShoppingCart className="cursor-pointer" />
+            </Link>
+
             <div className="rounded-full w-[35px] h-[35px] bg-black flex items-center justify-center">
               <FiUser className="cursor-pointer text-white" />
             </div>
@@ -63,12 +67,12 @@ export default function Navbar() {
           <div className="lg:block hidden w-[1.5px] h-[40px] rounded-md bg-black"></div>
 
           <div className="hidden lg:flex gap-4">
-            <Link href="/auth/sign_in">
+            <Link href="/auth/sign-in">
               <button className="px-4 py-1 text-md rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
                 Sign In
               </button>
             </Link>
-            <Link href="/auth/sign_up">
+            <Link href="/auth/sign-up">
               <button className="px-4 py-1 text-md rounded-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300">
                 Sign Up
               </button>
@@ -132,7 +136,7 @@ export default function Navbar() {
           </Link>
 
           <div className="flex flex-col gap-4 mt-4">
-            <Link href="/auth/sign_in">
+            <Link href="/auth/sign-in">
               <button
                 onClick={toggleMobileMenu}
                 className="w-full px-4 py-1 text-md rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300"
@@ -140,7 +144,7 @@ export default function Navbar() {
                 Sign In
               </button>
             </Link>
-            <Link href="/auth/sign_up">
+            <Link href="/auth/sign-up">
               <button
                 onClick={toggleMobileMenu}
                 className="w-full px-4 py-1 text-md rounded-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
