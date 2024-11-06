@@ -3,7 +3,7 @@
 import Slider from "react-slick";
 import { useRef, useEffect, useState } from "react";
 import Card from "@/components/core/Card/Card";
-import { getLatestProducts } from "@/app/api/latest_produact"; 
+import { getLatestProducts } from "@/app/api/latest_product"; 
 import ProductPreview from '@/app/lib/model/product_review';
 
 export default function SliderComp() {

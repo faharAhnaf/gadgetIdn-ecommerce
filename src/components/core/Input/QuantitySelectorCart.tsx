@@ -1,21 +1,22 @@
-"use client"
-
 import React, { useState } from 'react';
 
-export default function QuantitySelectorCart() {
-  const [quantity, setQuantity] = useState(1);
+interface QuantitySelectorProps {
+  quantity: number;
+  onQuantityChange: (newQuantity: number) => void;
+}
 
+export default function QuantitySelectorCart({ quantity, onQuantityChange }: QuantitySelectorProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
-    setQuantity(value ? parseInt(value) : 1);
+    onQuantityChange(value ? parseInt(value) : 1);
   };
 
   const incrementQuantity = () => {
-    setQuantity(prev => prev + 1);
+    onQuantityChange(quantity + 1);
   };
 
   const decrementQuantity = () => {
-    setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+    onQuantityChange(quantity > 1 ? quantity - 1 : 1);
   };
 
   return (

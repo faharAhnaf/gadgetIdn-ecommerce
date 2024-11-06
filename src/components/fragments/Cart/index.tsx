@@ -1,54 +1,25 @@
 import { useState, useEffect } from 'react';
 import QuantitySelectorCart from "@/components/core/Input/QuantitySelectorCart";
-import { getLatestProducts } from "@/app/api/latest_produact"; 
-import ProductPreview from '@/app/lib/model/product_review';
+import { getCartByUserId } from "@/app/api/cart/cart";
+import Cart from '@/app/lib/model/cart';
+import updateCartItem from '@/app/api/cart/update_cart';
+import removeCartItem from '@/app/api/cart/remove_cart';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Swal from 'sweetalert2';
 
-type CartItem = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  imageUrl: string;
-};
-
-export default function ShoppingCart () {
-    
-//   const [cartItems, setCartItems] = useState<CartItem[]>([
-//     {
-//       id: 1,
-//       name: 'Samsung Galaxy A55 5G',
-//       description: '8/256, Blue, Non Bundle',
-//       price: 4452000,
-//       quantity: 1,
-//       imageUrl: 'assets/image/detail_produk.png',
-//     },
-//     {
-//       id: 2,
-//       name: 'Samsung Galaxy A55 5G',
-//       description: '8/256, Blue, Non Bundle',
-//       price: 4452000,
-//       quantity: 1,
-//       imageUrl: 'assets/image/detail_produk.png',
-//     },
-//     {
-//       id: 3,
-//       name: 'Samsung Galaxy A55 5G',
-//       description: '8/256, Blue, Non Bundle',
-//       price: 4452000,
-//       quantity: 1,
-//       imageUrl: 'assets/image/detail_produk.png',
-//     },
-//   ]);
-
-  const [cartItems, setCartItems] = useState<ProductPreview[]>([]);
+export default function ShoppingCart() {
+  const [cartItems, setCartItems] = useState<Cart[]>([]);
+  const session = localStorage.getItem("userSession");
+  const userData = JSON.parse(session!);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const latestProducts = await getLatestProducts();
-      setCartItems(latestProducts);
+    const fetchCart = async () => {
+      const Carts = await getCartByUserId(userData.user_id);
+      setCartItems(Carts);
     };
-    fetchProducts();
+
+    fetchCart();
   }, []);
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -57,7 +28,7 @@ export default function ShoppingCart () {
     if (selectedItems.length === cartItems.length) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(cartItems.map((item) => item.product_id));
+      setSelectedItems(cartItems.map((item) => item.cart_id));
     }
   };
 
@@ -67,16 +38,53 @@ export default function ShoppingCart () {
     );
   };
 
+  const handleQuantityChange = (id: string, newQuantity: number) => {
+    setCartItems(prevItems =>
+      prevItems.map(item =>
+        item.cart_id === id
+          ? { ...item, quantity: newQuantity, totalPrice: item.price * newQuantity }
+          : item
+      )
+    );
+
+    const updatedItem = cartItems.find(item => item.cart_id === id);
+    if (updatedItem) {
+      const newTotalPrice = updatedItem.price * newQuantity;
+      updateCartItem(id, newQuantity, newTotalPrice);
+    }
+  };
+
+  const handleRemoveItem = async (id: string) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to remove this item from your cart?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, remove it!",
+        cancelButtonText: "Cancel",
+      });
+  
+      if (result.isConfirmed) {
+        await removeCartItem(id);
+        setCartItems(cartItems.filter((item) => item.cart_id !== id));
+        Swal.fire("Success", "Item has been removed from the cart.", "success");
+      }
+    } catch (error) {
+      Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+    }
+  };
+
   const total = selectedItems
-    .map((id) => cartItems.find((item) => item.product_id === id)?.price || 0)
-    .reduce((acc, price) => acc + price, 0);
+    .map((id) => cartItems.find((item) => item.cart_id === id)?.totalPrice || 0)
+    .reduce((acc, prices) => acc + prices, 0);
 
   return (
     <div className="flex justify-between p-8 min-h-[700px] mt-[100px] mb-10">
-
       <div className="w-2/3">
         <h1 className="text-2xl font-semibold mb-4">Keranjang</h1>
-
         <div className="shadow-md p-4 rounded-md mb-4">
           <label className="flex items-center">
             <input
@@ -90,35 +98,39 @@ export default function ShoppingCart () {
         </div>
         {cartItems.map((item) => (
           <div
-            key={item.product_id}
-            className="flex items-center shadow-md justify-between p-4 rounded-lg mb-5 border-1 border-[#f4f1eb]"
+            key={item.cart_id}
+            className="flex items-center shadow-md justify-between px-6 py-8 rounded-lg mb-5 border-1 border-[#f4f1eb]"
           >
             <label className="flex items-start">
               <input
                 type="checkbox"
-                checked={selectedItems.includes(item.product_id)}
-                onChange={() => toggleSelectItem(item.product_id)}
+                checked={selectedItems.includes(item.cart_id)}
+                onChange={() => toggleSelectItem(item.cart_id)}
                 className="mr-3 w-[20px] h-[20px]"
               />
-              <img src="assets/image/example_product.png" alt={item.name} className="w-16 h-16 mr-4 rounded-md" />
+              <img src="assets/image/example_product.png" alt={item.product?.name} className="w-[100px] h-[100px] mr-4 rounded-md" />
               <div className='pr-5'>
-                <h2 className="text-lg font-semibold">{item.name}</h2>
-                <p className="text-gray-600 text-justify">{item.description.length > 200 ? `${item.description.slice(0, 200)}...` : item.description}</p>
+                <div className='flex justify-between items-center mb-2'>
+                    <h2 className="text-lg font-semibold">{item.product?.name}</h2>
+                    <p className="text-md font-semibold ml-5">Rp{item.totalPrice.toLocaleString('id-ID')}</p>
+                </div>
+                <p className="text-gray-600 text-justify">{item.product!.description.length > 200 ? `${item.product!.description.slice(0, 200)}...` : item.product!.description}</p>
 
-                <div className='flex mt-5'>
-                    <button className="px-4 py-1 mr-2 text-md rounded-md border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
-                        Edit
+                <div className='flex justify-end mt-5'>
+                    <button
+                      onClick={() => handleRemoveItem(item.cart_id)}
+                      className="text-gray-500 hover:text-gray-600 transition duration-300 mr-4"
+                    >
+                      <FontAwesomeIcon icon={faTrashAlt} className="text-lg" />
                     </button>
-                    <button className="px-4 py-1 ml-2 text-md rounded-md bg-red-500 text-white hover:bg-red-600 transition duration-300">
-                        Remove
-                    </button>
+
+                    <QuantitySelectorCart
+                        quantity={item.quantity}
+                        onQuantityChange={(newQuantity) => handleQuantityChange(item.cart_id, newQuantity)}
+                    />
                 </div>
               </div>
             </label>
-            <div className="text-right flex items-center">
-                <QuantitySelectorCart/>
-              <p className="text-lg font-bold ml-5">Rp{item.price.toLocaleString('id-ID')}</p>
-            </div>
           </div>
         ))}
       </div>
@@ -136,7 +148,6 @@ export default function ShoppingCart () {
           Checkout ({selectedItems.length})
         </button>
       </div>
-
     </div>
   );
-};
+}
