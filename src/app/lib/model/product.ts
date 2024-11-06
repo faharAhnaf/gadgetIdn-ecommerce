@@ -4,7 +4,7 @@ interface Product {
     product_id: string;
     updated_at: { seconds: number; nanoseconds: number };
     created_at: { seconds: number; nanoseconds: number };
-    price: string;
+    price: number;
     description: string;
     user_id: string;
     category_id: string;

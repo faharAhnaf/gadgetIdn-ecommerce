@@ -5,6 +5,7 @@ import "@/app/assets/css/detail_produk.css";
 import "@/app/assets/css/skeleton-loading.css";
 
 import QuantitySelector from "@/components/core/Input/QuantitySelector";
+import formatRupiah from "@/app/lib/format_money"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
@@ -56,116 +57,120 @@ export default function DetailProduct() {
   return (
     <div>
 
-      <Link href="/" className='fixed top-10 left-20 flex items-center cursor-pointer'>
-        <FontAwesomeIcon icon={faArrowLeft } className="text-gray-700 hover:text-black" />
-        <p className='ml-3'>Kembali</p>
+      <Link href="/" className='fixed top-10 left-7 flex items-center cursor-pointer'>
+        <FontAwesomeIcon icon={faArrowLeft} className="text-gray-700 text-2xl hover:text-black" />
+        {/* <p className='ml-3'>Back</p> */}
       </Link>
 
       <div className="bg-[#f4f1eb] min-h-screen p-4 md:p-8 flex items-center justify-center">
-        <div className="bg-white shadow-lg rounded-xl flex flex-col md:flex-row w-full max-w-screen-xl">
-            
-            <div className="p-4 md:p-6 flex justify-center">
-                <img
-                    src="/assets/image/detail_produk.png"
-                    alt="Detail Produk"
-                    className="w-[500px] md:w-[500px] rounded-md h-auto mx-auto"
-                />
-            </div>
+        <div className="bg-white shadow-lg rounded-xl flex flex-col md:flex-col w-full max-w-screen-xl">
 
-            <div className="p-4 md:p-6 flex-1 overflow-y-auto max-h-screen md:max-h-[600px]">
-            <div className="flex flex-col mb-2">
-                <span className="bg-red-500 text-white text-xs max-w-min font-semibold px-2 py-1 mb-3 rounded-full">
-                HOTSALE
-                </span>
-                <h1 className="text-xl md:text-2xl font-bold">
-                    {product ? product.name : <SkeletonText width="50%" />}
-                </h1>
-            </div>
+            <div className="flex flex-col md:flex-row">
+                <div className="p-4 md:p-6 flex justify-center">
+                    <img
+                        src="/assets/image/detail_produk.png"
+                        alt="Detail Produk"
+                        className="w-[500px] md:w-[500px] rounded-md h-auto mx-auto"
+                    />
+                </div>
 
-            <p className="text-gray-500 text-sm mb-5">
-                {product ? `${product.category?.name} | ⭐️ 4.9 (2130 reviews) | ${product.price}` : <SkeletonText width="70%" />}
-            </p>
+                <div className="p-4 md:p-6 flex-1 overflow-y-auto max-h-screen md:max-h-[600px]">
+                    <div className="flex flex-col mb-2">
+                        <span className="bg-red-500 text-white text-xs max-w-min font-semibold px-2 py-1 mb-3 rounded-full">
+                        HOTSALE
+                        </span>
+                        <h1 className="text-xl md:text-2xl font-bold">
+                            {product ? product.name : <SkeletonText width="50%" />}
+                        </h1>
+                    </div>
 
-            <h1 className="text-lg font-semibold">Description :</h1>
+                    <p className="text-gray-500 text-sm mb-5">
+                        {product ? `${product.category?.name} | ⭐️ 4.9 (2130 reviews) | ${formatRupiah(product.price)}` : <SkeletonText width="70%" />}
+                    </p>
 
-            <div className="mt-2 space-y-2 text-gray-700 text-sm md:text-base">
-                {product ? product.description : <SkeletonText width="90%" />}
-            </div>
+                    <h1 className="text-lg font-semibold">Description :</h1>
 
-            {/* <div className="mt-6 flex flex-col bg-white shadow-md p-4 rounded-lg border border-gray-200">
-                <div className='flex justify-between mb-3'>
-                    <div className="flex items-center space-x-4">
-                        <img
-                        src="/assets/image/seller.png"
-                        alt="Store Logo"
-                        className="w-12 h-12 rounded-full"
-                        />
-                        <div>
-                            <div className="flex items-center space-x-2">
-                                <span className="text-md font-semibold">MHI - Samsung Authorized</span>
-                                <span className="bg-green-600 text-white text-xs font-semibold px-1.5 py-0.5 rounded-md"><FontAwesomeIcon icon={faCheck} className="text-white" />
-                                </span>
+                    <div className="mt-2 space-y-2 text-justify text-gray-700 text-sm md:text-base">
+                        {product ? product.description : <SkeletonText width="90%" />}
+                    </div>
+
+                    <div className="mt-6 flex flex-col bg-white shadow-md p-4 rounded-lg border border-gray-200">
+                        <div className='flex justify-between mb-3'>
+                            <div className="flex items-center space-x-4">
+                                <img
+                                src="/assets/image/seller.png"
+                                alt="Store Logo"
+                                className="w-12 h-12 rounded-full"
+                                />
+                                <div>
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-md font-semibold">Reza Store</span>
+                                        <span className="bg-green-600 text-white text-xs font-semibold px-1.5 py-0.5 rounded-md"><FontAwesomeIcon icon={faCheck} className="text-white" />
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-green-500 text-sm font-semibold">• Online</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <span className="text-green-500 text-sm font-semibold">• Online</span>
+
+                            <button className="px-4 py-1 border border-green-500 text-green-500 font-semibold rounded-lg hover:bg-green-50">
+                                Follow
+                            </button>
+                        </div>
+
+                        <div className="flex items-center space-x-4">
+                            <div className="flex items-center text-gray-500 text-sm space-x-1">
+                                <span>⭐️ 5.0</span>
+                                <span>(8 rb)</span>
+                            </div>
+                            <div className="flex items-center text-gray-500 text-sm space-x-1">
+                                <span>⏱️ ± 1 jam</span>
+                                <span>pesanan diproses</span>
                             </div>
                         </div>
                     </div>
 
-                    <button className="px-4 py-1 border border-green-500 text-green-500 font-semibold rounded-lg hover:bg-green-50">
-                        Follow
-                    </button>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center text-gray-500 text-sm space-x-1">
-                        <span>⭐️ 5.0</span>
-                        <span>(8 rb)</span>
+                    <div className="mt-6">
+                        <p className="text-lg font-semibold">Select Size:</p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                        <button className="px-4 py-2 bg-[#f9f7f3] text-[#a7a39b] font-semibold rounded-md mb-2">
+                            8/128
+                        </button>
+                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
+                            8/256
+                        </button>
+                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
+                            4/128
+                        </button>
+                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
+                            4/256
+                        </button>
+                        </div>
                     </div>
-                    <div className="flex items-center text-gray-500 text-sm space-x-1">
-                        <span>⏱️ ± 1 jam</span>
-                        <span>pesanan diproses</span>
-                    </div>
-                </div>
-            </div> */}
 
-            <div className="mt-6">
-                <p className="text-lg font-semibold">Select Size:</p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                <button className="px-4 py-2 bg-[#f9f7f3] text-[#a7a39b] font-semibold rounded-md mb-2">
-                    8/128
-                </button>
-                <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
-                    8/256
-                </button>
-                <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
-                    4/128
-                </button>
-                <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
-                    4/256
-                </button>
+                    <div className="mt-6">
+                        <p className="text-lg font-semibold">Select Color:</p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                        <button className="px-4 py-2 bg-[#f9f7f3] text-[#a7a39b] font-semibold rounded-md mb-2">
+                            Gray
+                        </button>
+                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
+                            Black
+                        </button>
+                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
+                            White
+                        </button>
+                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
+                            Blue
+                        </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <div className="mt-6">
-                <p className="text-lg font-semibold">Select Color:</p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                <button className="px-4 py-2 bg-[#f9f7f3] text-[#a7a39b] font-semibold rounded-md mb-2">
-                    Gray
-                </button>
-                <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
-                    Black
-                </button>
-                <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
-                    White
-                </button>
-                <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
-                    Blue
-                </button>
-                </div>
-            </div>
-
-            <div className="fixed bottom-5 left-4 right-4 md:left-20 md:right-20 bg-white shadow-md p-4 px-6 sm:px-4 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-8 rounded-xl overflow-x-auto">
+            <div className="md:left-20 md:right-20 bg-white shadow-md p-4 md:p-6 sm:px-4 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-8 rounded-b-xl overflow-x-auto">
                 <div className="flex items-center space-x-4 flex-shrink-0">
                     <img
                         src="/assets/image/detail_produk.png"
@@ -188,8 +193,7 @@ export default function DetailProduct() {
                     </button>
                 </div>
             </div>
-
-            </div>
+            
         </div>
       </div>
 
