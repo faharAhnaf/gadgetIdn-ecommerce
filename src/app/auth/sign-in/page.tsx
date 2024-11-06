@@ -68,7 +68,6 @@ export default function Sign_In() {
     return (
     <div className="flex justify-center items-center h-screen px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col lg:flex-row items-center rounded-[12px] shadow-lg w-full max-w-[1000px] lg:h-[500px] bg-white p-5">
-        {/* Bagian Gambar */}
         <div className="hidden lg:block w-1/2">
           <Image
             src="/assets/image/sign_in.png"
@@ -79,7 +78,6 @@ export default function Sign_In() {
           />
         </div>
 
-        {/* Bagian Form */}
         <div className="p-5 w-full lg:w-1/2">
           <h1 className="mb-4 text-2xl font-semibold text-center lg:text-left">Welcome Back, 👋🏻</h1>
 
@@ -95,7 +93,6 @@ export default function Sign_In() {
             />
           </div>
 
-          {/* Password Input */}
           <PasswordInput onPasswordChange={handlePasswordChange} />
 
           <button 

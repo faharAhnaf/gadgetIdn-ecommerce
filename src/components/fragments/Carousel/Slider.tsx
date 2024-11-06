@@ -1,11 +1,24 @@
 "use client";
 
 import Slider from "react-slick";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Card from "@/components/core/Card/Card";
+import { getLatestProducts } from "@/app/api/latest_product"; 
+import ProductPreview from '@/app/lib/model/product_review';
 
 export default function SliderComp() {
   const sliderRef = useRef(null);
+
+  const [products, setProducts] = useState<ProductPreview[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const latestProducts = await getLatestProducts();
+      setProducts(latestProducts);
+    };
+    fetchProducts();
+  }, []);
+
   let settings = {
     className: "center",
     centerMode: true,
@@ -49,16 +62,16 @@ export default function SliderComp() {
   return (
     <>
       <Slider ref={sliderRef} {...settings}>
-        <Card title={"Macbook"} description={"Deskripsi Headphonne nya"} 
-                price={100000} imageUrl={"assets/image/example_product.png"}/>
-        <Card title={"Macbook"} description={"Deskripsi Headphonne nya"} 
-                price={100000} imageUrl={"assets/image/example_product.png"}/>
-        <Card title={"Macbook"} description={"Deskripsi Headphonne nya"} 
-                price={100000} imageUrl={"assets/image/example_product.png"}/>
-        <Card title={"Macbook"} description={"Deskripsi Headphonne nya"} 
-                price={100000} imageUrl={"assets/image/example_product.png"}/>
-        <Card title={"Macbook"} description={"Deskripsi Headphonne nya"} 
-                price={100000} imageUrl={"assets/image/example_product.png"}/>
+        {products.map((product, index) => (
+            <Card
+              key={index}
+              product_id={product.product_id}
+              title={product.name}
+              description={product.description}
+              price={product.price}
+              imageUrl={"assets/image/example_product.png"}
+            />
+          ))}
       </Slider>
     </>
   );
