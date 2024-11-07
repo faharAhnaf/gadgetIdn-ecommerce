@@ -1,10 +1,12 @@
 import ProfileAnimateDropdown from "@/components/core/Dropdown/Sidebar";
+import TokoAnimateDropdown from "@/components/core/Dropdown/Toko";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleRight,
   faArrowRightFromBracket,
   faGear,
   faHouseChimney,
+  faShop,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -12,9 +14,10 @@ import AnimateHeight from "react-animate-height";
 
 type Props = {
   data: any;
+  isAdmin: boolean;
 };
 
-const ProfileSidebar = ({ data }: Props) => {
+const ProfileSidebar = ({ data, isAdmin }: Props) => {
   const [currentMenu, setCurrentMenu] = useState<string>("");
 
   const toggleMenu = (value: string) => {
@@ -26,8 +29,8 @@ const ProfileSidebar = ({ data }: Props) => {
       <div className="flex gap-4 border-b-2 py-5">
         <div className="bg-slate-400 rounded-full size-24" />
         <div className="flex-col flex justify-center">
-          <p>{data.name || "loading..."}</p>
-          <p>{data.email || "loading..."}</p>
+          <p>{data.name}</p>
+          <p>{data.email}</p>
         </div>
       </div>
 
@@ -71,6 +74,31 @@ const ProfileSidebar = ({ data }: Props) => {
 
             <ProfileAnimateDropdown currentMenu={currentMenu} />
           </li>
+
+          {isAdmin && (
+            <li className="flex flex-col">
+              <button
+                type="button"
+                className={`${currentMenu === "toko" ? "active" : ""}`}
+                onClick={() => toggleMenu("toko")}
+              >
+                <div className="flex items-center gap-3">
+                  <FontAwesomeIcon icon={faShop} className="w-5" />
+                  <span className="text-black">Toko</span>
+                  <div
+                    className={`ml-auto ${
+                      currentMenu === "toko" ? "rotate-90" : ""
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faAngleRight} />
+                  </div>
+                </div>
+              </button>
+
+              <TokoAnimateDropdown currentMenu={currentMenu} />
+            </li>
+          )}
+
           <li className="flex items-center gap-3">
             <FontAwesomeIcon icon={faArrowRightFromBracket} className="w-5" />
             <p>Logout</p>

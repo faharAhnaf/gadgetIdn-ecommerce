@@ -27,7 +27,6 @@ export const getProfileByUserId = async (
     }
 
     const profileData = profileSnap.docs[0].data();
-    console.log("Profile Data:", profileData);
 
     // Tangani created_at dan updated_at dengan aman
     const createdAt =

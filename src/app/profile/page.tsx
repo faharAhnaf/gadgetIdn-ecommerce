@@ -17,10 +17,12 @@ const UserProfile = () => {
   const [phone, setPhone] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const storedData = localStorage.getItem("userSession");
+
       if (storedData) {
         const userData = JSON.parse(storedData);
         const userProfile = await getProfileByUserId(userData.user_id);
@@ -31,10 +33,11 @@ const UserProfile = () => {
           setEmail(userProfile.email || "");
           setPhone(userProfile.phone || "");
           setLocation(userProfile.location || "");
+          setIsAdmin(userProfile.role);
         }
       }
     };
-
+    
     fetchUserProfile();
   }, []);
 
@@ -80,7 +83,7 @@ const UserProfile = () => {
   return (
     <div className="flex justify-center">
       <Navbar />
-      <ProfileSidebar data={data} />
+      <ProfileSidebar data={data} isAdmin={isAdmin} />
 
       <div className="m-10 my-28 w-[50%] p-5 shadow-xl rounded-xl">
         <form onSubmit={handleSubmit}>
