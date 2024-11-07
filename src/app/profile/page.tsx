@@ -1,220 +1,152 @@
 "use client";
 
-import Navbar from "@/components/fragments/Navbar";
-import { faBell, faUser } from "@fortawesome/free-regular-svg-icons";
-import {
-  faAngleRight,
-  faArrowRightFromBracket,
-  faDatabase,
-  faGear,
-  faGlobe,
-  faHouseChimney,
-  faLock,
-  faWallet,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import AnimateHeight from "react-animate-height";
+import Navbar from "@/components/fragments/Navbar";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import updateDataProfile from "../api/profile/update-profile";
+import Swal from "sweetalert2";
+import { getProfileByUserId } from "../api/profile/profile";
+import ProfileSidebar from "@/components/fragments/Sidebar/Profile";
 
 const UserProfile = () => {
-  const [currentMenu, setCurrentMenu] = useState<string>("");
-  const [data, setData] = useState<any>("");
-  const [onChange, setOnChange] = useState<any>(null);
+  const [data, setData] = useState<any>({});
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("userSession");
-    console.log("Stored Data:", storedData);
-    if (storedData) {
-      setData(JSON.parse(storedData));
-    }
+    const fetchUserProfile = async () => {
+      const storedData = localStorage.getItem("userSession");
+      if (storedData) {
+        const userData = JSON.parse(storedData);
+        const userProfile = await getProfileByUserId(userData.user_id);
+
+        if (userProfile) {
+          setData(userProfile);
+          setName(userProfile.name || "");
+          setEmail(userProfile.email || "");
+          setPhone(userProfile.phone || "");
+          setLocation(userProfile.location || "");
+        }
+      }
+    };
+
+    fetchUserProfile();
   }, []);
 
-  const toggleMenu = (value: string) => {
-    setCurrentMenu((oldValue) => {
-      return oldValue === value ? "" : value;
-    });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const updatedData = {
+        ...data,
+        name,
+        email,
+        phone,
+        location,
+      };
+
+      await updateDataProfile(
+        updatedData.user_id,
+        updatedData.name,
+        updatedData.email,
+        updatedData.phone,
+        updatedData.location
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Profile updated successfully.",
+      });
+
+      setData(updatedData);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "An error occurred while updating the profile. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex justify-center">
       <Navbar />
-      <div className="m-10 my-28 w-96 p-5 shadow-xl rounded-xl">
-        <div className="flex gap-4 border-b-2 py-5">
-          <div className="bg-slate-400 rounded-full size-24" />
-          <div className="flex-col flex justify-center">
-            <p>{data.name || "loading..."} </p>
-            <p>{data.email || "loading..."}</p>
-          </div>
-        </div>
+      <ProfileSidebar data={data} />
 
-        <div className="space-y-20">
+      <div className="m-10 my-28 w-[50%] p-5 shadow-xl rounded-xl">
+        <form onSubmit={handleSubmit}>
           <ul className="mx-2 my-8 space-y-6">
-            {/* Button Profile */}
-            <li className="flex flex-col">
-              <button
-                type="button"
-                className={`${currentMenu === "profile" ? "active" : ""}`}
-                onClick={() => toggleMenu("profile")}
-              >
-                <div className="flex items-center gap-3">
-                  <FontAwesomeIcon icon={faUser} className="w-5" />
-                  <p>Profile</p>
-                  <div className="ml-auto">
-                    <FontAwesomeIcon icon={faAngleRight} />
-                  </div>
-                </div>
-              </button>
+            <li className="flex items-center gap-3 border-b-2 py-5">
+              <FontAwesomeIcon icon={faUser} />
+              <p>My Profile</p>
+              <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
             </li>
-            {/* Button Settings */}
-            <li className="flex flex-col">
-              <button
-                type="button"
-                className={`${currentMenu === "settings" ? "active" : ""}`}
-                onClick={() => toggleMenu("settings")}
-              >
-                <div className="flex items-center gap-3">
-                  <FontAwesomeIcon icon={faGear} className="w-5" />
-                  <span className="text-black">Settings</span>
-                  <div
-                    className={`ml-auto ${
-                      currentMenu == "settings" ? "rotate-90" : ""
-                    }`}
-                  >
-                    <FontAwesomeIcon icon={faAngleRight} />
-                  </div>
-                </div>
-              </button>
-
-              <AnimateHeight
-                duration={300}
-                height={currentMenu === "settings" ? "auto" : 0}
-              >
-                <ul className="space-y-6 mt-6">
-                  <li>
-                    <button className="flex items-center gap-3 w-full">
-                      <FontAwesomeIcon icon={faHouseChimney} className="w-5" />
-                      <div className="text-left">
-                        <p>Daftar Alamat</p>
-                        <p className="text-[13px]">Atur Alamat Pengiriman</p>
-                      </div>
-                    </button>
-                  </li>
-                  <li>
-                    <button className="flex items-center gap-3 w-full">
-                      <FontAwesomeIcon icon={faDatabase} className="w-5" />
-                      <div className="text-left">
-                        <p>Rekening Bank</p>
-                        <p className="text-[13px]">Tarik Saldo</p>
-                      </div>
-                    </button>
-                  </li>
-                  <li>
-                    <button className="flex items-center gap-3 w-full">
-                      <FontAwesomeIcon icon={faWallet} className="w-5" />
-                      <div className="text-left">
-                        <p>Pembayaran Instan</p>
-                        <p className="text-[13px]">
-                          E-Wallet, kartu kredit, debit instan terdaftar
-                        </p>
-                      </div>
-                    </button>
-                  </li>
-                  <li>
-                    <button className="flex items-center gap-3 w-full">
-                      <FontAwesomeIcon icon={faLock} className="w-5" />
-                      <div className="text-left">
-                        <p>Keamanan Akun</p>
-                        <p className="text-[13px]">
-                          Kata sandi, PIN, Verifikasi data diri
-                        </p>
-                      </div>
-                    </button>
-                  </li>
-                  <li className="hover:bg-blue-300">
-                    <button className="flex items-center gap-3 w-full">
-                      <FontAwesomeIcon icon={faBell} className="w-5" />
-                      <div className="text-left">
-                        <p>Notifikasi</p>
-                        <p className="text-[13px]">Atur notifikasi</p>
-                      </div>
-                    </button>
-                  </li>
-                  <li>
-                    <button className="flex items-center gap-3 w-full">
-                      <FontAwesomeIcon icon={faGlobe} className="w-5" />
-                      <div className="text-left">
-                        <p>Privasi Akun</p>
-                        <p className="text-[13px]">Atur penggunaan data</p>
-                      </div>
-                    </button>
-                  </li>
-                </ul>
-              </AnimateHeight>
-            </li>
-            <li className="flex items-center gap-3">
-              <FontAwesomeIcon icon={faBell} className="w-5" />
-              <p>Notification</p>
-              <span className="ml-auto">Allow</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <FontAwesomeIcon icon={faArrowRightFromBracket} className="w-5" />
-              <p>Logout</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div className=" m-10 my-28 w-[50%] p-5 shadow-xl rounded-xl ">
-        <ul className="mx-2 my-8 space-y-6">
-          <li className="flex items-center gap-3 border-b-2 py-5">
-            <FontAwesomeIcon icon={faUser} />
-            <p>My Profile</p>
-            <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
-          </li>
-          <form action="">
             <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
               <label htmlFor="name">Name</label>
               <input
+                id="name"
                 type="text"
-                className=" w-1/2 h-10 text-right"
-                defaultValue={data.name}
-                onChange={(e) => setOnChange(e.target.value)}
+                className="w-1/2 h-10 text-right"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
               />
             </li>
             <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="name">Email Account</label>
+              <label htmlFor="email">Email Account</label>
               <input
+                id="email"
                 type="text"
-                className=" w-1/2 h-10 text-right"
-                defaultValue={data.email}
-                // onChange={(e) => setOnChange(e.target.value)}
+                className="w-1/2 h-10 text-right"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </li>
             <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="name">Mobile Number</label>
+              <label htmlFor="phone">Mobile Number</label>
               <input
+                id="phone"
                 type="text"
-                className=" w-1/2 h-10 text-right"
-                defaultValue={"your phone number"}
-                // onChange={(e) => setOnChange(e.target.value)}
+                className="w-1/2 h-10 text-right"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
               />
             </li>
             <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="name">Location</label>
+              <label htmlFor="location">Location</label>
               <input
+                id="location"
                 type="text"
-                className=" w-1/2 h-10 text-right"
-                defaultValue={"your Location"}
-                // onChange={(e) => setOnChange(e.target.value)}
+                className="w-1/2 h-10 text-right"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                required
               />
             </li>
-            <li className="flex items-center gap-3 py-5  justify-between">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg">
-                Save Change
+            <li className="flex items-center gap-3 py-5 justify-between">
+              <button
+                type="submit"
+                className={`bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={loading}
+              >
+                {loading ? "Saving..." : "Save Change"}
               </button>
             </li>
-          </form>
-        </ul>
+          </ul>
+        </form>
       </div>
     </div>
   );
