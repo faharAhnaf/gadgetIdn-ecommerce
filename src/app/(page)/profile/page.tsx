@@ -5,9 +5,9 @@ import Navbar from "@/components/fragments/Navbar";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import updateDataProfile from "../api/profile/update-profile";
+import updateDataProfile from "../../api/profile/update-profile";
 import Swal from "sweetalert2";
-import { getProfileByUserId } from "../api/profile/profile";
+import { getProfileByUserId } from "../../api/profile/profile";
 import ProfileSidebar from "@/components/fragments/Sidebar/Profile";
 
 const UserProfile = () => {
@@ -37,7 +37,7 @@ const UserProfile = () => {
         }
       }
     };
-    
+
     fetchUserProfile();
   }, []);
 

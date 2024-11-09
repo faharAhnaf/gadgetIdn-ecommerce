@@ -17,27 +17,25 @@ export const getProfileByUserId = async (
   try {
     const userCollection = collection(db, "users");
 
-    // Query untuk mendapatkan profil berdasarkan user_id
     const profileQuery = query(userCollection, where("user_id", "==", userId));
     const profileSnap = await getDocs(profileQuery);
 
     if (profileSnap.empty) {
       console.error("No profiles found for user_id:", userId);
-      return null; // Return null jika tidak ditemukan data
+      return null;
     }
 
     const profileData = profileSnap.docs[0].data();
 
-    // Tangani created_at dan updated_at dengan aman
     const createdAt =
       profileData.created_at instanceof Timestamp
         ? profileData.created_at.toDate().toISOString()
-        : new Date().toISOString(); // Convert ke string ISO
+        : new Date().toISOString(); 
 
     const updatedAt =
       profileData.updated_at instanceof Timestamp
         ? profileData.updated_at.toDate().toISOString()
-        : new Date().toISOString(); // Convert ke string ISO
+        : new Date().toISOString(); 
 
     const profileItem: Profile = {
       user_id: profileData.user_id,
@@ -54,7 +52,7 @@ export const getProfileByUserId = async (
     return profileItem;
   } catch (error) {
     console.error("Error fetching profiles:", error);
-    return null; // Kembalikan null jika terjadi error
+    return null;
   }
 };
 
