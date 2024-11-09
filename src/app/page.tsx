@@ -9,6 +9,7 @@ import Gallery from "@/components/fragments/Gallery/index";
 import SliderComp from "@/components/fragments/Carousel/Slider"
 
 export default function Home() {
+
   return (
     <div>
       <Navbar></Navbar>
