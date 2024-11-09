@@ -24,6 +24,7 @@ const saveToSession = (data: any) => {
     user_id: data.user_id,
     name: data.name,
     email: data.email,
+    role: data.role,
     expiresAt: Date.now() + oneDayInMs,
   };
   localStorage.setItem("userSession", JSON.stringify(sessionData));

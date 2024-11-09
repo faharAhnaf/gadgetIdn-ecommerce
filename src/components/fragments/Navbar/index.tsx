@@ -54,13 +54,14 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4 text-black text-lg">
-            
             <Link href="/keranjang">
               <FiShoppingCart className="cursor-pointer" />
             </Link>
 
             <div className="rounded-full w-[35px] h-[35px] bg-black flex items-center justify-center">
-              <FiUser className="cursor-pointer text-white" />
+              <Link href="/profile">
+                <FiUser className="cursor-pointer text-white" />
+              </Link>
             </div>
           </div>
 

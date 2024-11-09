@@ -19,7 +19,8 @@ const isValidEmail = (email: string) => {
 };
 
 const isValidPassword = (password: string) => {
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   return passwordRegex.test(password);
 };
 
@@ -29,6 +30,7 @@ const saveToSession = (data: any) => {
     user_id: data.user_id,
     name: data.name,
     email: data.email,
+    role: data.role,
     expiresAt: Date.now() + oneDayInMs,
   };
   localStorage.setItem("userSession", JSON.stringify(sessionData));
@@ -42,14 +44,20 @@ export const registerUser = async (data: RegisterData) => {
   }
 
   if (!isValidPassword(password)) {
-    throw new Error("Password must contain at least one uppercase letter, one number, one symbol, and be at least 8 characters long.");
+    throw new Error(
+      "Password must contain at least one uppercase letter, one number, one symbol, and be at least 8 characters long."
+    );
   }
 
   try {
     const salt = crypto.randomBytes(16).toString("hex");
     const hashedPassword = hashPassword(password, salt);
 
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user = userCredential.user;
 
     const userData = {
@@ -61,7 +69,7 @@ export const registerUser = async (data: RegisterData) => {
       role: false,
       isGmail: false,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     await setDoc(doc(db, "users", user.uid), userData);

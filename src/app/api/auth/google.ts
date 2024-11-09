@@ -10,6 +10,7 @@ const saveToSession = (user: any) => {
     user_id: user.uid,
     name: user.displayName,
     email: user.email,
+    role: user.role,
     expiresAt: Date.now() + oneDayInMs,
   };
 
