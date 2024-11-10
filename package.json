@@ -35,12 +35,9 @@
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.14.4",
-<<<<<<< HEAD
-    "uuid": "^11.0.2"
-=======
+    "uuid": "^11.0.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
->>>>>>> ef53ad47603b2fc4f1b89cddfc625af09b19db48
   },
   "devDependencies": {
     "@types/node": "^20",
