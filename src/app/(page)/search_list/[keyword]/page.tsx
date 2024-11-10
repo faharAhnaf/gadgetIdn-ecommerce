@@ -12,26 +12,29 @@ import ProductPreview from '@/app/lib/model/product_review';
 import "@/app/assets/css/home.css"
 
 export default function Keranjang() {
+    const { keyword } = useParams();
     const [products, setProducts] = useState<ProductPreview[]>([]);
 
     useEffect(() => {
-        searchProductsByName().then((data) => {
-            setProducts(data);
-        });
-    }, []);
+        if (keyword) {
+            searchProductsByName(keyword as string).then((data) => {
+                setProducts(data);
+            });
+        }
+    }, [keyword]);
 
   return (
     <div>
       <Navbar/>
       <div className="container flex justify-center mx-auto mt-[100px]">
             <div className="flex w-full">
-                <div className="w-1/5 mb-5">
+                <div className="w-1/5">
                     <SideBar />
                 </div>
 
                 <div className="w-4/5 p-5">
 
-                    <p className="mb-2 font-semibold">Menampilkan 1 - 16 dari total barang untuk "Seluruh Kategori"</p>
+                    <p className="mb-2 font-semibold">Menampilkan 1 - 16 dari total barang untuk "{keyword}"</p>
 
                     <div className="overflow-y-auto pb-4 max-h-[800px]">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

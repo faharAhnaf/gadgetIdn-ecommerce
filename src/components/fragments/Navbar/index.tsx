@@ -1,7 +1,6 @@
-import GrearMarket from "../../core/Label/GrearMarket";
+import GrearMarket from "@/components/core/Label/GrearMarket";
 import Link from "next/link";
 import {
-  FiHeart,
   FiShoppingCart,
   FiUser,
   FiSearch,
@@ -9,6 +8,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -20,6 +20,23 @@ export default function Navbar() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, []);
+
+  const router = useRouter();
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const handleSearch = () => {
+      if (searchKeyword.trim()) {
+          router.push(`/search_list/${searchKeyword}`);
+      } else {
+        router.push(`/search_list/`);
+      }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+          handleSearch();
+      }
+  };
 
   return (
     <nav className="bg-[#f4f1eb] border-b border-gray-200 shadow-lg fixed top-0 w-full z-50">
@@ -48,9 +65,14 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="What are you looking for?"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="bg-gray-100 border rounded-full px-5 py-2 text-sm w-full max-w-[350px] focus:outline-none"
             />
-            <FiSearch className="absolute right-3 text-gray-500" />
+            <FiSearch 
+              onClick={handleSearch}
+              className="absolute right-3 text-gray-500" />
           </div>
 
           <div className="flex items-center gap-4 text-black text-lg">
