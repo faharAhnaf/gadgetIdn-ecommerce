@@ -8,59 +8,74 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import updateDataProfile from "../../api/profile/update-profile";
 import Swal from "sweetalert2";
 import { getProfileByUserId } from "../../api/profile/profile";
-import ProfileSidebar from "@/components/fragments/Sidebar/Profile";
+import ProfileSidebar from "@/components/fragments/Sidebar/sidebar-profile";
+import { SaveChangeButton } from "@/components/core/Button/save-change";
+import updatePicture from "@/app/api/profile/update-picture";
+
+// Define the type for formData
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  picture: string;
+}
 
 const UserProfile = () => {
   const [data, setData] = useState<any>({});
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    picture: "",
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const storedData = localStorage.getItem("userSession");
-
       if (storedData) {
         const userData = JSON.parse(storedData);
         const userProfile = await getProfileByUserId(userData.user_id);
-
         if (userProfile) {
           setData(userProfile);
-          setName(userProfile.name || "");
-          setEmail(userProfile.email || "");
-          setPhone(userProfile.phone || "");
-          setLocation(userProfile.location || "");
+          setFormData({
+            name: userProfile.name || "",
+            email: userProfile.email || "",
+            phone: userProfile.phone || "",
+            location: userProfile.location || "",
+            picture: userProfile.picture || "",
+          });
           setIsAdmin(userProfile.role);
         }
       }
     };
-
     fetchUserProfile();
   }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const updatedData = {
-        ...data,
-        name,
-        email,
-        phone,
-        location,
-      };
-
-      await updateDataProfile(
-        updatedData.user_id,
-        updatedData.name,
-        updatedData.email,
-        updatedData.phone,
-        updatedData.location
-      );
+      const { user_id } = data;
+      await Promise.all([
+        updatePicture(user_id, formData.picture),
+        updateDataProfile(
+          user_id,
+          formData.name,
+          formData.email,
+          formData.phone,
+          formData.location,
+        ),
+      ]);
 
       Swal.fire({
         icon: "success",
@@ -68,7 +83,7 @@ const UserProfile = () => {
         text: "Profile updated successfully.",
       });
 
-      setData(updatedData);
+      setData((prev: any) => ({ ...prev, ...formData }));
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -84,8 +99,7 @@ const UserProfile = () => {
     <div className="flex justify-center">
       <Navbar />
       <ProfileSidebar data={data} isAdmin={isAdmin} />
-
-      <div className="m-10 my-28 w-[50%] p-5 shadow-xl rounded-xl">
+      <div className="m-10 my-28 w-[50%] rounded-xl p-5 shadow-xl">
         <form onSubmit={handleSubmit}>
           <ul className="mx-2 my-8 space-y-6">
             <li className="flex items-center gap-3 border-b-2 py-5">
@@ -93,60 +107,27 @@ const UserProfile = () => {
               <p>My Profile</p>
               <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
             </li>
-            <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                className="w-1/2 h-10 text-right"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </li>
-            <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="email">Email Account</label>
-              <input
-                id="email"
-                type="text"
-                className="w-1/2 h-10 text-right"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </li>
-            <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="phone">Mobile Number</label>
-              <input
-                id="phone"
-                type="text"
-                className="w-1/2 h-10 text-right"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
-            </li>
-            <li className="flex items-center gap-3 py-5 border-b-2 justify-between">
-              <label htmlFor="location">Location</label>
-              <input
-                id="location"
-                type="text"
-                className="w-1/2 h-10 text-right"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                required
-              />
-            </li>
-            <li className="flex items-center gap-3 py-5 justify-between">
-              <button
-                type="submit"
-                className={`bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                disabled={loading}
+            {["name", "email", "phone", "location"].map((field) => (
+              <li
+                key={field}
+                className="flex items-center justify-between gap-3 border-b-2 py-5"
               >
-                {loading ? "Saving..." : "Save Change"}
-              </button>
+                <label htmlFor={field}>
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <input
+                  id={field}
+                  name={field}
+                  type="text"
+                  className="h-10 w-1/2 p-1 text-right"
+                  value={formData[field as keyof FormData]}
+                  onChange={handleChange}
+                  required
+                />
+              </li>
+            ))}
+            <li className="flex items-center justify-between gap-3 py-5">
+              <SaveChangeButton loading={loading} className="p-3" />
             </li>
           </ul>
         </form>

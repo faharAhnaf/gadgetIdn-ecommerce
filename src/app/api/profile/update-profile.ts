@@ -7,7 +7,7 @@ const updateDataProfile = async (
   name: string,
   email: string,
   phone: string,
-  location: string
+  location: string,
 ) => {
   const cartRef = doc(db, "users", userId);
   try {
@@ -21,7 +21,7 @@ const updateDataProfile = async (
     Swal.fire({
       icon: "error",
       title: "Failed",
-      text: "An error occurred while updating the cart. Please try again..",
+      text: "An error occurred while updating the profile. Please try again..",
     });
   }
 };

@@ -5,6 +5,7 @@ export interface Profile {
   email: string;
   isGmail: boolean;
   location: string;
+  picture: string;
   phone: string;
   role: boolean;
   updated_at: string;

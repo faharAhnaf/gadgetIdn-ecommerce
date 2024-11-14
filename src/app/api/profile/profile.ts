@@ -12,7 +12,7 @@ import {
 import { Timestamp } from "firebase/firestore";
 
 export const getProfileByUserId = async (
-  userId: string
+  userId: string,
 ): Promise<Profile | null> => {
   try {
     const userCollection = collection(db, "users");
@@ -30,12 +30,12 @@ export const getProfileByUserId = async (
     const createdAt =
       profileData.created_at instanceof Timestamp
         ? profileData.created_at.toDate().toISOString()
-        : new Date().toISOString(); 
+        : new Date().toISOString();
 
     const updatedAt =
       profileData.updated_at instanceof Timestamp
         ? profileData.updated_at.toDate().toISOString()
-        : new Date().toISOString(); 
+        : new Date().toISOString();
 
     const profileItem: Profile = {
       user_id: profileData.user_id,
@@ -44,6 +44,7 @@ export const getProfileByUserId = async (
       email: profileData.email,
       isGmail: profileData.isGmail,
       location: profileData.location,
+      picture: profileData.picture,
       phone: profileData.phone,
       role: profileData.role,
       updated_at: updatedAt,
@@ -55,4 +56,3 @@ export const getProfileByUserId = async (
     return null;
   }
 };
-
