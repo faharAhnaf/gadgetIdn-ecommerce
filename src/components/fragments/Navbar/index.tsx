@@ -7,11 +7,31 @@ import {
   FiMenu,
   FiX,
 } from "react-icons/fi";
+
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 
+function buttonLogin(){
+  return (
+    <div className="hidden lg:flex gap-4">
+      <Link href="/auth/sign-in">
+        <button className="px-4 py-1 text-md rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
+          Sign In
+        </button>
+      </Link>
+      <Link href="/auth/sign-up">
+        <button className="px-4 py-1 text-md rounded-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300">
+          Sign Up
+        </button>
+      </Link>
+    </div>
+  )
+}
+
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const session = localStorage.getItem("userSession");
+  const userData = JSON.parse(session!);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -89,18 +109,7 @@ export default function Navbar() {
 
           <div className="lg:block hidden w-[1.5px] h-[40px] rounded-md bg-black"></div>
 
-          <div className="hidden lg:flex gap-4">
-            <Link href="/auth/sign-in">
-              <button className="px-4 py-1 text-md rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
-                Sign In
-              </button>
-            </Link>
-            <Link href="/auth/sign-up">
-              <button className="px-4 py-1 text-md rounded-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300">
-                Sign Up
-              </button>
-            </Link>
-          </div>
+          { userData ? <p>{userData.name}</p> : buttonLogin()}
 
           <div className="lg:hidden">
             <FiMenu

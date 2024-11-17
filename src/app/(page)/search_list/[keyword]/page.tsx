@@ -14,14 +14,22 @@ import "@/app/assets/css/home.css"
 export default function Keranjang() {
     const { keyword } = useParams();
     const [products, setProducts] = useState<ProductPreview[]>([]);
+    const [filters, setFilters] = useState<any>({});
+
+    const handleFilterSubmit = (newFilters: any) => {
+        setFilters(newFilters);
+    };
 
     useEffect(() => {
+        const applyFilters = async () => {
+            const data = await searchProductsByName(filters);
+            setProducts(data);
+        };
+
         if (keyword) {
-            searchProductsByName(keyword as string).then((data) => {
-                setProducts(data);
-            });
+            applyFilters();
         }
-    }, [keyword]);
+    }, [keyword, filters]);
 
   return (
     <div>
@@ -29,7 +37,7 @@ export default function Keranjang() {
       <div className="container flex justify-center mx-auto mt-[100px]">
             <div className="flex w-full">
                 <div className="w-1/5">
-                    <SideBar />
+                    <SideBar onSubmitFilters={handleFilterSubmit} params={keyword as string} />
                 </div>
 
                 <div className="w-4/5 p-5">

@@ -13,12 +13,22 @@ import "@/app/assets/css/home.css"
 
 export default function Keranjang() {
     const [products, setProducts] = useState<ProductPreview[]>([]);
+    const [filters, setFilters] = useState<any>({});
+
+    const handleFilterSubmit = (newFilters: any) => {
+        setFilters(newFilters);
+    };
 
     useEffect(() => {
-        searchProductsByName().then((data) => {
+        
+        const applyFilters = async () => {
+            const data = await searchProductsByName(filters);
             setProducts(data);
-        });
-    }, []);
+        };
+
+        applyFilters()
+
+    }, [filters]);
 
   return (
     <div>
@@ -26,7 +36,7 @@ export default function Keranjang() {
       <div className="container flex justify-center mx-auto mt-[100px]">
             <div className="flex w-full">
                 <div className="w-1/5 mb-5">
-                    <SideBar />
+                    <SideBar onSubmitFilters={handleFilterSubmit} params='' />
                 </div>
 
                 <div className="w-4/5 p-5">
