@@ -5,7 +5,7 @@ import Navbar from "@/components/fragments/Navbar/index";
 import Footer from "@/components/fragments/Footer/index";
 import Header from "@/components/fragments/Header/index";
 import HeaderSection from "@/components/fragments/HeaderSection/index";
-import Gallery from "@/components/fragments/Gallery/index";
+import EditorPick from "@/components/fragments/EditorPick/index";
 import SliderComp from "@/components/fragments/Carousel/Slider"
 
 export default function Home() {
@@ -14,18 +14,14 @@ export default function Home() {
     <div>
       <Navbar></Navbar>
 
+      <Header/>
+
       <div className="flex justify-center">
 
         <div className="container mx-auto px-4 md:px-0 lg:px-0 sm:px-5">
-          <Header/>
-
-          <hr className="w-full border-black border-t-2 mb-10 rounded" />
-
-          <Gallery/>
-
           <div>
             
-            <HeaderSection title={"Flash Sale"} subtitle={"Today's"} link={"Ini Link"} />
+            <HeaderSection title={"FLASH SALE"} subtitle={"Today's"} link={"Ini Link"} />
 
             <div className="overflow-x-hidden mb-5">
               <div className="max-w-7xl mx-auto">
@@ -37,20 +33,13 @@ export default function Home() {
               </div>
             </div>
 
-            <HeaderSection title={"Laptop"} subtitle={"Categories"} link={"Ini Link"} />
+            <HeaderSection title={"EDITOR'S PICK"} subtitle={"Categories"} link={"Ini Link"} />
 
-            <div className="overflow-x-hidden mb-5">
-              <div className="max-w-7xl mx-auto">
-
-                <div>
-                  <SliderComp></SliderComp>
-                </div>
-
-              </div>
+            <div className="mb-10">
+              <EditorPick/>
             </div>
 
-
-            <HeaderSection title={"Handphone"} subtitle={"Categories"} link={"Ini Link"} />
+            <HeaderSection title={"BEST SELLER PRODUCTS"} subtitle={"Categories"} link={"Ini Link"} />
 
             <div className="overflow-x-hidden mb-10">
               <div className="max-w-7xl mx-auto">
