@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDfb-1wSlXm4V9cXOu6aUKLc7hsHi7XD_o",
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_SECRET_KEY as string,
     authDomain: "ecommerce-15602.firebaseapp.com",
     projectId: "ecommerce-15602",
     storageBucket: "ecommerce-15602.firebasestorage.app",
