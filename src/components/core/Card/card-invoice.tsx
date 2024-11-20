@@ -4,14 +4,39 @@ import { faBagShopping, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
-export default function CardInvoice() {
+interface Props {
+  date?: string;
+  status?: string;
+  name?: string;
+  quantity?: number;
+  paidAmount?: number;
+}
+
+export default function CardInvoice({
+  date = "",
+  status = "",
+  name,
+  quantity = 0,
+  paidAmount = 0,
+}: Props) {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
+    const dateObj = new Date(dateString);
+    if (isNaN(dateObj.getTime())) {
+      return "";
+    }
+    return Intl.DateTimeFormat("id-ID").format(dateObj);
+  };
+
   return (
     <div className="rounded-lg border border-[#D9D9D9] shadow-md">
       <div className="flex items-center gap-10 bg-[#D9D9D9] px-10 py-5">
         <FontAwesomeIcon icon={faBagShopping} className="text-4xl" />
         <p>Belanja</p>
-        <p>10 June 2022</p>
-        <p className={`rounded-lg bg-[#A3D3BD] p-2`}>selesai</p>
+        <p>{formatDate(date)}</p>
+        <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
+          {status?.charAt(0) + status?.slice(1).toLowerCase()}
+        </p>
         <p>INV/20229999</p>
       </div>
       <div className="grid grid-cols-2 p-10">
@@ -34,10 +59,16 @@ export default function CardInvoice() {
             />
             <ul>
               <li>
-                <p>HEADPHONE ATH-M50X - HITAM</p>
+                <p>{name} - HITAM</p>
               </li>
               <li>
-                <p>1 barang x Rp299.999</p>
+                <p>
+                  {quantity} barang x &nbsp;
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  }).format(paidAmount)}
+                </p>
               </li>
             </ul>
           </div>
@@ -46,7 +77,12 @@ export default function CardInvoice() {
           <ul className="grid grid-cols-3 gap-3 text-end">
             <li className="col-span-2">
               <p>Total Belanja</p>
-              <p>Rp319.999</p>
+              <p>
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(quantity * paidAmount)}
+              </p>
             </li>
           </ul>
           <div className="grid grid-cols-3 items-center gap-3">
