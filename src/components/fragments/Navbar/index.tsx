@@ -91,13 +91,15 @@ export default function Navbar() {
             />
           </div>
 
-          <div className="flex items-center gap-4 text-lg text-black">
-            <Link href="/keranjang">
-              <FiShoppingCart className="cursor-pointer" />
-            </Link>
+          {session && (
+            <div className="flex items-center gap-4 text-lg text-black">
+              <Link href="/keranjang">
+                <FiShoppingCart className="cursor-pointer" />
+              </Link>
 
-            {session && <ProfileDropdown />}
-          </div>
+              <ProfileDropdown />
+            </div>
+          )}
 
           <div className="hidden h-[40px] w-[1.5px] rounded-md bg-black lg:block"></div>
 
