@@ -5,7 +5,7 @@ import ChatbotContainer from "@/components/fragments/Container/Chatbot";
 import ChatBotInput from "@/components/core/Input/Chatbot";
 import Message from "@/components/core/Label/Message";
 
-import { chatBot } from "@/app/chatbot/api/llm"
+import { chatBot } from "@/app/(page)/chatbot/api/llm"
 import { useState } from "react";
 
 export default function ChatbotPage() {

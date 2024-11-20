@@ -13,7 +13,9 @@ import Swal from 'sweetalert2';
 
 import { useRouter, useParams } from 'next/navigation';
 import { getProductByProductId } from "@/app/api/detail_product";
+import { handleCheckout } from "@/app/api/transaksi/transaksi"
 
+import addCartItem from '@/app/api/cart/add_cart';
 import Product from '@/app/lib/model/product'
 
 const SkeletonText = ({ width }: { width: string }) => (
@@ -22,6 +24,7 @@ const SkeletonText = ({ width }: { width: string }) => (
 
 export default function DetailProduct() {
     const [product, setProduct] = useState<Product | null>(null);
+    const [quantity, setQuantity] = useState(1);
     const router = useRouter();
     const { id } = useParams();
   
@@ -54,6 +57,36 @@ export default function DetailProduct() {
 
     }, [id, router]);
 
+    const session = localStorage.getItem("userSession");
+    const userData = JSON.parse(session!);
+
+    const handleAddToCart = async () => {
+      try {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "Are you sure you want to add to cart?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, add it!",
+          cancelButtonText: "Cancel",
+        });
+    
+        if (result.isConfirmed) {
+          await addCartItem(userData.user_id, id as string, product!.price, 1);
+          router.push('/keranjang');
+        }
+  
+      } catch (error) {
+        Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      }
+    };
+
+    const handleQuantityChange = (newQuantity: number) => {
+      setQuantity(newQuantity); 
+    };
+    
   return (
     <div>
 
@@ -186,9 +219,24 @@ export default function DetailProduct() {
                 <div className="flex items-center space-x-4 flex-shrink-0">
                     <span className="text-gray-700 font-semibold text-sm md:text-base">Qty:</span>
                     
-                    <QuantitySelector />
+                    <QuantitySelector onQuantityChange={handleQuantityChange} />
 
-                    <button className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md text-xs md:text-sm hover:bg-blue-700">
+                    <button 
+                        onClick={() => handleCheckout({
+                          user_id: userData?.user_id ?? "", 
+                          email: userData?.email ?? "", 
+                          price: product ? [product.price] : [0],
+                          amount: [quantity],
+                          description: product ? product.description : "",
+                          product_id: product ? [product.product_id] : ['0'],
+                        })}
+                        className="px-4 py-2 border border-blue-500 text-blue-500 font-semibold rounded-md text-xs md:text-sm hover:bg-blue-500 hover:text-white duration-300">
+                        CHECKOUT
+                    </button>
+
+                    <button 
+                        onClick={() => handleAddToCart()}
+                        className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md text-xs md:text-sm hover:bg-blue-700">
                         ADD TO CART
                     </button>
                 </div>

@@ -14,7 +14,9 @@ import "@/app/assets/css/home.css"
 export default function Keranjang() {
     const { keyword } = useParams();
     const [products, setProducts] = useState<ProductPreview[]>([]);
-    const [filters, setFilters] = useState<any>({});
+    const [filters, setFilters] = useState<any>({
+        name: keyword
+    });
 
     const handleFilterSubmit = (newFilters: any) => {
         setFilters(newFilters);

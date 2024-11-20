@@ -4,7 +4,7 @@ import { request_llm } from '@/app/lib/constant';
 
 const API = axios.create({
   baseURL: request,
-  timeout: 2000
+  timeout: 20000
 });
 
 export { API as axios }

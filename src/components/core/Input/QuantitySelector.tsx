@@ -2,20 +2,30 @@
 
 import React, { useState } from 'react';
 
-export default function QuantitySelector() {
+interface QuantitySelectorProps {
+  onQuantityChange: (quantity: number) => void;
+}
+
+export default function QuantitySelector({ onQuantityChange }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(1);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
-    setQuantity(value ? parseInt(value) : 1);
+    const newQuantity = value ? parseInt(value) : 1;
+    setQuantity(newQuantity);
+    onQuantityChange(newQuantity);
   };
 
   const incrementQuantity = () => {
-    setQuantity(prev => prev + 1);
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    onQuantityChange(newQuantity);
   };
 
   const decrementQuantity = () => {
-    setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+    const newQuantity = quantity > 1 ? quantity - 1 : 1;
+    setQuantity(newQuantity);
+    onQuantityChange(newQuantity);
   };
 
   return (
