@@ -1,7 +1,7 @@
-import { signInWithPopup, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import Swal from 'sweetalert2';
-import { auth, provider, db } from '@/app/lib/firebase';
+import { signInWithPopup, signOut } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
+import { auth, provider, db } from "@/app/lib/firebase";
 
 const saveToSession = (user: any) => {
   const oneDayInMs = 24 * 60 * 60 * 1000;
@@ -20,8 +20,8 @@ const saveToSession = (user: any) => {
 const signInWithGoogle = async () => {
   try {
     Swal.fire({
-      title: 'Logging in...',
-      text: 'Please wait while we log you in.',
+      title: "Logging in...",
+      text: "Please wait while we log you in.",
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -31,7 +31,7 @@ const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    const userRef = doc(db, 'users', user.uid);
+    const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
@@ -42,7 +42,7 @@ const signInWithGoogle = async () => {
         role: false,
         isGmail: true,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       await setDoc(userRef, userData);
     }
@@ -52,9 +52,9 @@ const signInWithGoogle = async () => {
     return user;
   } catch (error) {
     Swal.fire({
-      icon: 'error',
-      title: 'Login Failed',
-      text: 'An error occurred during Google sign-in.',
+      icon: "error",
+      title: "Login Failed",
+      text: "An error occurred during Google sign-in.",
       footer: `<a href="#">Why do I have this issue?</a>`,
     });
 
@@ -63,15 +63,26 @@ const signInWithGoogle = async () => {
 };
 
 const logout = async () => {
-  await signOut(auth);
-  localStorage.removeItem("userSession");
-
-  Swal.fire({
-    title: 'Logged Out',
-    text: 'You have successfully logged out.',
-    icon: 'info',
-    confirmButtonText: 'OK',
+  const result = await Swal.fire({
+    title: "Confirm Logout",
+    text: "Are you sure you want to exit?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, Signout",
+    cancelButtonText: "No, Keep Signin",
   });
+
+  if (result.isConfirmed) {
+    await signOut(auth);
+    localStorage.removeItem("userSession");
+
+    Swal.fire({
+      title: "Logged Out",
+      text: "You have successfully logged out.",
+      icon: "info",
+      confirmButtonText: "OK",
+    });
+  }
 };
 
 export { signInWithGoogle, logout };

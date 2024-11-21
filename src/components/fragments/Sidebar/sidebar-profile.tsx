@@ -22,6 +22,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import Link from "next/link";
+import { logout } from "@/app/api/auth/google";
+import { useRouter } from "next/navigation";
 
 type Props = {
   data: any;
@@ -35,6 +38,8 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
   const [pictureUrl, setPictureUrl] = useState<string>(
     `/assets/picture/${data.picture}`,
   );
+
+  const router = useRouter();
 
   const toggleMenu = (value: string) => {
     setCurrentMenu((oldValue) => (oldValue === value ? "" : value));
@@ -90,6 +95,12 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
     }
   };
 
+  const handleLogout = async (e: any) => {
+    e.preventDefault();
+    await logout();
+    router.push("/");
+  };
+
   return (
     <div className="m-10 my-28 w-96 rounded-xl p-5 shadow-xl">
       <div className="flex gap-4 border-b-2 py-5">
@@ -135,9 +146,9 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
       </div>
 
       <div className="space-y-20">
-        <ul className="mx-2 my-8 space-y-6">
+        <ul className="mx-2 mt-8 space-y-6">
           {/* Button Profile */}
-          <li className="flex flex-col">
+          {/* <li className="flex flex-col">
             <button
               type="button"
               className={`${currentMenu === "profile" ? "active" : ""}`}
@@ -151,7 +162,7 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
                 </div>
               </div>
             </button>
-          </li>
+          </li> */}
           {/* Button Settings */}
           <li className="flex flex-col">
             <button
@@ -199,7 +210,10 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
             </li>
           )}
 
-          <li className="flex items-center gap-3">
+          <li
+            className="flex cursor-pointer items-center gap-3"
+            onClick={(e) => handleLogout(e)}
+          >
             <FontAwesomeIcon icon={faArrowRightFromBracket} className="w-5" />
             <p>Logout</p>
           </li>

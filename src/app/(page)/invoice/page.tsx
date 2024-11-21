@@ -9,39 +9,32 @@ import { useEffect, useState } from "react";
 import CardInvoice from "@/components/core/Card/card-invoice";
 import Invoice from "@/app/api/invoice/invoice";
 import { getProductByProductId } from "@/app/api/detail_product";
+import { db } from "@/app/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import Product from "@/app/lib/model/product";
 
-interface DocumentReference {
-  id: string;
-}
 interface InvoiceData {
-  product_id: DocumentReference[];
-  paid_amount: number;
-  totalQuantity: number;
   created_at: string;
+  ekspedisi_id: string;
+  paid_amount: number;
+  payer_email: string;
+  payment_channel: string;
+  payment_method: string;
+  product_id: any;
   status: string;
+  totalQuantity: number;
+  transaksi_id: string;
+  updated_at: string;
+  user_id: string;
 }
 
-interface ProductData {
-  image_url: string;
-  name: string;
+interface ProductWithInvoice extends Product {
+  invoice: InvoiceData;
 }
 
 export default function InvoicePage() {
-  const [invoiceData, setinvoiceData] = useState<InvoiceData>({
-    product_id: [],
-    paid_amount: 0,
-    totalQuantity: 0,
-    created_at: "",
-    status: "",
-  });
-
-  // const [productData, setProductData] = useState<ProductData>({
-  //   image_url: "",
-  //   name: "",
-  // });
-
-  const [invoice, setInvoice] = useState<InvoiceData[]>([]);
-  const [productData, setProductData] = useState<ProductData[]>([]);
+  const [invoices, setInvoices] = useState<InvoiceData[]>([]);
+  const [productData, setProductData] = useState<ProductWithInvoice[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,15 +45,10 @@ export default function InvoicePage() {
         if (userId) {
           const userInvoice = await Invoice({ userId });
           if (userInvoice) {
-            setinvoiceData({
-              product_id: Array.isArray(userInvoice.product_id)
-                ? userInvoice.product_id
-                : [{ id: userInvoice.product_id }],
-              paid_amount: userInvoice.paid_amount || 0,
-              totalQuantity: userInvoice.totalQuantity || 0,
-              created_at: userInvoice.created_at || "",
-              status: userInvoice.status || "",
-            });
+            console.log("Invoices fetched: ", userInvoice);
+            setInvoices(userInvoice);
+          } else {
+            console.error("No invoices found for this user.");
           }
         }
       }
@@ -70,24 +58,29 @@ export default function InvoicePage() {
 
   useEffect(() => {
     const fetchProductData = async () => {
-      const productId = invoiceData.product_id[0]?.id;
-      if (productId) {
-        const product = await getProductByProductId(productId);
-        if (product) {
-          setProductData([
-            {
-              image_url: product.image_url || "",
-              name: product.name,
-            },
-          ]);
-        } else {
-          console.error("product not found");
-        }
-      }
+      const allProducts = await Promise.all(
+        invoices.flatMap(async (invoiceItem) => {
+          const productId = invoiceItem.product_id[0]?.id;
+          if (!productId) return null;
+
+          const productDoc = doc(db, "product", productId);
+          const productSnap = await getDoc(productDoc);
+          return productSnap.exists()
+            ? { ...productSnap.data(), invoice: invoiceItem }
+            : null;
+        }),
+      );
+
+      const filteredProducts = allProducts.filter(
+        (product): product is ProductWithInvoice => product !== null,
+      );
+      setProductData(filteredProducts);
     };
 
-    fetchProductData();
-  }, [invoiceData.product_id]);
+    if (invoices.length > 0) {
+      fetchProductData();
+    }
+  }, [invoices]);
 
   return (
     <div className="mt-20">
@@ -113,13 +106,22 @@ export default function InvoicePage() {
             <p>reset filter</p>
           </div>
 
-          <CardInvoice
-            date={invoiceData.created_at}
-            status={invoiceData.status}
-            quantity={invoiceData.totalQuantity}
-            paidAmount={invoiceData.paid_amount}
-            name={productData[0]?.name}
-          />
+          {productData.length > 0 ? (
+            productData.map((product, index) => (
+              <CardInvoice
+                key={index}
+                date={product.invoice.created_at}
+                status={product.invoice.status}
+                quantity={product.invoice.totalQuantity}
+                paidAmount={product.invoice.paid_amount}
+                price={product.price}
+                name={product.name}
+                imageURL={product.image_url}
+              />
+            ))
+          ) : (
+            <p> data not found</p>
+          )}
         </div>
       </div>
     </div>

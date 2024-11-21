@@ -10,6 +10,8 @@ interface Props {
   name?: string;
   quantity?: number;
   paidAmount?: number;
+  price?: number;
+  imageURL?: string;
 }
 
 export default function CardInvoice({
@@ -18,6 +20,8 @@ export default function CardInvoice({
   name,
   quantity = 0,
   paidAmount = 0,
+  price = 0,
+  imageURL = "",
 }: Props) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
@@ -37,7 +41,6 @@ export default function CardInvoice({
         <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
           {status?.charAt(0) + status?.slice(1).toLowerCase()}
         </p>
-        <p>INV/20229999</p>
       </div>
       <div className="grid grid-cols-2 p-10">
         <div className="space-y-5">
@@ -51,15 +54,10 @@ export default function CardInvoice({
             <p>Scratch Store</p>
           </div>
           <div className="flex gap-8">
-            <Image
-              src="/assets/image/headset.png"
-              width={70}
-              height={70}
-              alt="Claw Image"
-            />
+            <img src={imageURL} width={70} height={70} alt="Claw Image" />
             <ul>
               <li>
-                <p>{name} - HITAM</p>
+                <p>{name}</p>
               </li>
               <li>
                 <p>
@@ -67,7 +65,7 @@ export default function CardInvoice({
                   {new Intl.NumberFormat("id-ID", {
                     style: "currency",
                     currency: "IDR",
-                  }).format(paidAmount)}
+                  }).format(price)}
                 </p>
               </li>
             </ul>
@@ -81,7 +79,7 @@ export default function CardInvoice({
                 {new Intl.NumberFormat("id-ID", {
                   style: "currency",
                   currency: "IDR",
-                }).format(quantity * paidAmount)}
+                }).format(paidAmount)}
               </p>
             </li>
           </ul>
