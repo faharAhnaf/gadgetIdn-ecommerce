@@ -50,6 +50,8 @@ const calculateTotal = ({ price, amount }: {price: number[], amount: number[]}):
 const checkPaymentStatus = async (
         invoiceId: string, 
         product_id: string[], 
+        current_price: number[], 
+        amount: number[], 
         user_id: string, 
         totalQuantity: number,
     ) => {
@@ -74,12 +76,17 @@ const checkPaymentStatus = async (
                 product_id: productReferences,
                 user_id: user_id,
                 transaksi_id: data_payment.payment_id,
+                
                 payer_email: data_payment.payer_email,
                 payment_channel: data_payment.payment_channel,
                 payment_method: data_payment.payment_method,
+                
                 paid_amount: data_payment.paid_amount,
-                status: data_payment.status,
+                current_price: current_price,
+                amount: amount,
                 totalQuantity: totalQuantity,
+                
+                status: data_payment.status,
                 created_at: data_payment.created,
                 updated_at: data_payment.created,
               };
@@ -88,7 +95,7 @@ const checkPaymentStatus = async (
                 const docRef = doc(db, "transaksi", data.transaksi_id);
                 await setDoc(docRef, data);
 
-                window.location.href = "http://localhost:3000/daftar-transaksi"
+                window.location.href = "http://localhost:3000/invoice"
 
               } catch (e) {
                 console.error("Error adding document: ", e);
@@ -98,7 +105,7 @@ const checkPaymentStatus = async (
             await Swal.fire('Failed', 'Payment failed or expired.', 'error');
         } else {
             setTimeout( async () => await checkPaymentStatus(
-                invoiceId, product_id, user_id, totalQuantity,
+                invoiceId, product_id, current_price, amount, user_id, totalQuantity,
             ), 5000);
         }
     } catch (error) {
@@ -165,6 +172,8 @@ export const handleCheckout = async ({
             checkPaymentStatus(
                 response.data.id, 
                 product_id, 
+                price,
+                amount,
                 user_id, 
                 totalAmount.totalQuantity,
             );
