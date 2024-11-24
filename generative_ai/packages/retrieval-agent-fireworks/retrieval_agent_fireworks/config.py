@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    LANGCHAIN_API_KEY: str = os.getenv("LANGCHAIN_API_KEY")
     FIREWORKS_API_KEY: str = os.getenv("FIREWORKS_API_KEY")
     COHERE_API_KEY: str = os.getenv("COHERE_API_KEY")
     PINECONE_API_KEY: str = os.getenv("PINECONE_API_KEY")
