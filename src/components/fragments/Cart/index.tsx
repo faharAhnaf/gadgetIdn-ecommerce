@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import QuantitySelectorCart from "@/components/core/Input/QuantitySelectorCart";
 import { getCartByUserId } from "@/app/api/cart/cart";
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import QuantitySelectorCart from "@/components/core/Input/QuantitySelectorCart";
+import CartSkeleton from "@/components/core/Card/CartSkeleton";
 import Cart from '@/app/lib/model/cart';
 import updateCartItem from '@/app/api/cart/update_cart';
 import removeCartItem from '@/app/api/cart/remove_cart';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 
 export default function ShoppingCart() {
@@ -96,43 +98,67 @@ export default function ShoppingCart() {
             <span className="font-medium">Pilih Semua ({cartItems.length})</span>
           </label>
         </div>
-        {cartItems.map((item) => (
-          <div
-            key={item.cart_id}
-            className="flex items-center shadow-md justify-between px-6 py-8 rounded-lg mb-5 border-1 border-[#f4f1eb]"
-          >
-            <label className="flex items-start">
-              <input
-                type="checkbox"
-                checked={selectedItems.includes(item.cart_id)}
-                onChange={() => toggleSelectItem(item.cart_id)}
-                className="mr-3 w-[20px] h-[20px]"
-              />
-              <img src="assets/image/example_product.png" alt={item.product?.name} className="w-[100px] h-[100px] mr-4 rounded-md" />
-              <div className='pr-5'>
-                <div className='flex justify-between items-center mb-2'>
-                    <h2 className="text-lg font-semibold">{item.product?.name}</h2>
-                    <p className="text-md font-semibold ml-5">Rp{item.totalPrice.toLocaleString('id-ID')}</p>
-                </div>
-                <p className="text-gray-600 text-justify">{item.product!.description.length > 200 ? `${item.product!.description.slice(0, 200)}...` : item.product!.description}</p>
 
-                <div className='flex justify-end mt-5'>
+        {cartItems.length === 0
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <CartSkeleton key={index} />
+          ))
+        : cartItems.map((item) => (
+            <div
+              key={item.cart_id}
+              className="flex items-center shadow-md justify-between px-6 py-8 rounded-lg mb-5 border-1 border-[#f4f1eb]"
+            >
+              <label className="flex items-start">
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(item.cart_id)}
+                  onChange={() => toggleSelectItem(item.cart_id)}
+                  className="mr-3 w-[20px] h-[20px]"
+                />
+                <img
+                  src="assets/image/example_product.png"
+                  alt={item.product?.name}
+                  className="w-[100px] h-[100px] mr-4 rounded-md"
+                />
+                <div className="pr-5">
+                  <div className="flex justify-between items-center mb-2">
+                    <h2 className="text-lg font-semibold">
+                      {item.product?.name}
+                    </h2>
+                    <p className="text-md font-semibold ml-5">
+                      Rp{item.totalPrice.toLocaleString("id-ID")}
+                    </p>
+                  </div>
+                  <p className="text-gray-600 text-justify">
+                    {item.product!.description.length > 200
+                      ? `${item.product!.description.slice(0, 200)}...`
+                      : item.product!.description}
+                  </p>
+
+                  <div className="flex justify-end mt-5">
                     <button
                       onClick={() => handleRemoveItem(item.cart_id)}
                       className="text-gray-500 hover:text-gray-600 transition duration-300 mr-4"
                     >
-                      <FontAwesomeIcon icon={faTrashAlt} className="text-lg" />
+                      <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        className="text-lg"
+                      />
                     </button>
 
                     <QuantitySelectorCart
-                        quantity={item.quantity}
-                        onQuantityChange={(newQuantity) => handleQuantityChange(item.cart_id, newQuantity)}
+                      quantity={item.quantity}
+                      onQuantityChange={(newQuantity) =>
+                        handleQuantityChange(item.cart_id, newQuantity)
+                      }
                     />
+                  </div>
                 </div>
-              </div>
-            </label>
-          </div>
-        ))}
+              </label>
+            </div>
+          ))}
+
+
       </div>
 
       <div className="w-1/4 p-6 shadow-md rounded-md max-h-[500px]">

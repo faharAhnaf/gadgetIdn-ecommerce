@@ -12,6 +12,8 @@ interface Product {
   name: string;
   category?: Category;
   image_url: string;
+  color: string[];
+  variant: string[];
 }
 
 export default Product;

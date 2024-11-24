@@ -3,8 +3,9 @@
 import Slider from "react-slick";
 import { useRef, useEffect, useState } from "react";
 import Card from "@/components/core/Card/Card";
-import { getLatestProducts } from "@/app/api/latest_product"; 
-import ProductPreview from '@/app/lib/model/product_review';
+import CardSkeleton from "@/components/core/Card/CardSkeleton";
+import { getLatestProducts } from "@/app/api/latest_product";
+import ProductPreview from "@/app/lib/model/product_review";
 
 export default function SliderComp() {
   const sliderRef = useRef(null);
@@ -62,16 +63,22 @@ export default function SliderComp() {
   return (
     <>
       <Slider ref={sliderRef} {...settings}>
-        {products.map((product, index) => (
-            <Card
-              key={index}
-              product_id={product.product_id}
-              title={product.name}
-              description={product.description}
-              price={product.price}
-              imageUrl={"assets/image/example_product.png"}
-            />
-          ))}
+        {products.length === 0
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <div key={index}>
+                <CardSkeleton />
+              </div>
+            ))
+          : products.map((product, index) => (
+              <Card
+                key={index}
+                product_id={product.product_id}
+                title={product.name}
+                description={product.description}
+                price={product.price}
+                imageUrl={"assets/image/example_product.png"}
+              />
+            ))}
       </Slider>
     </>
   );

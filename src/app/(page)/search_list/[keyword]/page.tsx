@@ -8,6 +8,7 @@ import Footer from "@/components/fragments/Footer/index";
 import SideBar from "@/components/fragments/Sidebar/ProductList"
 import searchProductsByName from '@/app/api/search_list/product';
 import ProductPreview from '@/app/lib/model/product_review';
+import SearchListSkeleton from "@/components/core/Card/SearchListSkeleton";
 
 import "@/app/assets/css/home.css"
 
@@ -49,16 +50,22 @@ export default function Keranjang() {
                     <div className="overflow-y-auto pb-4 max-h-[800px]">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                 
-                                {products.map((product, index) => (
-                                    <Card
-                                        key={index}
-                                        product_id={product.product_id}
-                                        title={product.name}
-                                        description={product.description}
-                                        price={product.price}
-                                        imageUrl={"/assets/image/example_product.png"}
-                                    />
-                                ))}
+                        {products.length === 0
+                            ? Array.from({ length: 3 }).map((_, index) => (
+                                <div key={index}>
+                                    <SearchListSkeleton />
+                                </div>
+                                ))
+                            : products.map((product, index) => (
+                                <Card
+                                    key={index}
+                                    product_id={product.product_id}
+                                    title={product.name}
+                                    description={product.description}
+                                    price={product.price}
+                                    imageUrl={"/assets/image/example_product.png"}
+                                />
+                            ))}
 
                         </div>
                     </div>
