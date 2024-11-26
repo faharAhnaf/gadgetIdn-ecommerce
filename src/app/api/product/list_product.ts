@@ -8,6 +8,12 @@ export const getProductsByUserId = async (
   try {
     const productCollection = collection(db, "product");
 
+  /* Example Result
+
+    Note: Get data by user_id (admin id) or Get data by role true (admin)
+
+  */
+
     const productQuery = query(
       productCollection,
       where("user_id", "==", doc(db, "users", userId))
