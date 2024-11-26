@@ -14,11 +14,14 @@ export const getProductsByUserId = async (
 
     // Filter berdasarkan role = true
 
-    const productQuery = query(
-      productCollection,
-      where("role", "==", true)
-    );
+    const productCollection = collection(db, "product");
+      const productQuery = query(
+        productCollection,
+        where("user_id.role", "==", true) // Menggunakan path untuk mencari role dalam dokumen user
+      );
 
+    Note : Bisa tampilkan semua data product
+      
   */
 
     const productQuery = query(
