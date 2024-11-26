@@ -52,6 +52,8 @@ const checkPaymentStatus = async (
         product_id: string[], 
         current_price: number[], 
         amount: number[], 
+        color: string[],
+        variant: string[],
         user_id: string, 
         totalQuantity: number,
     ) => {
@@ -84,6 +86,8 @@ const checkPaymentStatus = async (
                 paid_amount: data_payment.paid_amount,
                 current_price: current_price,
                 amount: amount,
+                color: color,
+                variant: variant,
                 totalQuantity: totalQuantity,
                 
                 status: data_payment.status,
@@ -105,7 +109,8 @@ const checkPaymentStatus = async (
             await Swal.fire('Failed', 'Payment failed or expired.', 'error');
         } else {
             setTimeout( async () => await checkPaymentStatus(
-                invoiceId, product_id, current_price, amount, user_id, totalQuantity,
+                invoiceId, product_id, current_price, amount, color,
+                variant, user_id, totalQuantity,
             ), 5000);
         }
     } catch (error) {
@@ -120,6 +125,8 @@ export const handleCheckout = async ({
     price,
     product_id,
     amount,
+    color,
+    variant,
     description,
   }: {
     user_id: string;
@@ -127,62 +134,79 @@ export const handleCheckout = async ({
     price: number[];
     product_id: string[]; 
     amount: number[];
+    color: string[];
+    variant: string[];
     description: string;
   }) => {
-    const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'Are you sure you want to proceed with checkout?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, proceed!',
-        cancelButtonText: 'Cancel',
-    });
 
-    if (result.isConfirmed) {
-        try {
-        const totalAmount = calculateTotal({ price, amount });
-        const userEmail = email || 'guest@example.com';
-        const timestamp = Date.now();
-
-        const response = await axios.post(
-            xendit_invoice,
-            {
-                external_id: `invoice-${timestamp}`,
-                amount: totalAmount.total,
-                description: description, // Ganti dengan nama produk
-                payer_email: userEmail,
-            },
-            {
-            auth: {
-                username: process.env.NEXT_PUBLIC_XENDIT_SECRET_KEY as string,
-                password: '',
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
+    if (color?.length && variant?.length) {
+        
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to proceed with checkout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!',
+            cancelButtonText: 'Cancel',
+        });
+    
+        if (result.isConfirmed) {
+            try {
+                const totalAmount = calculateTotal({ price, amount });
+                const userEmail = email || 'guest@example.com';
+                const timestamp = Date.now();
+    
+                const response = await axios.post(
+                    xendit_invoice,
+                    {
+                        external_id: `invoice-${timestamp}`,
+                        amount: totalAmount.total,
+                        description: description, // Ganti dengan nama produk
+                        payer_email: userEmail,
+                    },
+                    {
+                    auth: {
+                        username: process.env.NEXT_PUBLIC_XENDIT_SECRET_KEY as string,
+                        password: '',
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    }
+                );
+    
+                if (response.data.invoice_url) {
+                    await Swal.fire('Success', 'Redirecting to payment page...', 'success');
+                    window.open(response.data.invoice_url, '_blank');
+    
+                    checkPaymentStatus(
+                        response.data.id, 
+                        product_id, 
+                        price,
+                        amount,
+                        color,
+                        variant,
+                        user_id, 
+                        totalAmount.totalQuantity,
+                    );
+                } else {
+                    throw new Error('Invoice URL is missing.');
+                }
+            } catch (error) {
+                console.error('Error during checkout:', error);
+                Swal.fire('Failed', 'Unable to proceed with checkout. Please try again.', 'error');
             }
-        );
-
-        if (response.data.invoice_url) {
-            await Swal.fire('Success', 'Redirecting to payment page...', 'success');
-            window.open(response.data.invoice_url, '_blank');
-
-            checkPaymentStatus(
-                response.data.id, 
-                product_id, 
-                price,
-                amount,
-                user_id, 
-                totalAmount.totalQuantity,
-            );
-        } else {
-            throw new Error('Invoice URL is missing.');
+    
         }
-        } catch (error) {
-            console.error('Error during checkout:', error);
-            Swal.fire('Failed', 'Unable to proceed with checkout. Please try again.', 'error');
-        }
+        
+    } else {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please fill in the color and size first",
+          });
     }
+
 };

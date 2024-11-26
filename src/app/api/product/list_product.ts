@@ -1,0 +1,33 @@
+import { db } from "@/app/lib/firebase";
+import { collection, query, where, getDocs, doc } from "firebase/firestore";
+import ProductList from "@/app/lib/model/product_list";
+
+export const getProductsByUserId = async (
+  userId: string
+): Promise<ProductList[] | null> => {
+  try {
+    const productCollection = collection(db, "product");
+
+    const productQuery = query(
+      productCollection,
+      where("user_id", "==", doc(db, "users", userId))
+    );
+
+    const productSnap = await getDocs(productQuery);
+
+    if (productSnap.empty) {
+      console.warn("No products found for user ID:", userId);
+      return null;
+    }
+
+    const products: ProductList[] = productSnap.docs.map((docSnap) => ({
+      product_id: docSnap.id,
+      ...docSnap.data(),
+    })) as ProductList[];
+
+    return products;
+  } catch (error) {
+    console.error("Error fetching products by user ID:", error);
+    return null;
+  }
+};

@@ -12,7 +12,7 @@ import Link from "next/link";
 import Swal from 'sweetalert2';
 
 import { useRouter, useParams } from 'next/navigation';
-import { getProductByProductId } from "@/app/api/detail_product";
+import { getProductByProductId } from "@/app/api/product/detail_product";
 import { handleCheckout } from "@/app/api/transaksi/transaksi"
 
 import addCartItem from '@/app/api/cart/add_cart';
@@ -24,13 +24,19 @@ const SkeletonText = ({ width }: { width: string }) => (
 
 export default function DetailProduct() {
     const [product, setProduct] = useState<Product | null>(null);
+    const [selectedSize, setSelectedSize] = useState<string | null>(null);
+    const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
     const [quantity, setQuantity] = useState(1);
     const router = useRouter();
     const { id } = useParams();
+
+    const session = localStorage.getItem("userSession");
+    const userData = JSON.parse(session!);
   
     useEffect(() => {
       const fetchProduct = async () => {
-        
+
         if (id) {
           const fetchedProduct = await getProductByProductId(id as string);
          
@@ -57,9 +63,6 @@ export default function DetailProduct() {
 
     }, [id, router]);
 
-    const session = localStorage.getItem("userSession");
-    const userData = JSON.parse(session!);
-
     const handleAddToCart = async () => {
       try {
         const result = await Swal.fire({
@@ -85,6 +88,14 @@ export default function DetailProduct() {
 
     const handleQuantityChange = (newQuantity: number) => {
       setQuantity(newQuantity); 
+    };
+
+    const handleSizeSelect = (size: string) => {
+      setSelectedSize(size);
+    };
+
+    const handleColorSelect = (color: string) => {
+      setSelectedColor(color);
     };
     
   return (
@@ -165,39 +176,57 @@ export default function DetailProduct() {
                     </div>
 
                     <div className="mt-6">
-                        <p className="text-lg font-semibold">Select Size:</p>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                        <button className="px-4 py-2 bg-[#f9f7f3] text-[#a7a39b] font-semibold rounded-md mb-2">
-                            8/128
-                        </button>
-                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
-                            8/256
-                        </button>
-                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
-                            4/128
-                        </button>
-                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] text-gray-800 font-semibold rounded-md mb-2">
-                            4/256
-                        </button>
-                        </div>
+                      <p className="text-lg font-semibold">Select Size:</p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {product ? (
+                          product.variant?.map((variant, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleSizeSelect(variant)}
+                              className={`px-4 py-2 font-semibold rounded-md mb-2 ${
+                                selectedSize === variant
+                                  ? "bg-[#f9f7f3] text-[#a7a39b]"
+                                  : "bg-transparent border-2 border-[#e2dfd9] text-gray-800" 
+                              }`}
+                            >
+                              {variant}
+                            </button>
+                          ))
+                        ) : (
+                          Array.from({ length: 3 }).map((_, index) => (
+                            <div key={index}>
+                              <div className="h-8 bg-gray-300 rounded-md w-[100px]"></div>
+                            </div>
+                          ))
+                        )}
+                      </div>
                     </div>
 
                     <div className="mt-6">
-                        <p className="text-lg font-semibold">Select Color:</p>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                        <button className="px-4 py-2 bg-[#f9f7f3] text-[#a7a39b] font-semibold rounded-md mb-2">
-                            Gray
-                        </button>
-                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
-                            Black
-                        </button>
-                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
-                            White
-                        </button>
-                        <button className="px-4 py-2 bg-transparent border-2 border-[#e2dfd9] font-semibold rounded-md mb-2">
-                            Blue
-                        </button>
-                        </div>
+                      <p className="text-lg font-semibold">Select Color:</p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {product ? (
+                          product.color?.map((color, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleColorSelect(color)}
+                              className={`px-4 py-2 font-semibold rounded-md mb-2 ${
+                                selectedColor === color
+                                  ? "bg-[#f9f7f3] text-[#a7a39b]"
+                                  : "bg-transparent border-2 border-[#e2dfd9] text-gray-800"
+                              }`}
+                            >
+                              {color}
+                            </button>
+                          ))
+                        ) : (
+                          Array.from({ length: 3 }).map((_, index) => (
+                            <div key={index}>
+                              <div className="h-8 bg-gray-300 rounded-md w-[100px]"></div>
+                            </div>
+                          ))
+                        )}
+                      </div>
                     </div>
 
                 </div>
@@ -227,6 +256,8 @@ export default function DetailProduct() {
                           email: userData?.email ?? "", 
                           price: product ? [product.price] : [0],
                           amount: [quantity],
+                          color: selectedColor ? [selectedColor] : [],
+                          variant: selectedSize ? [selectedSize] : [],
                           description: product ? product.description : "",
                           product_id: product ? [product.product_id] : ['0'],
                         })}
