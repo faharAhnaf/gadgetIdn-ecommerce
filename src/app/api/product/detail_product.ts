@@ -14,6 +14,7 @@ export const getProductByProductId = async (
   productId: string,
 ): Promise<Product | null> => {
   try {
+    
     const productCollection = collection(db, "product");
     const productQuery = query(
       productCollection,

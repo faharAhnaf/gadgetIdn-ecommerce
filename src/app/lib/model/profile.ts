@@ -1,4 +1,4 @@
-export interface Profile {
+export default interface Profile {
   created_at: string;
   user_id: string;
   name: string;

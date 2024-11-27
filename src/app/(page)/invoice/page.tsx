@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import CardInvoice from "@/components/core/Card/card-invoice";
 import Invoice from "@/app/api/invoice/invoice";
-import { getProductByProductId } from "@/app/api/detail_product";
+import { getProductByProductId } from "@/app/api/product/detail_product";
 import { db } from "@/app/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Product from "@/app/lib/model/product";
