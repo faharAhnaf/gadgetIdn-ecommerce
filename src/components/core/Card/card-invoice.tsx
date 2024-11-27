@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { faBagShopping, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   date?: string;
@@ -12,6 +13,7 @@ interface Props {
   paidAmount?: number;
   price?: number;
   imageURL?: string;
+  transactionId: string;
 }
 
 export default function CardInvoice({
@@ -22,6 +24,7 @@ export default function CardInvoice({
   paidAmount = 0,
   price = 0,
   imageURL = "",
+  transactionId = "",
 }: Props) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
@@ -84,12 +87,14 @@ export default function CardInvoice({
             </li>
           </ul>
           <div className="grid grid-cols-3 items-center gap-3">
-            <Button
-              variant={"ghost"}
-              className={cn(`mx-auto w-full rounded-xl`)}
-            >
-              Lihat Detail Transaksi
-            </Button>
+            <Link href={`/invoice/${transactionId}`}>
+              <Button
+                variant={"ghost"}
+                className={cn(`mx-auto w-full rounded-xl`)}
+              >
+                Lihat Detail Transaksi
+              </Button>
+            </Link>
             <Button
               variant={"outline"}
               className={cn(

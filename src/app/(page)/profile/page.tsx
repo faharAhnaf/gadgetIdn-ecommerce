@@ -119,7 +119,7 @@ const UserProfile = () => {
                   id={field}
                   name={field}
                   type="text"
-                  className="h-10 w-1/2 p-1 text-right"
+                  className="h-10 w-1/2 rounded-lg border p-1 text-right"
                   value={formData[field as keyof FormData]}
                   onChange={handleChange}
                   required

@@ -1,4 +1,5 @@
 import { db } from "@/app/lib/firebase";
+import { InvoiceData } from "@/app/lib/model/invoice";
 import {
   collection,
   getDocs,
@@ -7,26 +8,11 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-interface Invoice {
-  created_at: string;
-  ekspedisi_id: string;
-  paid_amount: number;
-  payer_email: string;
-  payment_channel: string;
-  payment_method: string;
-  product_id: string;
-  status: string;
-  totalQuantity: number;
-  transaksi_id: string;
-  updated_at: string;
-  user_id: string;
-}
-
 export default async function addInvoice({
   userId,
 }: {
   userId: string;
-}): Promise<Invoice[] | null> {
+}): Promise<InvoiceData[] | null> {
   try {
     const transactionCollection = collection(db, "transaksi");
     const q = query(transactionCollection, where("user_id", "==", userId));
@@ -37,7 +23,7 @@ export default async function addInvoice({
       return null;
     }
 
-    const transactions: Invoice[] = querySnapshot.docs.map((doc) => {
+    const transactions: InvoiceData[] = querySnapshot.docs.map((doc) => {
       const transactionData = doc.data();
       const createdAt =
         transactionData.created_at instanceof Timestamp
@@ -62,6 +48,7 @@ export default async function addInvoice({
         transaksi_id: transactionData.transaksi_id,
         updated_at: updatedAt,
         user_id: transactionData.user_id,
+        variant: transactionData.variant,
       };
     });
 
