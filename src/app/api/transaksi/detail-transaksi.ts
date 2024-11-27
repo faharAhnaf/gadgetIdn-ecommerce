@@ -22,10 +22,9 @@ export default async function detailInvoice({
 
     if (!transactionDoc.exists()) {
       console.log("Data transaksi tidak ada");
-      return null; // Kembalikan null jika transaksi tidak ada
+      return null;
     }
 
-    // Ambil data produk
     const productId = transactionDoc.data().product_id[0]?.id;
     let productDoc: ProductWithInvoice | null = null;
     if (productId) {
@@ -38,7 +37,6 @@ export default async function detailInvoice({
       }
     }
 
-    // Ambil data ekspedisi
     const ekspedisiId = transactionDoc.data().ekspedisi_id.id;
     let ekspedisiDoc: Ekspedisi | null = null;
     if (ekspedisiId) {
@@ -67,11 +65,10 @@ export default async function detailInvoice({
     if (productDoc) {
       productWithInvoice = {
         ...productDoc,
-        invoice: transactionData, // Menggabungkan data invoice
+        invoice: transactionData,
       } as ProductWithInvoice;
     }
 
-    // Kembalikan objek gabungan
     return {
       ekspedisi: ekspedisiDoc,
       product: productWithInvoice,
@@ -79,6 +76,6 @@ export default async function detailInvoice({
     };
   } catch (e) {
     console.error("Error fetching transactions:", e);
-    return null; // Mengembalikan null jika terjadi kesalahan
+    return null;
   }
 }
