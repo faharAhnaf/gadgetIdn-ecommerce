@@ -2,7 +2,7 @@ import { Ekspedisi } from "./../../lib/model/ekspedisi";
 import { db } from "@/app/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { ProductWithInvoice } from "@/app/lib/model/invoice";
-import { Profile } from "@/app/lib/model/profile";
+import Profile from "@/app/lib/model/profile";
 
 interface DetailInvoice {
   ekspedisi: Ekspedisi | null;

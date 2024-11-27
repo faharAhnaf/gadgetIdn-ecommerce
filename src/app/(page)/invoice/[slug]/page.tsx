@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import detailInvoice from "@/app/api/transaksi/detail-transaksi";
 import React from "react";
 import { Ekspedisi } from "@/app/lib/model/ekspedisi";
-import { Profile } from "@/app/lib/model/profile";
+import Profile from "@/app/lib/model/profile";
 
 export default function DetailInvoice({
   params,
