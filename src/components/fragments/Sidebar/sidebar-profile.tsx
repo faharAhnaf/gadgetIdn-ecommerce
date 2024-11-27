@@ -102,7 +102,7 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
   };
 
   return (
-    <div className="m-10 my-28 w-96 rounded-xl p-5 shadow-xl">
+    <div className="m-10">
       <div className="flex gap-4 border-b-2 py-5">
         <Dialog>
           <DialogTrigger>

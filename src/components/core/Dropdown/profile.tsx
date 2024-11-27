@@ -48,7 +48,7 @@ export function ProfileDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mt-3">
         <DropdownMenuGroup>
-          <Link href="/profile">
+          <Link href="/profile/my-profile">
             <DropdownMenuItem className="flex gap-3 p-2">
               <User />
               <span>Profile</span>

@@ -5,25 +5,20 @@ import Navbar from "@/components/fragments/Navbar";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import updateDataProfile from "../../api/profile/update-profile";
+import updateDataProfile from "../../../api/profile/update-profile";
 import Swal from "sweetalert2";
-import { getProfileByUserId } from "../../api/profile/profile";
+import { getProfileByUserId } from "../../../api/profile/profile";
 import ProfileSidebar from "@/components/fragments/Sidebar/sidebar-profile";
 import { SaveChangeButton } from "@/components/core/Button/save-change";
 import updatePicture from "@/app/api/profile/update-picture";
-
-// Define the type for formData
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  location: string;
-  picture: string;
-}
+import { Form } from "@/app/lib/model/form";
+import MyProfile from "../modals/my-profile";
+import { useParams, usePathname } from "next/navigation";
+import UploadProduct from "../modals/upload-product";
 
 const UserProfile = () => {
   const [data, setData] = useState<any>({});
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<Form>({
     name: "",
     email: "",
     phone: "",
@@ -95,42 +90,25 @@ const UserProfile = () => {
     }
   };
 
+  const params = usePathname();
+
   return (
-    <div className="flex justify-center">
-      <Navbar />
-      <ProfileSidebar data={data} isAdmin={isAdmin} />
-      <div className="m-10 my-28 w-[50%] rounded-xl p-5 shadow-xl">
-        <form onSubmit={handleSubmit}>
-          <ul className="mx-2 my-8 space-y-6">
-            <li className="flex items-center gap-3 border-b-2 py-5">
-              <FontAwesomeIcon icon={faUser} />
-              <p>My Profile</p>
-              <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
-            </li>
-            {["name", "email", "phone", "location"].map((field) => (
-              <li
-                key={field}
-                className="flex items-center justify-between gap-3 border-b-2 py-5"
-              >
-                <label htmlFor={field}>
-                  {field.charAt(0).toUpperCase() + field.slice(1)}
-                </label>
-                <input
-                  id={field}
-                  name={field}
-                  type="text"
-                  className="h-10 w-1/2 rounded-lg border p-1 text-right"
-                  value={formData[field as keyof FormData]}
-                  onChange={handleChange}
-                  required
-                />
-              </li>
-            ))}
-            <li className="flex items-center justify-between gap-3 py-5">
-              <SaveChangeButton loading={loading} className="p-3" />
-            </li>
-          </ul>
-        </form>
+    <div>
+      <div className="mx-28 mb-10 mt-28 grid grid-cols-2 rounded-xl border-2">
+        <div className="grid w-full border-r-2">
+          <ProfileSidebar data={data} isAdmin={isAdmin} />
+        </div>
+        <div className="flex justify-center">
+          {params == "/profile/my-profile" && (
+            <MyProfile
+              handleSubmit={handleSubmit}
+              handleChange={handleChange}
+              formData={formData}
+              loading={loading}
+            />
+          )}
+          {params == "/profile/upload-product" && <UploadProduct />}
+        </div>
       </div>
     </div>
   );

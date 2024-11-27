@@ -11,6 +11,7 @@ import {
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import AnimateHeight from "react-animate-height";
 
@@ -19,30 +20,31 @@ type Props = {
 };
 
 const TokoAnimateDropdown = ({ currentMenu }: Props) => {
+  const router = useRouter();
+
+  const handleButtonUpload = () => {
+    router.push("/profile/upload-product");
+  };
+
   return (
     <AnimateHeight duration={300} height={currentMenu === "toko" ? "auto" : 0}>
-      <ul className="space-y-6 mt-6">
+      <ul className="mt-6 space-y-6">
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button
+            className="flex w-full items-center gap-3"
+            onClick={handleButtonUpload}
+          >
             <FontAwesomeIcon icon={faPenToSquare} className="w-5" />
             <div className="text-left">
-              <p>Edit informasi toko</p>
+              <p>Upload Product</p>
             </div>
           </button>
         </li>
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faFile} className="w-5" />
             <div className="text-left">
-              <p>Edit catatan toko</p>
-            </div>
-          </button>
-        </li>
-        <li>
-          <button className="flex items-center gap-3 w-full">
-            <FontAwesomeIcon icon={faCalendar} className="w-5" />
-            <div className="text-left">
-              <p>Edit jadwal operasional toko</p>
+              <p>List Product</p>
             </div>
           </button>
         </li>

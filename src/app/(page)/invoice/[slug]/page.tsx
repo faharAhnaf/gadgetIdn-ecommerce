@@ -23,6 +23,10 @@ import React from "react";
 import { Ekspedisi } from "@/app/lib/model/ekspedisi";
 import Profile from "@/app/lib/model/profile";
 
+interface Props {
+  params: string;
+}
+
 export default function DetailInvoice({
   params,
 }: {
@@ -32,39 +36,41 @@ export default function DetailInvoice({
   const [dataEkspedisi, setDataEkspedisi] = useState<Ekspedisi[]>([]);
   const [dataUser, setDataUser] = useState<Profile[]>([]);
 
-  const unwrappedParams = React.use(params);
-  const slug = unwrappedParams.slug;
-
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await detailInvoice({ transaksiId: slug });
-      if (data?.product) {
-        setDataInvoice([data.product]);
-      }
+    try {
+      const fetchData = async () => {
+        const slug = (await params).slug;
+        const data = await detailInvoice({ transaksiId: slug });
+        if (data?.product) {
+          setDataInvoice([data.product]);
+        }
 
-      if (data?.ekspedisi) {
-        setDataEkspedisi([data.ekspedisi]);
-      }
+        if (data?.ekspedisi) {
+          setDataEkspedisi([data.ekspedisi]);
+        }
 
-      if (data?.user) {
-        setDataUser([data.user]);
-      }
-    };
+        if (data?.user) {
+          setDataUser([data.user]);
+        }
+      };
 
-    fetchData();
-  }, [slug]);
+      fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   return (
     <div>
       <Navbar></Navbar>
-      <div className="mt-16 flex min-h-[93vh] items-center">
+      <div className="my-28 mb-10 flex items-center">
         <div className="mx-auto">
-          <p className="flex w-1/6 justify-center rounded-t-lg bg-[#A3D3BD] px-5 py-2">
+          <p className="flex w-1/4 justify-center rounded-t-lg bg-[#A3D3BD] px-5 py-2">
             Pesanan Selesai
           </p>
           <div className="flex gap-20">
-            <div className="grid space-y-6">
-              <div className="w-[70vh] rounded-b-lg rounded-r-lg bg-[#D9D9D9] p-5">
+            <div className="grid w-[100vh] space-y-6">
+              <div className="rounded-b-lg rounded-r-lg bg-[#D9D9D9] p-5">
                 <div className="border-b-2 border-black">
                   <p>Info Pengiriman</p>
                   <p className="text-gray-500">GXP Standart : GXPID123456789</p>
@@ -164,7 +170,7 @@ export default function DetailInvoice({
                 </Button>
               </div>
             </div>
-            <div className="w-[55vh] rounded-lg bg-[#d9d9d9]">
+            <div className="w-[60vh] rounded-lg bg-[#d9d9d9]">
               <div className="space-y-3 rounded-t-lg bg-blue-500 p-5">
                 <div className="flex items-center gap-3">
                   <input type="checkbox" />

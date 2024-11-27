@@ -1,16 +1,18 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface QuantitySelectorProps {
   onQuantityChange: (quantity: number) => void;
 }
 
-export default function QuantitySelector({ onQuantityChange }: QuantitySelectorProps) {
+export default function QuantitySelector({
+  onQuantityChange,
+}: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(1);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
+    const value = e.target.value.replace(/\D/g, "");
     const newQuantity = value ? parseInt(value) : 1;
     setQuantity(newQuantity);
     onQuantityChange(newQuantity);
@@ -29,10 +31,10 @@ export default function QuantitySelector({ onQuantityChange }: QuantitySelectorP
   };
 
   return (
-    <div className="flex items-center border border-gray-300 rounded-md">
+    <div className="flex items-center rounded-md border border-gray-300">
       <button
         onClick={decrementQuantity}
-        className="px-3 py-2 bg-gray-100 text-gray-700 font-bold hover:bg-gray-200"
+        className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
       >
         −
       </button>
@@ -46,7 +48,7 @@ export default function QuantitySelector({ onQuantityChange }: QuantitySelectorP
 
       <button
         onClick={incrementQuantity}
-        className="px-3 py-2 bg-gray-100 text-gray-700 font-bold hover:bg-gray-200"
+        className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
       >
         +
       </button>
