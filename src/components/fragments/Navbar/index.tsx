@@ -6,6 +6,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ProfileDropdown } from "@/components/core/Dropdown/profile";
 
+interface UserData {
+  email: string;
+  expiresAt: Date;
+  name: string;
+  user_id: string;
+}
+
 function buttonLogin() {
   return (
     <div className="hidden gap-4 lg:flex">
@@ -25,19 +32,23 @@ function buttonLogin() {
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const session = localStorage.getItem("userSession");
-  const userData = JSON.parse(session!);
+  const [userData, setUserData] = useState<UserData>();
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   useEffect(() => {
+    const session = localStorage.getItem("userSession");
+    if (session) {
+      const userData = JSON.parse(session!);
+      setUserData(userData);
+    }
     setIsMobileMenuOpen(false);
   }, []);
 
   const router = useRouter();
-  const [searchKeyword, setSearchKeyword] = useState("");
 
   const handleSearch = () => {
     if (searchKeyword.trim()) {
@@ -91,7 +102,7 @@ export default function Navbar() {
             />
           </div>
 
-          {session && (
+          {userData && (
             <div className="flex items-center gap-4 text-lg text-black">
               <Link href="/keranjang">
                 <FiShoppingCart className="cursor-pointer" />

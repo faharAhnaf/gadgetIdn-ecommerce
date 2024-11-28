@@ -3,12 +3,13 @@ import { collection, query, where, getDocs, doc } from "firebase/firestore";
 import ProductList from "@/app/lib/model/product_list";
 
 export const getProductsByUserId = async (
-  userId: string
+  userId: string,
 ): Promise<ProductList[] | null> => {
   try {
     const productCollection = collection(db, "product");
+    const categoryCollection = collection(db, "category");
 
-  /*  Note
+    /*  Note
 
     Note: Get data by user_id (admin id) or Get data by role true (admin)
 
@@ -26,7 +27,7 @@ export const getProductsByUserId = async (
 
     const productQuery = query(
       productCollection,
-      where("user_id", "==", doc(db, "users", userId))
+      where("user_id", "==", doc(db, "users", userId)),
     );
 
     const productSnap = await getDocs(productQuery);

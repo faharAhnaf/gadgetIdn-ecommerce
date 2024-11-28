@@ -7,10 +7,10 @@ interface Product {
   price: number;
   description: string;
   user_id: string;
-  category_id: string;
-  quantityInStock: string;
+  category: string;
+  quantityInStock: number;
   name: string;
-  category?: Category;
+  // category?: Category;
   image_url: string;
   color: string[];
   variant: string[];

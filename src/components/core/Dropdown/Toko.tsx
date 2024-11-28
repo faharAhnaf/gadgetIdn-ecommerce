@@ -26,6 +26,10 @@ const TokoAnimateDropdown = ({ currentMenu }: Props) => {
     router.push("/profile/upload-product");
   };
 
+  const handleButtonList = () => {
+    router.push("/profile/list-product");
+  };
+
   return (
     <AnimateHeight duration={300} height={currentMenu === "toko" ? "auto" : 0}>
       <ul className="mt-6 space-y-6">
@@ -41,7 +45,10 @@ const TokoAnimateDropdown = ({ currentMenu }: Props) => {
           </button>
         </li>
         <li>
-          <button className="flex w-full items-center gap-3">
+          <button
+            className="flex w-full items-center gap-3"
+            onClick={handleButtonList}
+          >
             <FontAwesomeIcon icon={faFile} className="w-5" />
             <div className="text-left">
               <p>List Product</p>

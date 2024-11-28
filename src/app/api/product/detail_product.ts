@@ -11,10 +11,9 @@ import Category from "@/app/lib/model/category";
 import Product from "@/app/lib/model/product";
 
 export const getProductByProductId = async (
-  productId: string,
+  productId: string | string[] | undefined,
 ): Promise<Product | null> => {
   try {
-    
     const productCollection = collection(db, "product");
     const productQuery = query(
       productCollection,
@@ -29,17 +28,17 @@ export const getProductByProductId = async (
         ...productData,
       } as Product;
 
-      const categoryRef = doc(db, "category", productData.category_id.id);
-      const categorySnap = await getDoc(categoryRef);
+      // const categoryRef = doc(db, "category", productData.category_id.id);
+      // const categorySnap = await getDoc(categoryRef);
 
-      if (categorySnap.exists()) {
-        product.category = {
-          category_id: categorySnap.id,
-          ...categorySnap.data(),
-        } as Category;
-      } else {
-        console.error("Category not found for ID:", productData.category_id.id);
-      }
+      // if (categorySnap.exists()) {
+      //   product.category = {
+      //     category_id: categorySnap.id,
+      //     ...categorySnap.data(),
+      //   } as Category;
+      // } else {
+      //   console.error("Category not found for ID:", productData.category_id.id);
+      // }
 
       return product;
     }

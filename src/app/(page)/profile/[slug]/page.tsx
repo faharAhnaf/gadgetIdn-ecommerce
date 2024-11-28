@@ -15,8 +15,14 @@ import { Form } from "@/app/lib/model/form";
 import MyProfile from "../modals/my-profile";
 import { useParams, usePathname } from "next/navigation";
 import UploadProduct from "../modals/upload-product";
+import { ListProduct } from "../modals/list-product";
+import UpdateProduct from "../modals/update-product";
 
-const UserProfile = () => {
+export default function UserProfile({
+  productId,
+}: {
+  productId: string | string[] | undefined;
+}) {
   const [data, setData] = useState<any>({});
   const [formData, setFormData] = useState<Form>({
     name: "",
@@ -108,10 +114,10 @@ const UserProfile = () => {
             />
           )}
           {params == "/profile/upload-product" && <UploadProduct />}
+          {params == "/profile/list-product" && <ListProduct />}
+          {params == `/profile/list-product/${productId}` && <UpdateProduct />}
         </div>
       </div>
     </div>
   );
-};
-
-export default UserProfile;
+}
