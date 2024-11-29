@@ -78,7 +78,11 @@ export const columns: ColumnDef<ProductList>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div className="">
+        <p>{row.getValue("name")}</p>
+      </div>
+    ),
   },
   {
     accessorKey: "category",
@@ -156,6 +160,10 @@ export function ListProduct() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = useState<ProductList[]>([]);
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 8,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -192,7 +200,9 @@ export function ListProduct() {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
+    onPaginationChange: setPagination,
   });
 
   return (

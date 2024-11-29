@@ -1,46 +1,70 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleRight,
   faCircleInfo,
   faFileCirclePlus,
   faHeadphones,
+  faKeyboard,
   faLaptop,
   faMobile,
+  faPersonRunning,
+  faShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { getProductByProductId } from "@/app/api/product/detail_product";
+import Product from "@/app/lib/model/product";
+import { useParams, useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import updateDataProduct from "@/app/api/product/update_product";
+import uploadDataProduct from "@/app/api/product/upload_product";
+import Swal from "sweetalert2";
 
 interface productType {
   name: string;
   icon: IconProp;
 }
 
-export default function UploadProduct() {
-  const [productTypeVal, setProductTypeVal] = useState<string>("");
+export default function UpdateProduct() {
+  const [productTypeVal, setProductTypeVal] = useState<string>();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [user, setUser] = useState<string>("");
+
+  const router = useRouter();
   const productType: productType[] = [
     {
-      name: "Mobile Phone",
+      name: "Electronic",
       icon: faMobile,
     },
     {
-      name: "Laptop and PC",
-      icon: faLaptop,
-    },
-    {
-      name: "Headphone",
+      name: "Accessories",
       icon: faHeadphones,
     },
     {
-      name: "Keyboard",
-      icon: faKeyboard,
+      name: "Sports",
+      icon: faPersonRunning,
+    },
+    {
+      name: "Clothes",
+      icon: faShirt,
     },
   ];
+
+  const { register, handleSubmit, setValue } = useForm<Product>({
+    defaultValues: {
+      category: "",
+      image_url: "",
+      price: 0,
+      quantityInStock: 0,
+      name: "",
+      description: "",
+    },
+  });
 
   const handleProductType = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -48,17 +72,55 @@ export default function UploadProduct() {
   ) => {
     e.preventDefault();
     setProductTypeVal(type);
+    setValue("category", type);
   };
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  // };
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("userSession");
+    if (storedData) {
+      const userData = JSON.parse(storedData);
+      setUser(userData.user_id);
+    }
+  });
+
+  const onSubmit: SubmitHandler<Product> = async (dataSubmit) => {
+    console.log(dataSubmit);
+    try {
+      await uploadDataProduct(
+        dataSubmit.name,
+        Number(dataSubmit.price),
+        Number(dataSubmit.quantityInStock),
+        dataSubmit.category,
+        dataSubmit.description,
+        dataSubmit.image_url,
+        user,
+      );
+      router.replace("/profile/list-product");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log(file);
+    if (file) {
+      // const reader = new FileReader();
+      // console.log("reader file:", reader);
+      // reader.onloadend = () => {
+      setImagePreview(file.name);
+      // };
+      setValue("image_url", file.name);
+    }
+  };
+
   return (
     <div className="m-10">
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <ul className="mx-2 mt-8 space-y-6">
-          <li className="flex items-center gap-3 border-b-2 py-5">
+          <li className="flex items-center gap-3 border-b-2 pb-5">
             <FontAwesomeIcon icon={faCircleInfo} />
-            <p>Upload Product</p>
+            <p>Update Product</p>
             <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
           </li>
           <li className="grid items-center justify-between gap-3 border-b-2 py-5">
@@ -68,25 +130,30 @@ export default function UploadProduct() {
                 <Button
                   variant={`outline`}
                   key={index}
-                  className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-slate-300"}`}
+                  className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-blue-500 text-white"}`}
                   onClick={(e) => handleProductType(e, type.name)}
                 >
                   <FontAwesomeIcon icon={type.icon} />
-                  <p className="mr-auto">{type.name}</p>
+                  <p className="text-left">{type.name}</p>
+                  <Input type="hidden" {...register("category")}></Input>
                 </Button>
               ))}
             </div>
           </li>
-          <li className="grid items-center gap-3 border-b-2 py-5">
+          <li className="grid items-center gap-3 border-b-2 pb-5">
             <p>Product Media</p>
             <div className="flex space-x-3">
-              <Image
-                src={`/assets/image/bank.jpg`}
-                alt="priview image"
-                height={100}
-                width={100}
-                className="object-cover"
-              />
+              {imagePreview ? (
+                <Image
+                  src={`/assets/image/product/${imagePreview}`}
+                  alt="priview image"
+                  height={100}
+                  width={100}
+                  className="object-cover"
+                />
+              ) : (
+                <p>No Image Available</p>
+              )}
               <div className="flex items-center">
                 <label className="flex cursor-pointer flex-col items-center justify-center rounded text-[13px] text-blue-500 duration-300 hover:text-blue-600">
                   <FontAwesomeIcon
@@ -94,65 +161,87 @@ export default function UploadProduct() {
                     className="text-3xl"
                   />
                   Upload Image
-                  <input type="file" className="hidden" />
+                  <input
+                    type="file"
+                    {...register("image_url")}
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
                 </label>
               </div>
             </div>
           </li>
-          <li className="grid items-center gap-3 border-b-2 py-5">
-            <p>Pricing</p>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
             <div className="flex gap-3">
               <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="price">Price</Label>
-                <Input type="text" id="price" placeholder="price..." />
-              </div>
-              <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="discount">Discount</Label>
-                <Input type="text" id="discount" placeholder="discount..." />
-              </div>
-            </div>
-          </li>
-          <li className="grid items-center gap-3 border-b-2 py-5">
-            <p>Product Detail</p>
-            <div className="flex gap-3">
-              <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="name">Product Name</Label>
-                <Input type="text" id="name" placeholder="product name..." />
-              </div>
-              <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="brand-name">Brand Name</Label>
+                <Label htmlFor="price" className="text-base">
+                  Price
+                </Label>
                 <Input
-                  type="text"
-                  id="brand-name"
-                  placeholder="brand name..."
+                  {...register("price")}
+                  type="number"
+                  id="price"
+                  placeholder="Input as number..."
+                />
+              </div>
+              <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="stock" className="text-base">
+                  Stock
+                </Label>
+                <Input
+                  {...register("quantityInStock")}
+                  type="number"
+                  id="stock"
+                  placeholder="stock..."
                 />
               </div>
             </div>
           </li>
-          <li className="grid items-center gap-3 border-b-2 py-5">
-            <p>Product Detail</p>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
             <div className="flex gap-3">
               <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="brand-name">Description</Label>
+                <Label htmlFor="name" className="text-base">
+                  Product Name
+                </Label>
+                <Input
+                  {...register("name")}
+                  type="text"
+                  id="name"
+                  placeholder="product name..."
+                />
+              </div>
+            </div>
+          </li>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
+            <div className="flex gap-3">
+              <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="brand-name" className="text-base">
+                  Description
+                </Label>
                 <Textarea
                   placeholder="Add Description Here..."
                   id="brand-name"
+                  {...register("description")}
+                  className="h-60"
                 />
               </div>
             </div>
           </li>
-          <li className="flex items-center justify-end gap-3 py-5">
+          <li className="flex items-center justify-end gap-3 pb-5">
             <Button
               variant={"outline"}
               className="hover:bg-blue-500 hover:text-white"
+              onClick={router.back}
+              type="button"
             >
-              Discard
+              Back
             </Button>
             <Button
               variant={"outline"}
               className="hover:bg-blue-500 hover:text-white"
+              type="submit"
             >
-              Add Product
+              Update Product
             </Button>
           </li>
         </ul>
