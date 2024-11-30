@@ -39,14 +39,15 @@ export default function Navbar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const session = localStorage.getItem("userSession");
+
   useEffect(() => {
-    const session = localStorage.getItem("userSession");
+    setIsMobileMenuOpen(false);
     if (session) {
       const userData = JSON.parse(session!);
       setUserData(userData);
     }
-    setIsMobileMenuOpen(false);
-  }, []);
+  }, [session]);
 
   const router = useRouter();
 

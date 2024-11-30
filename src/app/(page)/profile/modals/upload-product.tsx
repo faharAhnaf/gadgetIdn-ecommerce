@@ -30,10 +30,11 @@ interface productType {
   icon: IconProp;
 }
 
-export default function UpdateProduct() {
+export default function UploadProduct() {
   const [productTypeVal, setProductTypeVal] = useState<string>();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [user, setUser] = useState<string>("");
+  const [file, setFile] = useState<File | undefined>();
 
   const router = useRouter();
   const productType: productType[] = [
@@ -84,15 +85,32 @@ export default function UpdateProduct() {
   });
 
   const onSubmit: SubmitHandler<Product> = async (dataSubmit) => {
-    console.log(dataSubmit);
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
     try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      await response.json();
+
       await uploadDataProduct(
         dataSubmit.name,
         Number(dataSubmit.price),
         Number(dataSubmit.quantityInStock),
         dataSubmit.category,
         dataSubmit.description,
-        dataSubmit.image_url,
+        dataSubmit.image_url.replaceAll(" ", "_"),
         user,
       );
       router.replace("/profile/list-product");
@@ -103,13 +121,13 @@ export default function UpdateProduct() {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log(file);
+    setFile(file);
     if (file) {
-      // const reader = new FileReader();
-      // console.log("reader file:", reader);
-      // reader.onloadend = () => {
-      setImagePreview(file.name);
-      // };
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
       setValue("image_url", file.name);
     }
   };
@@ -145,7 +163,7 @@ export default function UpdateProduct() {
             <div className="flex space-x-3">
               {imagePreview ? (
                 <Image
-                  src={`/assets/image/product/${imagePreview}`}
+                  src={imagePreview}
                   alt="priview image"
                   height={100}
                   width={100}

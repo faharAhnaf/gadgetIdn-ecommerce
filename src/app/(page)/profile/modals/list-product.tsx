@@ -40,116 +40,8 @@ import { getProductsByUserId } from "@/app/api/product/list_product";
 import Product from "@/app/lib/model/product";
 import ProductList from "@/app/lib/model/product_list";
 import { useRouter } from "next/navigation";
-
-export const columns: ColumnDef<ProductList>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="p-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="">
-        <p>{row.getValue("name")}</p>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="p-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Category
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="">{row.getValue("category")}</div>,
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="">Price</div>,
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-
-      // Format the price as a idr price
-      const formatted = new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      }).format(price);
-
-      return <div className="font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const data = row.original;
-      const router = useRouter();
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(data.product_id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem> */}
-            {/* <DropdownMenuSeparator /> */}
-            <DropdownMenuItem
-              onClick={() => router.push(`list-product/${data.product_id}`)}
-            >
-              Update Product
-            </DropdownMenuItem>
-            <DropdownMenuItem>Delete Product</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+import { deleteProductById } from "@/app/api/product/delete_product";
+import Swal from "sweetalert2";
 
 export function ListProduct() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -170,7 +62,6 @@ export function ListProduct() {
       const dataProduct = await getProductsByUserId(
         "70aYS0UUUfON9bjusEwHnjAZtb43",
       );
-
       const mappedData =
         dataProduct?.map((item) => ({
           product_id: item.product_id,
@@ -178,11 +69,106 @@ export function ListProduct() {
           category: item.category,
           price: item.price,
         })) || [];
-
       setData(mappedData);
     };
     fetchData();
   }, []);
+
+  const handleDelete = async (productId: string) => {
+    const result = await Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Anda tidak akan dapat mengembalikan ini!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
+      await deleteProductById(productId);
+      setData((prevData) =>
+        prevData.filter((item) => item.product_id !== productId),
+      );
+      Swal.fire("Dihapus!", "Data Anda telah dihapus.", "success");
+    } else {
+      console.log("Hapus dibatalkan");
+    }
+  };
+
+  const columns: ColumnDef<ProductList>[] = [
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <p>{row.getValue("name")}</p>,
+    },
+    {
+      accessorKey: "category",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <div>{row.getValue("category")}</div>,
+    },
+    {
+      accessorKey: "price",
+      header: () => <div>Price</div>,
+      cell: ({ row }) => {
+        const price = parseFloat(row.getValue("price"));
+        const formatted = new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        }).format(price);
+        return <div className="font-medium">{formatted}</div>;
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const data = row.original;
+        const router = useRouter();
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => router.push(`list-product/${data.product_id}`)}
+              >
+                Update Product
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(data.product_id)}>
+                Delete Product
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data,
@@ -222,18 +208,16 @@ export function ListProduct() {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

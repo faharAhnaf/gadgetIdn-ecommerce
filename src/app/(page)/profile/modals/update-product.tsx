@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getProductByProductId } from "@/app/api/product/detail_product";
 import Product from "@/app/lib/model/product";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import updateDataProduct from "@/app/api/product/update_product";
 
@@ -28,10 +28,14 @@ interface productType {
   icon: IconProp;
 }
 
-export default function UpdateProduct() {
-  const { id } = useParams();
+export default function UpdateProduct({
+  productId,
+}: {
+  productId: string | string[] | undefined;
+}) {
   const [data, setData] = useState<Product | null>();
   const [productTypeVal, setProductTypeVal] = useState<string>();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -67,21 +71,35 @@ export default function UpdateProduct() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const dataProduct = await getProductByProductId(id);
+      const dataProduct = await getProductByProductId(productId);
       setData(dataProduct);
       setProductTypeVal(dataProduct?.category);
 
       if (dataProduct) {
         setValue("category", dataProduct.category);
-        setValue("image_url", dataProduct.image_url);
+        setValue("image_url", dataProduct.image_url.replaceAll(" ", "_"));
         setValue("price", dataProduct.price);
         setValue("quantityInStock", dataProduct.quantityInStock);
         setValue("name", dataProduct.name);
         setValue("description", dataProduct.description);
+
+        setImagePreview(`/assets/picture/${dataProduct.image_url}`);
       }
     };
     fetchData();
-  }, [id]);
+  }, [productId]);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      setValue("image_url", file.name);
+    }
+  };
 
   const handleProductType = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -143,10 +161,10 @@ export default function UpdateProduct() {
           <li className="grid items-center gap-3 border-b-2 pb-5">
             <p>Product Media</p>
             <div className="flex space-x-3">
-              {data?.image_url ? (
+              {imagePreview ? (
                 <Image
-                  src={`/assets/image/product/${data?.image_url}`}
-                  alt="priview image"
+                  src={imagePreview}
+                  alt="preview image"
                   height={100}
                   width={100}
                   className="object-cover"
@@ -164,6 +182,7 @@ export default function UpdateProduct() {
                   <input
                     type="file"
                     {...register("image_url")}
+                    onChange={handleImageUpload}
                     className="hidden"
                   />
                 </label>
