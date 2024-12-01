@@ -98,7 +98,6 @@ const ProfileSidebar = ({ data, isAdmin }: Props) => {
   const handleLogout = async (e: any) => {
     e.preventDefault();
     await logout();
-    router.push("/");
   };
 
   return (

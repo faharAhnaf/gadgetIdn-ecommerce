@@ -2,8 +2,8 @@ import Category from "@/app/lib/model/category";
 
 interface Product {
   product_id: string;
-  updated_at: { seconds: number; nanoseconds: number };
-  created_at: { seconds: number; nanoseconds: number };
+  updated_at: Date;
+  created_at: Date;
   price: number;
   description: string;
   user_id: string;

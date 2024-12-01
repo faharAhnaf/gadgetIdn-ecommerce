@@ -1,7 +1,7 @@
 import Product from "./product";
 
 export interface InvoiceData {
-  created_at: string;
+  created_at: Date;
   ekspedisi_id: string;
   paid_amount: number;
   payer_email: string;
@@ -11,9 +11,10 @@ export interface InvoiceData {
   status: string;
   totalQuantity: number;
   transaksi_id: string;
-  updated_at: string;
+  updated_at: Date;
   user_id: string;
   variant: any;
+  color: any;
 }
 
 export interface ProductWithInvoice extends Product {

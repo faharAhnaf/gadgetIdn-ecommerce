@@ -7,7 +7,6 @@ export const getProductsByUserId = async (
 ): Promise<ProductList[] | null> => {
   try {
     const productCollection = collection(db, "product");
-    const categoryCollection = collection(db, "category");
 
     /*  Note
 

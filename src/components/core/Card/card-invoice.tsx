@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
-  date?: string;
+  date?: Date;
   status?: string;
   name?: string;
   quantity?: number;
@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function CardInvoice({
-  date = "",
+  date,
   status = "",
   name,
   quantity = 0,
@@ -26,21 +26,12 @@ export default function CardInvoice({
   imageURL = "",
   transactionId = "",
 }: Props) {
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "";
-    const dateObj = new Date(dateString);
-    if (isNaN(dateObj.getTime())) {
-      return "";
-    }
-    return Intl.DateTimeFormat("id-ID").format(dateObj);
-  };
-
   return (
     <div className="rounded-lg border border-[#D9D9D9] shadow-md">
       <div className="flex items-center gap-10 bg-[#D9D9D9] px-10 py-5">
         <FontAwesomeIcon icon={faBagShopping} className="text-4xl" />
         <p>Belanja</p>
-        <p>{formatDate(date)}</p>
+        <p>{date && new Date(date).toLocaleString("en-US")}</p>
         <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
           {status?.charAt(0) + status?.slice(1).toLowerCase()}
         </p>

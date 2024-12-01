@@ -10,7 +10,7 @@ interface DetailInvoice {
   user: Profile | null;
 }
 
-export default async function detailInvoice({
+export async function detailInvoice({
   transaksiId,
 }: {
   transaksiId: string;

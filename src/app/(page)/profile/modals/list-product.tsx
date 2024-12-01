@@ -13,7 +13,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  FilePenLine,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -76,14 +82,14 @@ export function ListProduct() {
 
   const handleDelete = async (productId: string) => {
     const result = await Swal.fire({
-      title: "Apakah Anda yakin?",
-      text: "Anda tidak akan dapat mengembalikan ini!",
+      title: "Are you sure?",
+      text: "You won't be able to return this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Ya, hapus!",
-      cancelButtonText: "Batal",
+      confirmButtonText: "Yes, Delete!",
+      cancelButtonText: "Cancel",
     });
 
     if (result.isConfirmed) {
@@ -158,10 +164,12 @@ export function ListProduct() {
               <DropdownMenuItem
                 onClick={() => router.push(`list-product/${data.product_id}`)}
               >
-                Update Product
+                <FilePenLine />
+                <span>Edit</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(data.product_id)}>
-                Delete Product
+                <Trash2 />
+                <span>Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

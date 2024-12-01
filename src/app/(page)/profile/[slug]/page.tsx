@@ -1,6 +1,7 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import UserProfile from "../page";
+import { useEffect } from "react";
 
 export default function ModalsPage({
   id,
@@ -8,5 +9,15 @@ export default function ModalsPage({
   id: string | string[] | undefined;
 }) {
   const { slug } = useParams();
-  return <UserProfile productId={id} slug={slug}></UserProfile>;
+  const router = useRouter();
+  const validRoutes = ["list-product", "update-product", "upload-product"];
+  const slugString = Array.isArray(slug) ? slug[0] : slug;
+
+  useEffect(() => {
+    if (!slugString || !validRoutes.includes(slugString)) {
+      router.push("/profile");
+    }
+  }, [slugString, router]);
+
+  return <UserProfile productId={id} slug={slugString}></UserProfile>;
 }
