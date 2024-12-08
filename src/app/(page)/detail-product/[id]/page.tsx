@@ -123,8 +123,8 @@ export default function DetailProduct() {
     if (!selectedColor && !selectedSize) {
       Swal.fire({
         icon: "warning",
-        title: "Product data has not finished loading",
-        text: "Please wait a moment",
+        title: "Oops...",
+        text: "Please fill in the color and size first",
       });
       return;
     }

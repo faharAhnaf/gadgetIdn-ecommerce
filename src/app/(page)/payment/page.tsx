@@ -7,8 +7,7 @@ import DropdownShipping from "@/components/core/Dropdown/Shipping";
 import QuantitySelectorPayment from "@/components/core/Input/QuantitySelectorPayment";
 import { handleCheckout } from "@/app/api/transaksi/transaksi";
 
-import removeCartItem from '@/app/api/cart/remove_cart';
-import { useRouter } from 'next/navigation';
+import { getProfileByUserId } from "@/app/api/profile/profile"
 
 interface Product {
   cart_id: string;
@@ -33,8 +32,6 @@ export default function Checkout() {
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [selectedShipping, setSelectedShipping] = useState("");
   const [selectedShippingETA, setSelectedETA] = useState("");
-
-  const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
   const [alamat, setAlamat] = useState({
@@ -88,6 +85,41 @@ export default function Checkout() {
     setSelectedETA(option.eta);
   };
 
+  const handleDefault = async () => {
+    try {
+      if (!userData?.user_id) {
+        Swal.fire({
+          icon: "error",
+          title: "User ID Missing",
+          text: "Unable to fetch profile. Please login first.",
+        });
+        return;
+      }
+  
+      const profile = await getProfileByUserId(userData.user_id);
+  
+      if (profile) {
+        setFormInput({
+          nama: profile.name || "Nama Penerima",
+          nomor: profile.phone || "(+62) 888-8888-8888",
+          detail: profile.location || "Alamat Lengkap",
+        });
+  
+        Swal.fire({
+          icon: "success",
+          title: "Profile Loaded",
+          text: "Default profile has been loaded successfully.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to load default profile. Please try again.",
+      });
+    }
+  }
+
   const handleCheckoutClick = async () => {
     if (!selectedMethod) {
       Swal.fire({
@@ -128,34 +160,12 @@ export default function Checkout() {
       color: products.map((p) => p.selectedColor),
       variant: products.map((p) => p.selectedSize),
       product_id: products.map((p) => p.product_id),
+      cart_id: products.map((p) => p.cart_id),
 
       shippingName: selectedShipping,
       shippingCost: shippingCost,
       shippingETA: selectedShippingETA,
     });
-
-    const result = await Swal.fire({
-      title: "Checkout Successful",
-      text: "Want to go to invoice page?",
-      icon: "success",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, add it!",
-      cancelButtonText: "Cancel",
-    });
-
-    products.forEach(product => {
-      if(product.cart_id && product.cart_id != ""){
-        removeCartItem(product.cart_id);
-      }
-    })
-
-    localStorage.removeItem("cartSession");
-
-    if (result.isConfirmed) {
-      router.push('/invoice');
-    }
 
   };
 
@@ -226,12 +236,24 @@ export default function Checkout() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <button
-                    onClick={handleSimpan}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
-                  >
-                    Simpan
-                  </button>
+                  <div className="flex gap-3">
+
+                    <button
+                      onClick={handleSimpan}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
+                    >
+                      Simpan
+                    </button>
+
+                    <button
+                      onClick={handleDefault}
+                      className="border border-blue-500 text-blue-500 px-4 py-2 rounded-lg shadow hover:bg-blue-500 hover:text-white"
+                    >
+                      Default Profile
+                    </button>
+
+
+                  </div>
                 </div>
               )}
             </div>

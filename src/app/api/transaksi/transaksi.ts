@@ -4,6 +4,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
 import { xendit_invoice } from "@/app/lib/constant";
 import { redirect } from "next/navigation";
+import removeCartItem from '@/app/api/cart/remove_cart';
 
 /* Example Result
 
@@ -56,6 +57,7 @@ const calculateTotal = ({
 const checkPaymentStatus = async (
   invoiceId: string,
   product_id: string[],
+  cart_id: string[],
   current_price: number[],
   amount: number[],
   color: string[],
@@ -80,8 +82,9 @@ const checkPaymentStatus = async (
     const invoiceStatus = response.data.status;
     const data_payment = response.data;
 
+    Swal.fire("Please complete the payment", "Waiting for Payment!", "warning");
+
     if (invoiceStatus === "PAID") {
-      await Swal.fire("Success", "Payment successful!", "success");
 
       const productReferences = product_id.map((id) => doc(db, "product", id));
 
@@ -109,16 +112,44 @@ const checkPaymentStatus = async (
         shippingCost: shippingCost,
         shippingETA: shippingETA,
 
+        serviceFee: 10000,
+        handlingFee: 1500,
+
         status: data_payment.status,
         created_at: data_payment.created,
         updated_at: data_payment.created,
       };
 
       try {
+        
+        Swal.fire("Waiting for the system to finish", "Please Wait", "info");
+
         const docRef = doc(db, "transaksi", data.transaksi_id);
         await setDoc(docRef, data);
 
-        window.location.href = "http://localhost:3000/invoice";
+        for (let i = 0; i < cart_id.length; i++) {
+          if(cart_id[i] && cart_id[i] != ""){
+            await removeCartItem(cart_id[i]);
+          }
+        }
+
+        const result = await Swal.fire({
+          title: "Checkout Successful",
+          text: "Want to go to invoice page?",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes!",
+          cancelButtonText: "Cancel",
+        });
+    
+        if (result.isConfirmed) {
+      
+          localStorage.removeItem("cartSession");
+          window.location.href = "http://localhost:3000/invoice";
+        }
+
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -130,6 +161,7 @@ const checkPaymentStatus = async (
           await checkPaymentStatus(
             invoiceId,
             product_id,
+            cart_id,
             current_price,
             amount,
             color,
@@ -164,6 +196,7 @@ export const handleCheckout = async ({
   address,
   price,
   product_id,
+  cart_id,
   amount,
   color,
   variant,
@@ -179,6 +212,7 @@ export const handleCheckout = async ({
   address: string;
   price: number[];
   product_id: string[];
+  cart_id: string[];
   amount: number[];
   color: string[];
   variant: string[];
@@ -187,7 +221,7 @@ export const handleCheckout = async ({
   shippingCost: number;
   shippingETA: string;
 }) => {
-  
+
   if (color?.length && variant?.length) {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -206,11 +240,13 @@ export const handleCheckout = async ({
         const userEmail = email || "guest@example.com";
         const timestamp = Date.now();
 
+        const total = totalAmount.total + shippingCost + 10000 + 1500
+
         const response = await axios.post(
           xendit_invoice,
           {
             external_id: `invoice-${timestamp}`,
-            amount: totalAmount.total,
+            amount: total,
             description: description,
             payer_email: userEmail,
           },
@@ -226,16 +262,19 @@ export const handleCheckout = async ({
         );
 
         if (response.data.invoice_url) {
+          
           await Swal.fire(
             "Success",
             "Redirecting to payment page...",
             "success",
           );
+
           window.open(response.data.invoice_url, "_blank");
 
           checkPaymentStatus(
             response.data.id,
             product_id,
+            cart_id,
             price,
             amount,
             color,
@@ -249,6 +288,7 @@ export const handleCheckout = async ({
             shippingCost,
             shippingETA,
           );
+
         } else {
           throw new Error("Invoice URL is missing.");
         }

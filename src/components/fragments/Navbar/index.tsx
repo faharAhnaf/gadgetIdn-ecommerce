@@ -75,11 +75,11 @@ export default function Navbar() {
             <Link href="/">
               <p className="hover:text-blue-500 hover:duration-700">Home</p>
             </Link>
-            <Link href="/shop">
-              <p className="hover:text-blue-500 hover:duration-700">Shop</p>
-            </Link>
             <Link href="/contact">
               <p className="hover:text-blue-500 hover:duration-700">Contact</p>
+            </Link>
+            <Link href="/invoice">
+              <p className="hover:text-blue-500 hover:duration-700">Detail Transaksi</p>
             </Link>
             <Link href="/chatbot">
               <p className="hover:text-blue-500 hover:duration-700">Chatbot</p>
