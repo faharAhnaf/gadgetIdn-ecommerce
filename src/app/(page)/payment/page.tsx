@@ -36,6 +36,25 @@ export default function Checkout() {
 
   const router = useRouter();
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [alamat, setAlamat] = useState({
+    nama: "Nama Penerima",
+    nomor: "(+62) 888-8888-8888",
+    detail:
+      "Jl. Moch Kahfi II Gg. Suro, Cipedak, Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta, ID 12630.",
+  });
+
+  const [formInput, setFormInput] = useState(alamat);
+
+  const handleUbah = () => {
+    setIsEditing(true);
+  };
+
+  const handleSimpan = () => {
+    setAlamat(formInput);
+    setIsEditing(false);
+  };
+
   useEffect(() => {
     const updateProducts = () => {
       const cartData = localStorage.getItem("cartSession");
@@ -100,6 +119,9 @@ export default function Checkout() {
     await handleCheckout({
       user_id: userData?.user_id ?? "",
       email: userData?.email ?? "",
+      recipient: alamat.nama ?? "",
+      telepon: alamat.nomor ?? "",
+      address: alamat.detail ?? "",
       description: "Terima kasih telah berbelanja di toko kami! 😊, Kami sangat menghargai kepercayaan Anda dalam memilih produk kami. Silakan selesaikan pembayaran untuk memproses pesanan Anda segera. Jangan khawatir, proses pembayaran aman dan mudah! 💳, Jika Anda mengalami kesulitan, tim kami siap membantu kapan saja. Selamat berbelanja dan semoga hari Anda menyenangkan! 🌟",
       price: products.map((p) => p.price),
       amount: products.map((p) => p.quantity),
@@ -144,18 +166,76 @@ export default function Checkout() {
         <div className="max-w-7xl mx-auto my-24 p-6 bg-white shadow-lg rounded-lg">
           <h1 className="text-3xl font-bold mb-20 text-center">Check Out</h1>
           <div className="grid grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-5">
-            <div>
-              <div className="p-4 border rounded-lg bg-gray-50">
-                <h2 className="text-2xl font-medium mb-4">Alamat Pengiriman</h2>
-                <p className="font-semibold">Nama Penerima</p>
-                <p>(+62) 888-8888-8888</p>
-                <p>
-                  Jl. Moch Kahfi II Gg. Suro, Cipedak, Kec. Jagakarsa, Kota
-                  Jakarta Selatan, Daerah Khusus Ibukota Jakarta, ID 12630.
-                </p>
-                <button className="text-blue-500 underline mt-2">Ubah</button>
-              </div>
+
+          <div className="mt-6">
+            <div className="p-6 border rounded-lg bg-gray-50 shadow-md">
+              <h2 className="text-2xl font-medium mb-4">Alamat Pengiriman</h2>
+              {!isEditing ? (
+                <div>
+                  <p className="font-semibold">{alamat.nama}</p>
+                  <p>{alamat.nomor}</p>
+                  <p>{alamat.detail}</p>
+                  <button
+                    onClick={handleUbah}
+                    className="text-blue-500 underline mt-2 hover:text-blue-700"
+                  >
+                    Ubah
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block font-semibold mb-2" htmlFor="nama">
+                      Nama Penerima
+                    </label>
+                    <input
+                      id="nama"
+                      type="text"
+                      value={formInput.nama}
+                      onChange={(e) =>
+                        setFormInput((prev) => ({ ...prev, nama: e.target.value }))
+                      }
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold mb-2" htmlFor="nomor">
+                      Nomor Telepon
+                    </label>
+                    <input
+                      id="nomor"
+                      type="text"
+                      value={formInput.nomor}
+                      onChange={(e) =>
+                        setFormInput((prev) => ({ ...prev, nomor: e.target.value }))
+                      }
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold mb-2" htmlFor="detail">
+                      Alamat Lengkap
+                    </label>
+                    <textarea
+                      id="detail"
+                      value={formInput.detail}
+                      onChange={(e) =>
+                        setFormInput((prev) => ({ ...prev, detail: e.target.value }))
+                      }
+                      rows={4}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button
+                    onClick={handleSimpan}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
+                  >
+                    Simpan
+                  </button>
+                </div>
+              )}
             </div>
+          </div>
 
             <div className="row-span-3">
               <div className="p-4 border rounded-lg bg-gray-50">

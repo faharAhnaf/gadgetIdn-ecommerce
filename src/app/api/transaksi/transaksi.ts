@@ -61,6 +61,9 @@ const checkPaymentStatus = async (
   color: string[],
   variant: string[],
   user_id: string,
+  recipient: string,
+  telepon: string,
+  address: string,
   totalQuantity: number,
   shippingName: string,
   shippingCost: number,
@@ -86,6 +89,9 @@ const checkPaymentStatus = async (
         ekspedisi_id: doc(db, "ekspedisi", "Oz52qy0DaKJ5V8xmKtLd"),
         product_id: productReferences,
         user_id: user_id,
+        recipient: recipient,
+        telepon: telepon,
+        address: address,
         transaksi_id: data_payment.payment_id,
 
         payer_email: data_payment.payer_email,
@@ -112,7 +118,7 @@ const checkPaymentStatus = async (
         const docRef = doc(db, "transaksi", data.transaksi_id);
         await setDoc(docRef, data);
 
-        // window.location.href = "http://localhost:3000/invoice";
+        window.location.href = "http://localhost:3000/invoice";
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -129,6 +135,9 @@ const checkPaymentStatus = async (
             color,
             variant,
             user_id,
+            recipient,
+            telepon,
+            address,
             totalQuantity,
             shippingName,
             shippingCost,
@@ -150,6 +159,9 @@ const checkPaymentStatus = async (
 export const handleCheckout = async ({
   user_id,
   email,
+  recipient,
+  telepon,
+  address,
   price,
   product_id,
   amount,
@@ -162,6 +174,9 @@ export const handleCheckout = async ({
 }: {
   user_id: string;
   email: string;
+  recipient: string;
+  telepon: string;
+  address: string;
   price: number[];
   product_id: string[];
   amount: number[];
@@ -196,7 +211,7 @@ export const handleCheckout = async ({
           {
             external_id: `invoice-${timestamp}`,
             amount: totalAmount.total,
-            description: description, // Ganti dengan nama produk
+            description: description,
             payer_email: userEmail,
           },
           {
@@ -226,6 +241,9 @@ export const handleCheckout = async ({
             color,
             variant,
             user_id,
+            recipient,
+            telepon,
+            address,
             totalAmount.totalQuantity,
             shippingName,
             shippingCost,
