@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { faInstagram, faTiktok } from '@fortawesome/free-brands-svg-icons';
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -8,25 +9,30 @@ export default function Footer() {
           <div className="flex flex-col lg:flex-row justify-between items-center">
             
             <div className="flex items-center space-x-4">
-              <span className="text-2xl font-bold">GearMarket.</span>
+              <span className="text-2xl font-bold">BelanjaKuy.</span>
               <div className="flex items-center space-x-3 text-xl">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.instagram.com/rezatamaar" target="_blank" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faInstagram} className="text-gray-700 hover:text-black" />
                 </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faTwitter} className="text-gray-700 hover:text-black ml-3 mr-3" />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faFacebook} className="text-gray-700 hover:text-black" />
+                <a href="https://www.tiktok.com/@rezatamaar_" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faTiktok} className="text-gray-700 hover:text-black ml-3 mr-3" />
                 </a>
               </div>
             </div>
   
             <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-10 mt-4 lg:mt-0">
-              <a href="#home" className="text-gray-600 hover:text-gray-900">Home</a>
-              <a href="#contact" className="text-gray-600 hover:text-gray-900">Contact</a>
-              <a href="#shop" className="text-gray-600 hover:text-gray-900">Detail Transaksi</a>
-              <a href="#chatbot" className="text-gray-600 hover:text-gray-900">Chatbot</a>
+              <Link href="/">
+                <p className="text-gray-600 hover:text-gray-900">Home</p>
+              </Link>
+              <Link href="/contact">
+                <p className="text-gray-600 hover:text-gray-900">Contact</p>
+              </Link>
+              <Link href="/invoice">
+                <p className="text-gray-600 hover:text-gray-900">Detail Transaksi</p>
+              </Link>
+              <Link href="/chatbot">
+                <p className="text-gray-600 hover:text-gray-900">Chatbot</p>
+              </Link>
             </div>
             
             <div className="mt-6 lg:mt-0">

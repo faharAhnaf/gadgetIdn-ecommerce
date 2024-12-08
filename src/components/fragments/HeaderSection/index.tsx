@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface HeaderSectionProps {
     title: string;
     subtitle: string;
@@ -14,9 +16,11 @@ export default function HeaderSection({ title, subtitle, link }: HeaderSectionPr
                 </div>
                 <h1 className="text-2xl font-semibold">{title}</h1>
             </div>
-            <button className="bg-blue-500 h-max text-white text-md py-2 px-4 sm:px-5 md:px-6 rounded-[4px] hover:bg-blue-600 transition">
-                View All
-            </button>
+            <Link href="/search_list">
+                <button className="bg-blue-500 h-max text-white text-md py-2 px-4 sm:px-5 md:px-6 rounded-[4px] hover:bg-blue-600 transition">
+                    View All
+                </button>
+            </Link>
         </div>
     );
 }
