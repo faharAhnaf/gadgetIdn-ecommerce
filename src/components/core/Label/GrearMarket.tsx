@@ -13,7 +13,7 @@ export default function GrearMarket({ size, children, classname }: Props) {
         <p
           className={`text-black ${size && "text-xl"} text-2xl font-bold`}
         >
-          GrearMarket.
+          BelanjaKuy.
         </p>
         {children}
       </div>

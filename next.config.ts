@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+});
+
 const nextConfig: NextConfig = {
   images: {
     domains: ["static.nike.com"], // Ganti dengan domain yang sesuai
@@ -23,4 +29,6 @@ const nextConfig: NextConfig = {
   // },
 };
 
-export default nextConfig;
+// export default nextConfig;
+
+module.exports = withPWA(nextConfig);
