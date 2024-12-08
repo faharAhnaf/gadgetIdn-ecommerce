@@ -2,6 +2,7 @@ import { signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import { auth, provider, db } from "@/app/lib/firebase";
+import { useRouter } from "next/navigation";
 
 const saveToSession = (user: any) => {
   const oneDayInMs = 24 * 60 * 60 * 1000;

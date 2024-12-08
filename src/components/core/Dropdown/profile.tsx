@@ -1,9 +1,6 @@
 "use client";
 
 import * as React from "react";
-
-import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,18 +13,47 @@ import {
 import Link from "next/link";
 import { LogOut, User } from "lucide-react";
 import { logout } from "@/app/api/auth/google";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getProfileByUserId } from "@/app/api/profile/profile";
+import Profile from "@/app/lib/model/profile";
+import Image from "next/image";
 
+const session = localStorage.getItem("userSession");
 export function ProfileDropdown() {
+  const [profile, setProfile] = useState<Profile | null>();
+  useEffect(() => {
+    (async () => {
+      if (session) {
+        const userData = JSON.parse(session);
+        const profile = await getProfileByUserId(userData.user_id);
+        setProfile(profile);
+      }
+    })();
+  }, []);
+
+  const router = useRouter();
   const handleLogout = async (e: any) => {
     e.preventDefault();
     await logout();
+    router.push("/");
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="group flex size-10 cursor-pointer items-center justify-center rounded-full bg-black hover:bg-white">
-          <User className="cursor-pointer text-white group-hover:text-black" />
+        <div className="group flex cursor-pointer items-center justify-center rounded-full bg-black hover:bg-white">
+          {session ? (
+            <Image
+              src={`/assets/picture/${profile?.picture}`}
+              width={50}
+              height={50}
+              className="h-10 w-10 rounded-full object-cover transition duration-300 ease-in-out"
+              alt=""
+            ></Image>
+          ) : (
+            <User className="cursor-pointer text-white group-hover:text-black" />
+          )}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mt-3">

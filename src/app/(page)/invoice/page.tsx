@@ -7,25 +7,24 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import CardInvoice from "@/components/core/Card/card-invoice";
-import Invoice from "@/app/api/invoice/invoice";
-import { getProductByProductId } from "@/app/api/product/detail_product";
-import { db } from "@/app/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import Product from "@/app/lib/model/product";
-import { InvoiceData, ProductWithInvoice } from "@/app/lib/model/invoice";
+import { InvoiceData } from "@/app/lib/model/invoice";
+import invoice from "@/app/api/invoice/invoice";
 
 export default function InvoicePage() {
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
-  const [productData, setProductData] = useState<ProductWithInvoice[]>([]);
+  // const [productData, setProductData] = useState<ProductWithInvoice[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const storedData = localStorage.getItem("userSession");
       if (storedData) {
         const userData = JSON.parse(storedData);
-        const userId = userData.user_id;
+        const userId: string = userData.user_id;
+
         if (userId) {
-          const userInvoice = await Invoice({ userId });
+          const userInvoice = await invoice({ userId });
+          console.log("tes: ", userInvoice);
+
           if (userInvoice) {
             console.log("Invoices fetched: ", userInvoice);
             setInvoices(userInvoice);
@@ -38,31 +37,34 @@ export default function InvoicePage() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchProductData = async () => {
-      const allProducts = await Promise.all(
-        invoices.flatMap(async (invoiceItem) => {
-          const productId = invoiceItem.product_id[0]?.id;
-          if (!productId) return null;
+  // useEffect(() => {
+  //   const fetchProductData = async () => {
+  //     const allProducts = await Promise.all(
+  //       invoices.flatMap(async (invoiceItem) => {
+  //         return await Promise.all(
+  //           invoiceItem.product_id.map(async (id) => {
+  //             if (!id) return null;
 
-          const productDoc = doc(db, "product", productId);
-          const productSnap = await getDoc(productDoc);
-          return productSnap.exists()
-            ? { ...productSnap.data(), invoice: invoiceItem }
-            : null;
-        }),
-      );
+  //             const productDoc = doc(db, "product", id.id);
+  //             const productSnap = await getDoc(productDoc);
+  //             return productSnap.exists()
+  //               ? { ...productSnap.data(), invoice: invoiceItem }
+  //               : null;
+  //           }),
+  //         );
+  //       }),
+  //     );
 
-      const filteredProducts = allProducts.filter(
-        (product): product is ProductWithInvoice => product !== null,
-      );
-      setProductData(filteredProducts);
-    };
+  //     const filteredProducts = allProducts
+  //       .flat()
+  //       .filter((product): product is ProductWithInvoice => product !== null);
+  //     setProductData(filteredProducts);
+  //   };
 
-    if (invoices.length > 0) {
-      fetchProductData();
-    }
-  }, [invoices]);
+  //   if (invoices.length > 0) {
+  //     fetchProductData();
+  //   }
+  // }, [invoices]);
 
   return (
     <div className="mt-20">
@@ -88,18 +90,17 @@ export default function InvoicePage() {
             <p>reset filter</p>
           </div>
 
-          {productData.length > 0 ? (
-            productData.map((product, index) => (
+          {invoices.length > 0 ? (
+            invoices.map((product) => (
               <CardInvoice
-                key={index}
-                date={product.invoice.created_at}
-                status={product.invoice.status}
-                quantity={product.invoice.totalQuantity}
-                paidAmount={product.invoice.paid_amount}
-                price={product.price}
-                name={product.name}
-                imageURL={product.image_url}
-                transactionId={product.invoice.transaksi_id}
+                key={product.transaksi_id}
+                date={product.updated_at}
+                status={product.status}
+                quantity={product.totalQuantity}
+                paidAmount={product.paid_amount}
+                products={product.products}
+                transactionId={product.transaksi_id}
+                productAmount={product.amount}
               />
             ))
           ) : (

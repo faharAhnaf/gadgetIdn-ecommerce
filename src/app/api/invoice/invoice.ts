@@ -1,14 +1,17 @@
 import { db } from "@/app/lib/firebase";
 import { InvoiceData } from "@/app/lib/model/invoice";
+import Product from "@/app/lib/model/product";
 import {
   collection,
   getDocs,
   query,
   where,
   Timestamp,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 
-export default async function addInvoice({
+export default async function invoice({
   userId,
 }: {
   userId: string;
@@ -23,38 +26,85 @@ export default async function addInvoice({
       return null;
     }
 
-    const transactions: InvoiceData[] = querySnapshot.docs.map((doc) => {
-      const transactionData = doc.data();
-      const createdAt =
-        transactionData.created_at instanceof Timestamp
-          ? transactionData.created_at.toDate().toISOString()
-          : new Date().toISOString();
+    const transactions: (InvoiceData | null)[] = await Promise.all(
+      querySnapshot.docs.map(async (docs) => {
+        const transactionData = docs.data();
 
-      const updatedAt =
-        transactionData.updated_at instanceof Timestamp
-          ? transactionData.updated_at.toDate().toISOString()
-          : new Date().toISOString();
+        // Check if product_id is an array
+        if (!Array.isArray(transactionData.product_id)) {
+          console.error(
+            "product_id is not an array:",
+            transactionData.product_id,
+          );
+          return null; // or handle this case as needed
+        }
 
-      return {
-        created_at: createdAt,
-        ekspedisi_id: transactionData.ekspedisi_id,
-        paid_amount: transactionData.paid_amount,
-        payer_email: transactionData.payer_email,
-        payment_channel: transactionData.payment_channel,
-        payment_method: transactionData.payment_method,
-        product_id: transactionData.product_id,
-        status: transactionData.status,
-        totalQuantity: transactionData.totalQuantity,
-        transaksi_id: transactionData.transaksi_id,
-        updated_at: updatedAt,
-        user_id: transactionData.user_id,
-        variant: transactionData.variant,
-      };
-    });
+        // Fetch product details for each product_id
+        const products: (Product | null)[] = await Promise.all(
+          transactionData.product_id.map(async (id) => {
+            const productRef = doc(db, "product", id.id);
+            const productSnap = await getDoc(productRef);
+            if (productSnap.exists()) {
+              return {
+                product_id: productSnap.id,
+                ...productSnap.data(),
+              } as Product;
+            } else {
+              console.error("Product not found for ID:", id);
+              return null;
+            }
+          }),
+        );
 
-    return transactions; // Mengembalikan array dari transaksi
+        // Filter out null products
+        const filteredProducts: Product[] = products.filter(
+          (product): product is Product => product !== null,
+        );
+
+        const createdAt =
+          transactionData.created_at instanceof Timestamp
+            ? transactionData.created_at.toDate().toISOString()
+            : new Date().toISOString();
+
+        const updatedAt =
+          transactionData.updated_at instanceof Timestamp
+            ? transactionData.updated_at.toDate().toISOString()
+            : new Date().toISOString();
+
+        return {
+          address: transactionData.address,
+          amount: transactionData.amount,
+          color: transactionData.color,
+          created_at: createdAt,
+          current_price: transactionData.current_price,
+          ekspedisi_id: transactionData.ekspedisi_id,
+          paid_amount: transactionData.paid_amount,
+          payer_email: transactionData.payer_email,
+          payment_channel: transactionData.payment_channel,
+          payment_method: transactionData.payment_method,
+          product_id: transactionData.product_id,
+          recipient: transactionData.recipient,
+          shippingCost: transactionData.shippingCost,
+          shippingETA: transactionData.shippingETA,
+          shippingName: transactionData.shippingName,
+          status: transactionData.status,
+          telepon: transactionData.telepon,
+          totalQuantity: transactionData.totalQuantity,
+          transaksi_id: transactionData.transaksi_id,
+          updated_at: updatedAt,
+          user_id: transactionData.user_id,
+          variant: transactionData.variant,
+          products: filteredProducts,
+        } as InvoiceData;
+      }),
+    );
+
+    // Filter out any null transactions
+    return transactions.filter(
+      (transaction): transaction is InvoiceData => transaction !== null,
+    );
   } catch (e) {
     console.error("Error fetching transactions:", e);
-    return null; // Mengembalikan null jika terjadi kesalahan
+    return null;
   }
 }

@@ -28,7 +28,7 @@ export default async function uploadDataProduct(
       quantityInStock,
       category,
       description,
-      image_url,
+      image_url: `/image/product/${image_url}`,
       user_id: userRef,
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),

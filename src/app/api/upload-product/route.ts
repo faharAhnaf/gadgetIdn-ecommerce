@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
     const filePath = path.join(
       process.cwd(),
-      "public/assets/picture",
+      "public/assets/image/product",
       filename,
     );
 

@@ -22,6 +22,7 @@ import Product from "@/app/lib/model/product";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import updateDataProduct from "@/app/api/product/update_product";
+import { randomUUID } from "crypto";
 
 interface productType {
   name: string;
@@ -33,9 +34,10 @@ export default function UpdateProduct({
 }: {
   productId: string | string[] | undefined;
 }) {
-  const [data, setData] = useState<Product | null>();
+  const [data, setData] = useState<Product | null>(null);
   const [productTypeVal, setProductTypeVal] = useState<string>();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [filename, setFilename] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -51,22 +53,10 @@ export default function UpdateProduct({
   });
 
   const productType: productType[] = [
-    {
-      name: "Electronic",
-      icon: faMobile,
-    },
-    {
-      name: "Accessories",
-      icon: faHeadphones,
-    },
-    {
-      name: "Sports",
-      icon: faPersonRunning,
-    },
-    {
-      name: "Clothes",
-      icon: faShirt,
-    },
+    { name: "Electronic", icon: faMobile },
+    { name: "Accessories", icon: faHeadphones },
+    { name: "Sports", icon: faPersonRunning },
+    { name: "Clothes", icon: faShirt },
   ];
 
   useEffect(() => {
@@ -77,19 +67,47 @@ export default function UpdateProduct({
 
       if (dataProduct) {
         setValue("category", dataProduct.category);
-        setValue("image_url", dataProduct.image_url.replaceAll(" ", "_"));
+        setValue("image_url", dataProduct.image_url);
         setValue("price", dataProduct.price);
         setValue("quantityInStock", dataProduct.quantityInStock);
         setValue("name", dataProduct.name);
         setValue("description", dataProduct.description);
-
-        setImagePreview(`/assets/picture/${dataProduct.image_url}`);
+        setImagePreview(`/assets${dataProduct.image_url}`);
       }
     };
     fetchData();
   }, [productId]);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSubmit: SubmitHandler<Product> = async (dataSubmit) => {
+    try {
+      if (!data) {
+        console.error("Product data is not available");
+        return;
+      }
+
+      const { product_id } = data;
+      const imageUrl = filename
+        ? `/image/product/${filename}`
+        : dataSubmit.image_url;
+
+      await updateDataProduct(
+        product_id,
+        dataSubmit.name,
+        dataSubmit.price,
+        dataSubmit.quantityInStock,
+        dataSubmit.category,
+        dataSubmit.description,
+        imageUrl,
+      );
+      router.replace("/profile/list-product");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -97,7 +115,21 @@ export default function UpdateProduct({
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-      setValue("image_url", file.name);
+      setValue("image_url", `/image/product/${file.name}`);
+
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/upload-product", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const result = await response.json();
+      setFilename(result.filename);
     }
   };
 
@@ -108,28 +140,6 @@ export default function UpdateProduct({
     e.preventDefault();
     setProductTypeVal(type);
     setValue("category", type);
-  };
-
-  const onSubmit: SubmitHandler<Product> = async (dataSubmit) => {
-    try {
-      if (!data) {
-        console.error("Product data is not available");
-        return;
-      }
-
-      const { product_id } = data;
-      await updateDataProduct(
-        product_id,
-        dataSubmit.name,
-        dataSubmit.price,
-        dataSubmit.quantityInStock,
-        dataSubmit.category,
-        dataSubmit.description,
-        dataSubmit.image_url,
-      );
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
@@ -163,6 +173,7 @@ export default function UpdateProduct({
             <div className="flex space-x-3">
               {imagePreview ? (
                 <Image
+                  priority
                   src={imagePreview}
                   alt="preview image"
                   height={100}

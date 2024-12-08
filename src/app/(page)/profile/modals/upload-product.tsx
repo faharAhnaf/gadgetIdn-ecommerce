@@ -37,6 +37,18 @@ export default function UploadProduct() {
   const [file, setFile] = useState<File | undefined>();
 
   const router = useRouter();
+
+  const { register, handleSubmit, setValue } = useForm<Product>({
+    defaultValues: {
+      category: "",
+      image_url: "",
+      price: 0,
+      quantityInStock: 0,
+      name: "",
+      description: "",
+    },
+  });
+
   const productType: productType[] = [
     {
       name: "Electronic",
@@ -56,17 +68,6 @@ export default function UploadProduct() {
     },
   ];
 
-  const { register, handleSubmit, setValue } = useForm<Product>({
-    defaultValues: {
-      category: "",
-      image_url: "",
-      price: 0,
-      quantityInStock: 0,
-      name: "",
-      description: "",
-    },
-  });
-
   const handleProductType = (
     e: React.MouseEvent<HTMLButtonElement>,
     type: string,
@@ -76,8 +77,8 @@ export default function UploadProduct() {
     setValue("category", type);
   };
 
+  const storedData = localStorage.getItem("userSession");
   useEffect(() => {
-    const storedData = localStorage.getItem("userSession");
     if (storedData) {
       const userData = JSON.parse(storedData);
       setUser(userData.user_id);
@@ -93,7 +94,7 @@ export default function UploadProduct() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/upload-product", {
         method: "POST",
         body: formData,
       });
@@ -102,7 +103,7 @@ export default function UploadProduct() {
         throw new Error("Failed to upload image");
       }
 
-      await response.json();
+      const result = await response.json();
 
       await uploadDataProduct(
         dataSubmit.name,
@@ -110,7 +111,7 @@ export default function UploadProduct() {
         Number(dataSubmit.quantityInStock),
         dataSubmit.category,
         dataSubmit.description,
-        dataSubmit.image_url.replaceAll(" ", "_"),
+        result.filename,
         user,
       );
       router.replace("/profile/list-product");
@@ -259,7 +260,7 @@ export default function UploadProduct() {
               className="hover:bg-blue-500 hover:text-white"
               type="submit"
             >
-              Update Product
+              Upload Product
             </Button>
           </li>
         </ul>
