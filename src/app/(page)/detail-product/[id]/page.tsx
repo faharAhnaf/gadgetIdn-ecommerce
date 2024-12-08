@@ -14,12 +14,17 @@ import Swal from "sweetalert2";
 import { useRouter, useParams } from "next/navigation";
 import { getProductByProductId } from "@/app/api/product/detail_product";
 import { handleCheckout } from "@/app/api/transaksi/transaksi";
+import CartItem from "@/app/lib/model/cartItem"
 
 import addCartItem from "@/app/api/cart/add_cart";
 import Product from "@/app/lib/model/product";
 
 const SkeletonText = ({ width }: { width: string }) => (
   <span className="skeleton-loading" style={{ width }}></span>
+);
+
+const SkeletonImg = ({ width, height }: { width: string, height: string }) => (
+  <div className="skeleton-loading" style={{ width, height}}></div>
 );
 
 export default function DetailProduct() {
@@ -41,7 +46,6 @@ export default function DetailProduct() {
 
         if (fetchedProduct) {
           setProduct(fetchedProduct);
-          console.log(fetchedProduct);
         } else {
           Swal.fire({
             icon: "error",
@@ -74,8 +78,16 @@ export default function DetailProduct() {
       });
 
       if (result.isConfirmed) {
-        await addCartItem(userData.user_id, id as string, product!.price, 1);
-        router.push("/keranjang");
+        if(selectedSize && selectedColor){
+          await addCartItem(userData.user_id, id as string, product!.price, quantity, selectedSize, selectedColor);
+          router.push("/keranjang");
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please fill in the color and size first",
+          });
+        }
       }
     } catch (error) {
       Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
@@ -92,6 +104,72 @@ export default function DetailProduct() {
 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
+  };
+
+  const handleProceedToPayment = async (
+  ) => {
+
+    const selectedCartItems: CartItem[] = [];
+
+    if (!product) {
+      Swal.fire({
+        icon: "warning",
+        title: "Product data has not finished loading",
+        text: "Please wait a moment",
+      });
+      return;
+    }
+
+    if (!selectedColor && !selectedSize) {
+      Swal.fire({
+        icon: "warning",
+        title: "Product data has not finished loading",
+        text: "Please wait a moment",
+      });
+      return;
+    }
+    
+    selectedCartItems.push({
+      cart_id: "",
+      product_id: product.product_id,
+      image_url: product?.image_url,
+      name: product.name,
+      description: product.description,
+      selectedColor: selectedColor!,
+      selectedSize: selectedSize!,
+      quantity: quantity,
+      price: product.price,
+      total_price: product.price * quantity,
+    });
+
+      try {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "Are you sure you want to checkout you cart?",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, add it!",
+          cancelButtonText: "Cancel",
+        });
+    
+        if (selectedCartItems.length > 0) {
+          localStorage.setItem("cartSession", JSON.stringify(selectedCartItems));
+          router.push("/payment");
+          console.log("Selected items saved to localStorage:", selectedCartItems);
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "No matching items found",
+          });
+        }
+  
+      } catch (error) {
+        Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      }
+  
   };
 
   return (
@@ -111,11 +189,16 @@ export default function DetailProduct() {
         <div className="flex w-full max-w-screen-xl flex-col rounded-xl bg-white shadow-lg md:flex-col">
           <div className="flex flex-col md:flex-row">
             <div className="flex justify-center p-4 md:p-6">
-              <img
-                src="/assets/image/detail_produk.png"
-                alt="Detail Produk"
-                className="mx-auto h-auto w-[500px] rounded-md md:w-[500px]"
-              />
+              {
+                product ? (
+                  <img
+                    src={'/assets' + product!.image_url}
+                    alt="Detail Produk"
+                    className="mx-auto h-auto w-[500px] rounded-md md:w-[500px]"
+                  />
+                ) :
+                <SkeletonImg width="500px" height="500px" />
+              }
             </div>
 
             <div className="max-h-screen flex-1 overflow-y-auto p-4 md:max-h-[600px] md:p-6">
@@ -269,16 +352,7 @@ export default function DetailProduct() {
 
               <button
                 onClick={() =>
-                  handleCheckout({
-                    user_id: userData?.user_id ?? "",
-                    email: userData?.email ?? "",
-                    price: product ? [product.price] : [0],
-                    amount: [quantity],
-                    color: selectedColor ? [selectedColor] : [],
-                    variant: selectedSize ? [selectedSize] : [],
-                    description: product ? product.description : "",
-                    product_id: product ? [product.product_id] : ["0"],
-                  })
+                  handleProceedToPayment()
                 }
                 className="rounded-md border border-blue-500 px-4 py-2 text-xs font-semibold text-blue-500 duration-300 hover:bg-blue-500 hover:text-white md:text-sm"
               >

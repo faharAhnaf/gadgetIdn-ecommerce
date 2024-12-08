@@ -62,6 +62,9 @@ const checkPaymentStatus = async (
   variant: string[],
   user_id: string,
   totalQuantity: number,
+  shippingName: string,
+  shippingCost: number,
+  shippingETA: string,
 ) => {
   try {
     const response = await axios.get(`${xendit_invoice}/${invoiceId}`, {
@@ -96,6 +99,10 @@ const checkPaymentStatus = async (
         variant: variant,
         totalQuantity: totalQuantity,
 
+        shippingName: shippingName,
+        shippingCost: shippingCost,
+        shippingETA: shippingETA,
+
         status: data_payment.status,
         created_at: data_payment.created,
         updated_at: data_payment.created,
@@ -105,7 +112,7 @@ const checkPaymentStatus = async (
         const docRef = doc(db, "transaksi", data.transaksi_id);
         await setDoc(docRef, data);
 
-        window.location.href = "http://localhost:3000/invoice";
+        // window.location.href = "http://localhost:3000/invoice";
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -123,6 +130,9 @@ const checkPaymentStatus = async (
             variant,
             user_id,
             totalQuantity,
+            shippingName,
+            shippingCost,
+            shippingETA,
           ),
         5000,
       );
@@ -146,6 +156,9 @@ export const handleCheckout = async ({
   color,
   variant,
   description,
+  shippingName,
+  shippingCost,
+  shippingETA,
 }: {
   user_id: string;
   email: string;
@@ -155,7 +168,11 @@ export const handleCheckout = async ({
   color: string[];
   variant: string[];
   description: string;
+  shippingName: string;
+  shippingCost: number;
+  shippingETA: string;
 }) => {
+  
   if (color?.length && variant?.length) {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -210,6 +227,9 @@ export const handleCheckout = async ({
             variant,
             user_id,
             totalAmount.totalQuantity,
+            shippingName,
+            shippingCost,
+            shippingETA,
           );
         } else {
           throw new Error("Invoice URL is missing.");

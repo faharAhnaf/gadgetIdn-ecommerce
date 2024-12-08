@@ -15,9 +15,17 @@ export default function CartSkeleton() {
             <div className="bg-gray-300 h-4 w-full rounded-md mb-2"></div>
             <div className="bg-gray-300 h-4 w-1/2 rounded-md mb-2"></div>
             
-            <div className="flex justify-end mt-5 space-x-4">
-              <div className="bg-gray-300 h-6 w-10 rounded-md"></div>
-              <div className="bg-gray-300 h-6 w-24 rounded-md"></div>
+            <div className="flex justify-between mt-5 space-x-4">
+              <div className="flex">
+                <div className="bg-gray-300 h-6 w-16 rounded-md"></div>
+                <div className="bg-gray-300 h-6 w-16 ml-3 rounded-md"></div>
+              </div>
+
+              <div className="flex">
+                <div className="bg-gray-300 h-6 w-10 rounded-md"></div>
+                <div className="bg-gray-300 h-6 w-24 ml-3 rounded-md"></div>
+              </div>
+
             </div>
 
           </div>

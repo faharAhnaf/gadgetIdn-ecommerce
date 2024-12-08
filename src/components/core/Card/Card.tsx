@@ -3,6 +3,7 @@ import Link from "next/link";
 import formatRupiah from "@/app/lib/format_money"
 import addCartItem from '@/app/api/cart/add_cart';
 import Swal from 'sweetalert2';
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
     product_id: string;
@@ -17,27 +18,30 @@ const Card: React.FC<ProductCardProps> = ({ product_id, title, description, pric
 
     const session = localStorage.getItem("userSession");
     const userData = JSON.parse(session!);
+    const router = useRouter();
   
     const handleAddToCart = async () => {
-      try {
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "Are you sure you want to add to cart?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, add it!",
-          cancelButtonText: "Cancel",
-        });
+      router.push(id);
+
+      // try {
+      //   const result = await Swal.fire({
+      //     title: "Are you sure?",
+      //     text: "Are you sure you want to add to cart?",
+      //     icon: "warning",
+      //     showCancelButton: true,
+      //     confirmButtonColor: "#3085d6",
+      //     cancelButtonColor: "#d33",
+      //     confirmButtonText: "Yes, add it!",
+      //     cancelButtonText: "Cancel",
+      //   });
     
-        if (result.isConfirmed) {
-          await addCartItem(userData.user_id, product_id, price, 1);
-        }
+      //   if (result.isConfirmed) {
+      //     await addCartItem(userData.user_id, product_id, price, 1);
+      //   }
   
-      } catch (error) {
-        Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
-      }
+      // } catch (error) {
+      //   Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      // }
     };
 
     return (

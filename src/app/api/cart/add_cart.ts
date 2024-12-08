@@ -18,6 +18,8 @@ export default async function addCartItem(
   productId: string,
   price: number,
   quantity: number,
+  selectedSize: string,
+  selectedColor: string,
 ) {
   try {
     const cartRef = collection(db, "cart");
@@ -52,6 +54,8 @@ export default async function addCartItem(
         product_id: productRef,
         price: price,
         quantity: quantity,
+        selectedSize: selectedSize,
+        selectedColor: selectedColor,
         totalPrice: price * quantity,
         created_at: serverTimestamp(),
         updated_at: serverTimestamp(),

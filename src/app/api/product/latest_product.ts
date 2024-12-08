@@ -21,6 +21,7 @@ export const getLatestProducts = async (): Promise<ProductPreview[]> => {
                 name: data.name,
                 description: data.description,
                 price: data.price,
+                image_url: data.image_url,
             } as ProductPreview;
         });
 
