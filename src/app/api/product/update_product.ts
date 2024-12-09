@@ -10,6 +10,8 @@ export default async function updateDataProduct(
   category: string,
   description: string,
   image_url: string,
+  variant: string[],
+  color: string[],
 ) {
   const productRef = doc(db, "product", productId);
   try {
@@ -20,6 +22,8 @@ export default async function updateDataProduct(
       category,
       description,
       image_url,
+      variant,
+      color,
     });
 
     Swal.fire({

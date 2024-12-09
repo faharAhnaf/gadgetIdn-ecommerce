@@ -20,10 +20,8 @@ import UpdateProduct from "./modals/update-product";
 
 export default function UserProfile({
   productId,
-  slug,
 }: {
   productId: string | string[] | undefined;
-  slug: string | string[] | undefined;
 }) {
   const [data, setData] = useState<any>({});
   const [formData, setFormData] = useState<Form>({

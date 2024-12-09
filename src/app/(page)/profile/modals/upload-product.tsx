@@ -12,22 +12,27 @@ import {
   faShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { getProductByProductId } from "@/app/api/product/detail_product";
 import Product from "@/app/lib/model/product";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import updateDataProduct from "@/app/api/product/update_product";
 import uploadDataProduct from "@/app/api/product/upload_product";
-import Swal from "sweetalert2";
+import { Plus } from "lucide-react";
 
 interface productType {
   name: string;
   icon: IconProp;
+}
+
+interface FormVC {
+  variants: string[];
+  colors: string[];
+  variantInput: string;
+  colorInput: string;
 }
 
 export default function UploadProduct() {
@@ -35,6 +40,12 @@ export default function UploadProduct() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [user, setUser] = useState<string>("");
   const [file, setFile] = useState<File | undefined>();
+  const [formVC, setFormVC] = useState<FormVC>({
+    variants: [],
+    colors: [],
+    variantInput: "",
+    colorInput: "",
+  });
 
   const router = useRouter();
 
@@ -46,6 +57,8 @@ export default function UploadProduct() {
       quantityInStock: 0,
       name: "",
       description: "",
+      variant: [],
+      color: [],
     },
   });
 
@@ -113,6 +126,8 @@ export default function UploadProduct() {
         dataSubmit.description,
         result.filename,
         user,
+        formVC.variants,
+        formVC.colors,
       );
       router.replace("/profile/list-product");
     } catch (error) {
@@ -131,6 +146,37 @@ export default function UploadProduct() {
       reader.readAsDataURL(file);
       setValue("image_url", file.name);
     }
+  };
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: "variant" | "color",
+  ) => {
+    setFormVC((prev) => ({
+      ...prev,
+      [`${type}Input`]: e.target.value,
+    }));
+  };
+
+  const handleAddItem = (type: "variant" | "color") => {
+    const inputValue = formVC[`${type}Input`];
+    if (inputValue) {
+      setFormVC((prev) => ({
+        ...prev,
+        [type + "s"]: [...prev[(type + "s") as keyof FormVC], inputValue],
+        [`${type}Input`]: "",
+      }));
+    }
+  };
+
+  const handleDeleteItem = (type: "variant" | "color", index: number) => {
+    setFormVC((prev) => {
+      const updatedItems = prev[`${type}s`].filter((_, i) => i !== index);
+      return {
+        ...prev,
+        [`${type}s`]: updatedItems,
+      };
+    });
   };
 
   return (
@@ -232,6 +278,80 @@ export default function UploadProduct() {
             </div>
           </li>
           <li className="grid items-center gap-3 border-b-2 pb-5">
+            <div className="grid gap-1.5">
+              <Label htmlFor="variant" className="text-base">
+                Variant
+              </Label>
+              <div className="flex w-full items-center gap-3">
+                <Input
+                  value={formVC.variantInput}
+                  onChange={(e) => handleInputChange(e, "variant")}
+                  type="text"
+                  id="variant"
+                  placeholder="product variant..."
+                />
+                <Button
+                  type="button"
+                  onClick={() => handleAddItem("variant")}
+                  variant={"outline"}
+                  className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+                >
+                  <Plus />
+                </Button>
+              </div>
+              <div className="">
+                {formVC.variants.map((variant, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => handleDeleteItem("variant", index)}
+                    className="m-2 hover:bg-red-500 hover:text-white"
+                  >
+                    {variant}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </li>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
+            <div className="grid gap-1.5">
+              <Label htmlFor="name" className="text-base">
+                Color
+              </Label>
+              <div className="flex w-full items-center gap-3">
+                <Input
+                  value={formVC.colorInput}
+                  onChange={(e) => handleInputChange(e, "color")}
+                  type="text"
+                  id="color"
+                  placeholder="product color..."
+                />
+                <Button
+                  type="button"
+                  onClick={() => handleAddItem("color")}
+                  variant={"outline"}
+                  className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+                >
+                  <Plus />
+                </Button>
+              </div>
+              <div className="">
+                {formVC.colors.map((color, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => handleDeleteItem("color", index)}
+                    className="m-2 hover:bg-red-500 hover:text-white"
+                  >
+                    {color}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </li>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
             <div className="flex gap-3">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="brand-name" className="text-base">
@@ -249,7 +369,7 @@ export default function UploadProduct() {
           <li className="flex items-center justify-end gap-3 pb-5">
             <Button
               variant={"outline"}
-              className="hover:bg-blue-500 hover:text-white"
+              className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
               onClick={router.back}
               type="button"
             >
@@ -257,7 +377,7 @@ export default function UploadProduct() {
             </Button>
             <Button
               variant={"outline"}
-              className="hover:bg-blue-500 hover:text-white"
+              className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
               type="submit"
             >
               Upload Product

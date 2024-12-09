@@ -12,7 +12,7 @@ import {
   faShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -23,10 +23,17 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import updateDataProduct from "@/app/api/product/update_product";
 import { randomUUID } from "crypto";
+import { Plus } from "lucide-react";
 
 interface productType {
   name: string;
   icon: IconProp;
+}
+interface FormVC {
+  variants: string[];
+  colors: string[];
+  variantInput: string;
+  colorInput: string;
 }
 
 export default function UpdateProduct({
@@ -38,6 +45,12 @@ export default function UpdateProduct({
   const [productTypeVal, setProductTypeVal] = useState<string>();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [filename, setFilename] = useState<string | null>(null);
+  const [formVC, setFormVC] = useState<FormVC>({
+    variants: [],
+    colors: [],
+    variantInput: "",
+    colorInput: "",
+  });
 
   const router = useRouter();
 
@@ -49,6 +62,8 @@ export default function UpdateProduct({
       quantityInStock: 0,
       name: "",
       description: "",
+      variant: [],
+      color: [],
     },
   });
 
@@ -73,6 +88,11 @@ export default function UpdateProduct({
         setValue("name", dataProduct.name);
         setValue("description", dataProduct.description);
         setImagePreview(`/assets${dataProduct.image_url}`);
+        setFormVC((prev) => ({
+          ...prev,
+          variants: dataProduct.variant,
+          colors: dataProduct.color,
+        }));
       }
     };
     fetchData();
@@ -93,11 +113,13 @@ export default function UpdateProduct({
       await updateDataProduct(
         product_id,
         dataSubmit.name,
-        dataSubmit.price,
-        dataSubmit.quantityInStock,
+        Number(dataSubmit.price),
+        Number(dataSubmit.quantityInStock),
         dataSubmit.category,
         dataSubmit.description,
         imageUrl,
+        formVC.variants,
+        formVC.colors,
       );
       router.replace("/profile/list-product");
     } catch (error) {
@@ -140,6 +162,37 @@ export default function UpdateProduct({
     e.preventDefault();
     setProductTypeVal(type);
     setValue("category", type);
+  };
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: "variant" | "color",
+  ) => {
+    setFormVC((prev) => ({
+      ...prev,
+      [`${type}Input`]: e.target.value,
+    }));
+  };
+
+  const handleAddItem = (type: "variant" | "color") => {
+    const inputValue = formVC[`${type}Input`];
+    if (inputValue) {
+      setFormVC((prev) => ({
+        ...prev,
+        [type + "s"]: [...prev[(type + "s") as keyof FormVC], inputValue],
+        [`${type}Input`]: "",
+      }));
+    }
+  };
+
+  const handleDeleteItem = (type: "variant" | "color", index: number) => {
+    setFormVC((prev) => {
+      const updatedItems = prev[`${type}s`].filter((_, i) => i !== index);
+      return {
+        ...prev,
+        [`${type}s`]: updatedItems,
+      };
+    });
   };
 
   return (
@@ -239,14 +292,80 @@ export default function UpdateProduct({
                   placeholder="product name..."
                 />
               </div>
-              {/* <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="brand-name">Brand Name</Label>
+            </div>
+          </li>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
+            <div className="grid gap-1.5">
+              <Label htmlFor="variant" className="text-base">
+                Variant
+              </Label>
+              <div className="flex w-full items-center gap-3">
                 <Input
+                  value={formVC.variantInput}
+                  onChange={(e) => handleInputChange(e, "variant")}
                   type="text"
-                  id="brand-name"
-                  placeholder="brand name..."
+                  id="variant"
+                  placeholder="product variant..."
                 />
-              </div> */}
+                <Button
+                  type="button"
+                  onClick={() => handleAddItem("variant")}
+                  variant={"outline"}
+                  className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+                >
+                  <Plus />
+                </Button>
+              </div>
+              <div className="">
+                {formVC.variants.map((variant, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => handleDeleteItem("variant", index)}
+                    className={`m-2 hover:bg-red-500 hover:text-white`}
+                  >
+                    {variant}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </li>
+          <li className="grid items-center gap-3 border-b-2 pb-5">
+            <div className="grid gap-1.5">
+              <Label htmlFor="name" className="text-base">
+                Color
+              </Label>
+              <div className="flex w-full items-center gap-3">
+                <Input
+                  value={formVC.colorInput}
+                  onChange={(e) => handleInputChange(e, "color")}
+                  type="text"
+                  id="color"
+                  placeholder="product color..."
+                />
+                <Button
+                  type="button"
+                  onClick={() => handleAddItem("color")}
+                  variant={"outline"}
+                  className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+                >
+                  <Plus />
+                </Button>
+              </div>
+              <div className="">
+                {formVC.colors.map((color, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => handleDeleteItem("color", index)}
+                    className={`m-2 hover:bg-red-500 hover:text-white`}
+                  >
+                    {color}
+                  </Button>
+                ))}
+              </div>
             </div>
           </li>
           <li className="grid items-center gap-3 border-b-2 pb-5">

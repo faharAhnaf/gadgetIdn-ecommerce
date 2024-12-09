@@ -16,6 +16,8 @@ export default async function uploadDataProduct(
   description: string,
   image_url: string,
   user_id: string,
+  variant: string[],
+  color: string[],
 ) {
   const productCollection = collection(db, "product");
   const userRef = doc(db, "users", user_id);
@@ -30,6 +32,8 @@ export default async function uploadDataProduct(
       description,
       image_url: `/image/product/${image_url}`,
       user_id: userRef,
+      variant,
+      color,
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
     });
@@ -47,7 +51,7 @@ export default async function uploadDataProduct(
     await Swal.fire({
       icon: "success",
       title: "Success",
-      text: `Product added successfully with ID: ${productId}`,
+      text: `Product added successfully`,
     });
   } catch (e) {
     await Swal.fire({
