@@ -3,20 +3,17 @@
 import React, { useState, useEffect } from "react";
 import "@/app/assets/css/detail_produk.css";
 import "@/app/assets/css/skeleton-loading.css";
-
 import QuantitySelector from "@/components/core/Input/QuantitySelector";
 import formatRupiah from "@/app/lib/format_money";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import Swal from "sweetalert2";
-
 import { useRouter, useParams } from "next/navigation";
 import { getProductByProductId } from "@/app/api/product/detail_product";
 import CartItem from "@/app/lib/model/cartItem";
 import Image from "next/image";
 import addCartItem from "@/app/api/cart/add_cart";
 import Product from "@/app/lib/model/product";
+import { Button } from "@/components/ui/button";
+import { Check, SquareArrowLeft } from "lucide-react";
 
 const SkeletonText = ({ width }: { width: string }) => (
   <span className="skeleton-loading" style={{ width }}></span>
@@ -176,16 +173,13 @@ export default function DetailProduct() {
 
   return (
     <div>
-      <Link
-        href="/"
-        className="fixed left-7 top-10 flex cursor-pointer items-center"
+      <Button
+        variant={"link"}
+        onClick={() => router.back()}
+        className="fixed left-2 top-10 flex cursor-pointer items-center [&_svg]:size-8"
       >
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          className="text-2xl text-gray-700 hover:text-black"
-        />
-        {/* <p className='ml-3'>Back</p> */}
-      </Link>
+        <SquareArrowLeft className="text-gray-700 duration-300 hover:text-black" />
+      </Button>
 
       <div className="flex min-h-screen items-center justify-center bg-[#f4f1eb] p-4 md:p-8">
         <div className="flex w-full max-w-screen-xl flex-col rounded-xl bg-white shadow-lg md:flex-col">
@@ -230,23 +224,22 @@ export default function DetailProduct() {
               </div>
 
               <div className="mt-6 flex flex-col rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                <div className="mb-3 flex justify-between">
+                <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <img
+                    <Image
+                      width={100}
+                      height={100}
                       src="/assets/image/seller.png"
                       alt="Store Logo"
-                      className="h-12 w-12 rounded-full"
+                      className="size-16 rounded-full object-scale-down"
                     />
                     <div>
                       <div className="flex items-center space-x-2">
                         <span className="text-md font-semibold">
                           Reza Store
                         </span>
-                        <span className="rounded-md bg-green-600 px-1.5 py-0.5 text-xs font-semibold text-white">
-                          <FontAwesomeIcon
-                            icon={faCheck}
-                            className="text-white"
-                          />
+                        <span className="rounded-md bg-green-600 p-0.5 text-xs font-semibold [&_svg]:size-4">
+                          <Check className="text-white" />
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -257,9 +250,12 @@ export default function DetailProduct() {
                     </div>
                   </div>
 
-                  <button className="rounded-lg border border-green-500 px-4 py-1 font-semibold text-green-500 hover:bg-green-50">
+                  <Button
+                    variant={"outline"}
+                    className="rounded-lg border border-green-500 px-4 font-semibold text-green-500 hover:bg-green-50"
+                  >
                     Follow
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="flex items-center space-x-4">
