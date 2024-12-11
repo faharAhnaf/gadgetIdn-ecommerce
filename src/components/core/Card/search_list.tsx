@@ -23,8 +23,8 @@ const Card: React.FC<ProductCardProps> = ({
   const router = useRouter();
 
   return (
-    <div className="flex h-full min-h-[425px] flex-col items-start rounded-lg bg-white p-4 shadow-lg">
-      <div className="mb-4 h-48 w-full overflow-hidden rounded-md bg-gray-200">
+    <div className="flex w-full flex-col items-start rounded-lg bg-white p-4 shadow-lg">
+      <div className="mb-4 h-48 w-full rounded-md bg-gray-200">
         <Link href={`/detail-product/${product_id}`}>
           <img
             src={`/assets${imageUrl}`}
