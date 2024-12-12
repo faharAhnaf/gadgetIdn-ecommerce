@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Card from "@/components/core/Card/search_list";
-import Navbar from "@/components/fragments/Navbar/index";
-import Footer from "@/components/fragments/Footer/index";
+import Navbar from "@/components/fragments/Navbar/Navbar";
+import Footer from "@/components/fragments/Footer/Footer";
 import SideBar from "@/components/fragments/Sidebar/ProductList";
 import searchProductsByName from "@/app/api/search_list/product";
 import ProductPreview from "@/app/lib/model/product_review";
-import SearchListSkeleton from "@/components/core/Card/SearchListSkeleton";
+import SearchListSkeleton from "@/components/core/Skeleton/SearchListSkeleton";
 
 import "@/app/assets/css/home.css";
 
