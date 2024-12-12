@@ -27,7 +27,7 @@ const Card: React.FC<ProductCardProps> = ({
       <div className="mb-4 h-48 w-full rounded-md bg-gray-200">
         <Link href={`/detail-product/${product_id}`}>
           <img
-            src={`/assets${imageUrl}`}
+            src={`${imageUrl}`}
             alt={title}
             className="h-full w-full object-cover"
           />

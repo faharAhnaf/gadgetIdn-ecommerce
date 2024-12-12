@@ -75,7 +75,7 @@ export default function Checkout() {
   );
 
   const HANDLING_FEE = 1500;
-  const SERVICE_COST = 10000;
+  const SERVICE_COST = 1000;
 
   const totalOrder = subtotal + shippingCost + HANDLING_FEE + SERVICE_COST;
 

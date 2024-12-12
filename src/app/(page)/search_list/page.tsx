@@ -31,6 +31,7 @@ export default function Keranjang() {
   return (
     <div className="">
       <Navbar />
+
       <div className="container mx-auto mt-28 flex justify-center">
         <div className="flex w-full">
           <div className="fixed mb-5 w-1/5">
@@ -43,41 +44,33 @@ export default function Keranjang() {
               Kategori"
             </p>
 
-                    <p className="mb-2 font-semibold">Menampilkan 1 - 16 dari total barang untuk "Seluruh Kategori"</p>
-
-                    <div className="overflow-y-auto pb-4 max-h-[800px]">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                
-                            {products.length === 0
-                                ? Array.from({ length: 3 }).map((_, index) => (
-                                    <div key={index}>
-                                        <SearchListSkeleton />
-                                    </div>
-                                    ))
-                                : products.map((product, index) => (
-                                    <Card
-                                        key={index}
-                                        product_id={product.product_id}
-                                        title={product.name}
-                                        description={product.description}
-                                        price={product.price}
-                                        imageUrl={"/assets" + product.image_url}
-                                    />
-                            ))}
-
-                        </div>
-                    </div>
-
-                </div>
+            <div className="pb-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {products.length === 0
+                  ? Array.from({ length: 3 }).map((_, index) => (
+                      <div key={index}>
+                        <SearchListSkeleton />
+                      </div>
+                    ))
+                  : products.map((product, index) => (
+                      <Card
+                        key={index}
+                        product_id={product.product_id}
+                        title={product.name}
+                        description={product.description}
+                        price={product.price}
+                        imageUrl={"assets" + product.image_url}
+                      />
+                    ))}
+              </div>
             </div>
+            
           </div>
         </div>
       </div>
-      {products.length > 0 && (
-        <div className="ml-[22.2rem]">
-          <Footer />
-        </div>
-      )}
+
+        <Footer />
+
     </div>
   );
 }

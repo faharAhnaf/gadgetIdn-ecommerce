@@ -49,7 +49,7 @@ export default function CardInvoice({
             <div key={product.product_id} className="grid space-y-5">
               <div className="flex gap-8">
                 <img
-                  src={product.image_url}
+                  src={"assets" + product.image_url}
                   width={70}
                   height={70}
                   alt="Claw Image"

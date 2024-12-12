@@ -37,7 +37,7 @@ export default function Keranjang() {
   return (
     <div>
       <Navbar/>
-      <div className="container flex justify-center mx-auto mt-[100px]">
+      <div className="container flex justify-center mx-auto mt-[100px] mb-5">
             <div className="flex w-full">
                 <div className="w-1/5">
                     <SideBar onSubmitFilters={handleFilterSubmit} params={keyword as string} />

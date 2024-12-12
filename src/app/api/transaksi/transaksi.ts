@@ -112,7 +112,7 @@ const checkPaymentStatus = async (
         shippingCost: shippingCost,
         shippingETA: shippingETA,
 
-        serviceFee: 10000,
+        serviceFee: 1000,
         handlingFee: 1500,
 
         status: data_payment.status,
@@ -240,7 +240,7 @@ export const handleCheckout = async ({
         const userEmail = email || "guest@example.com";
         const timestamp = Date.now();
 
-        const total = totalAmount.total + shippingCost + 10000 + 1500
+        const total = totalAmount.total + shippingCost + 1000 + 1500
 
         const response = await axios.post(
           xendit_invoice,
