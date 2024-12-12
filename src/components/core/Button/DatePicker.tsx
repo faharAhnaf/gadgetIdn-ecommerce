@@ -13,8 +13,31 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function DatePicker() {
-  const [date, setDate] = React.useState<Date>();
+interface DatePickerProps {
+  selectedDate: string | null;
+  onDateChange: (date: string | null) => void;
+}
+
+export function DatePicker({ selectedDate, onDateChange }: DatePickerProps) {
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+
+  React.useEffect(() => {
+    if (selectedDate) {
+      setDate(new Date(selectedDate));
+    } else {
+      setDate(undefined);
+    }
+  }, [selectedDate]);
+
+  const handleDateSelect = (day: Date | undefined) => {
+    if (day) {
+      setDate(day);
+      onDateChange(format(day, "yyyy-MM-dd"));
+    } else {
+      setDate(undefined);
+      onDateChange(null);
+    }
+  };
 
   return (
     <Popover>
@@ -23,7 +46,7 @@ export function DatePicker() {
           variant={"outline"}
           className={cn(
             "w-auto justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
           )}
         >
           <CalendarIcon />
@@ -34,7 +57,7 @@ export function DatePicker() {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleDateSelect}
           initialFocus
         />
       </PopoverContent>

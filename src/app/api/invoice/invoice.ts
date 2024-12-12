@@ -36,10 +36,9 @@ export default async function invoice({
             "product_id is not an array:",
             transactionData.product_id,
           );
-          return null; // or handle this case as needed
+          return null;
         }
 
-        // Fetch product details for each product_id
         const products: (Product | null)[] = await Promise.all(
           transactionData.product_id.map(async (id) => {
             const productRef = doc(db, "product", id.id);
@@ -56,26 +55,21 @@ export default async function invoice({
           }),
         );
 
-        // Filter out null products
         const filteredProducts: Product[] = products.filter(
           (product): product is Product => product !== null,
         );
 
-        const createdAt =
-          transactionData.created_at instanceof Timestamp
-            ? transactionData.created_at.toDate().toISOString()
-            : new Date().toISOString();
-
         const updatedAt =
           transactionData.updated_at instanceof Timestamp
-            ? transactionData.updated_at.toDate().toISOString()
-            : new Date().toISOString();
+            ? transactionData.updated_at.toDate()
+            : new Date();
 
         return {
           address: transactionData.address,
           amount: transactionData.amount,
           color: transactionData.color,
-          created_at: createdAt,
+          confirmed: transactionData.confirmed,
+          created_at: new Date(transactionData.created_at),
           current_price: transactionData.current_price,
           ekspedisi_id: transactionData.ekspedisi_id,
           paid_amount: transactionData.paid_amount,

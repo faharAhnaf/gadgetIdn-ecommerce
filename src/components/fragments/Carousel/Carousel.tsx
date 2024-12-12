@@ -1,17 +1,17 @@
-import SliderComp from "./Slider";
+import SliderComp from "./SliderComp";
 
 export default function Carousel() {
   return (
     <div className="overflow-x-hidden">
-      <div className="max-w-7xl mx-auto pt-[40px] text-center">
+      <div className="mx-auto max-w-7xl pt-[40px] text-center">
         <div className="text-white">
           <SliderComp></SliderComp>
         </div>
-        <h1 className="text-white text-[28px] font-extrabold">
+        <h1 className="text-[28px] font-extrabold text-white">
           THE SOUND OF THE PROJECT 2024
         </h1>
-        <div className="text-white w-[28rem] mx-auto py-[1rem] text-[0.9rem] ">
-          <p className="text-xl font-light pb-3">
+        <div className="mx-auto w-[28rem] py-[1rem] text-[0.9rem] text-white">
+          <p className="pb-3 text-xl font-light">
             20 Agustus 2024 - 15 Maret 2025
           </p>
           <p className="text-base">

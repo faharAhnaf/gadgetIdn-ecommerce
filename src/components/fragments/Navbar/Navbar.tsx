@@ -4,7 +4,7 @@ import { FiShoppingCart, FiUser, FiSearch, FiMenu, FiX } from "react-icons/fi";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ProfileDropdown } from "@/components/core/Dropdown/profile";
+import { ProfileDropdown } from "@/components/core/Dropdown/ProfileDropdown";
 
 interface UserData {
   email: string;
@@ -79,7 +79,9 @@ export default function Navbar() {
               <p className="hover:text-blue-500 hover:duration-700">Contact</p>
             </Link>
             <Link href="/invoice">
-              <p className="hover:text-blue-500 hover:duration-700">Detail Transaksi</p>
+              <p className="hover:text-blue-500 hover:duration-700">
+                Detail Transaksi
+              </p>
             </Link>
             <Link href="/chatbot">
               <p className="hover:text-blue-500 hover:duration-700">Chatbot</p>

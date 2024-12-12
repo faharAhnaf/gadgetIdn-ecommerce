@@ -18,16 +18,19 @@ import { useEffect, useState } from "react";
 import { getProfileByUserId } from "@/app/api/profile/profile";
 import Profile from "@/app/lib/model/profile";
 import Image from "next/image";
+import SkeletonUserPicture from "../Skeleton/SkeletonUserPicture";
 
-const session = localStorage.getItem("userSession");
 export function ProfileDropdown() {
+  const session = localStorage.getItem("userSession");
   const [profile, setProfile] = useState<Profile | null>();
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
       if (session) {
         const userData = JSON.parse(session);
         const profile = await getProfileByUserId(userData.user_id);
         setProfile(profile);
+        setLoading(false);
       }
     })();
   }, []);
@@ -44,13 +47,19 @@ export function ProfileDropdown() {
       <DropdownMenuTrigger asChild>
         <div className="group flex cursor-pointer items-center justify-center rounded-full bg-black hover:bg-white">
           {session ? (
-            <Image
-              src={`/assets/picture/${profile?.picture}`}
-              width={50}
-              height={50}
-              className="h-10 w-10 rounded-full object-cover transition duration-300 ease-in-out"
-              alt=""
-            ></Image>
+            <>
+              {loading ? (
+                <SkeletonUserPicture />
+              ) : (
+                <Image
+                  src={`/assets/picture/${profile?.picture}`}
+                  width={50}
+                  height={50}
+                  className="h-10 w-10 rounded-full object-cover transition duration-300 ease-in-out"
+                  alt=""
+                ></Image>
+              )}
+            </>
           ) : (
             <User className="cursor-pointer text-white group-hover:text-black" />
           )}

@@ -1,79 +1,61 @@
 import { Ekspedisi } from "./../../lib/model/ekspedisi";
 import { db } from "@/app/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { ProductWithInvoice } from "@/app/lib/model/invoice";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import Profile from "@/app/lib/model/profile";
-
-interface DetailInvoice {
-  ekspedisi: Ekspedisi | null;
-  product: ProductWithInvoice | null;
-  user: Profile | null;
-}
+import { InvoiceData } from "@/app/lib/model/invoice";
+import Product from "@/app/lib/model/product";
 
 export async function detailInvoice({
   transaksiId,
 }: {
   transaksiId: string;
-}): Promise<DetailInvoice | null> {
+}): Promise<InvoiceData | null> {
   try {
     const transactionRef = doc(db, "transaksi", transaksiId);
     const transactionDoc = await getDoc(transactionRef);
-    const transactionData = transactionDoc.data();
 
     if (!transactionDoc.exists()) {
       console.log("Data transaksi tidak ada");
       return null;
     }
 
-    const productId = transactionDoc.data().product_id[0]?.id;
-    let productDoc: ProductWithInvoice | null = null;
-    if (productId) {
-      const productRef = doc(db, "product", productId);
+    const transactionData = transactionDoc.data();
+    const productIds = transactionData.product_id;
+
+    // Validasi product_id
+    if (!Array.isArray(productIds)) {
+      console.error("product_id tidak valid atau bukan array:", productIds);
+      return null;
+    }
+
+    // Mengambil produk secara bersamaan
+    const productPromises = productIds.map(async (id: any) => {
+      const productRef = doc(db, "product", id.id);
       const productSnapshot = await getDoc(productRef);
       if (productSnapshot.exists()) {
-        productDoc = productSnapshot.data() as ProductWithInvoice;
+        return productSnapshot.data() as Product;
       } else {
-        console.log("Data produk tidak ditemukan");
+        console.log(`Data produk dengan ID ${id} tidak ditemukan`);
+        return null;
       }
-    }
+    });
 
-    const ekspedisiId = transactionDoc.data().ekspedisi_id.id;
-    let ekspedisiDoc: Ekspedisi | null = null;
-    if (ekspedisiId) {
-      const ekspedisiRef = doc(db, "ekspedisi", ekspedisiId);
-      const ekspedisiSnapshot = await getDoc(ekspedisiRef);
-      if (ekspedisiSnapshot.exists()) {
-        ekspedisiDoc = ekspedisiSnapshot.data() as Ekspedisi;
-      } else {
-        console.log("Data ekspedisi tidak ditemukan");
-      }
-    }
-
-    const userId = transactionDoc.data().user_id;
-    let userDoc: Profile | null = null;
-    if (userId) {
-      const ekspedisiRef = doc(db, "users", userId);
-      const ekspedisiSnapshot = await getDoc(ekspedisiRef);
-      if (ekspedisiSnapshot.exists()) {
-        userDoc = ekspedisiSnapshot.data() as Profile;
-      } else {
-        console.log("Data ekspedisi tidak ditemukan");
-      }
-    }
-
-    let productWithInvoice: ProductWithInvoice | null = null;
-    if (productDoc) {
-      productWithInvoice = {
-        ...productDoc,
-        invoice: transactionData,
-      } as ProductWithInvoice;
-    }
+    const products = await Promise.all(productPromises);
+    const arrProduct: Product[] = products.filter(
+      (product): product is Product => product !== null,
+    );
 
     return {
-      ekspedisi: ekspedisiDoc,
-      product: productWithInvoice,
-      user: userDoc,
-    };
+      ...transactionData,
+      products: arrProduct,
+    } as InvoiceData;
   } catch (e) {
     console.error("Error fetching transactions:", e);
     return null;

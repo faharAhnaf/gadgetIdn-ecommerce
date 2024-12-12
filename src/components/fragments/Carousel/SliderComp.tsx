@@ -3,7 +3,7 @@
 import Slider from "react-slick";
 import { useRef, useEffect, useState } from "react";
 import Card from "@/components/core/Card/Card";
-import CardSkeleton from "@/components/core/Card/CardSkeleton";
+import CardSkeleton from "@/components/core/Skeleton/CardSkeleton";
 import { getLatestProducts } from "@/app/api/product/latest_product";
 import ProductPreview from "@/app/lib/model/product_review";
 

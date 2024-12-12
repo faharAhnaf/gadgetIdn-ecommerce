@@ -1,21 +1,20 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import Navbar from "@/components/fragments/Navbar/index";
-import Footer from "@/components/fragments/Footer/index";
-import ShoppingCart  from "@/components/fragments/Cart/index";
+import Navbar from "@/components/fragments/Navbar/Navbar";
+import Footer from "@/components/fragments/Footer/Footer";
+import ShoppingCart from "@/components/fragments/Cart/ShoppingCart";
 
 export default function Keranjang() {
-
   return (
     <div>
-      <Navbar/>
+      <Navbar />
 
-      <div className="container mx-auto px-4 md:px-0 lg:px-0 sm:px-5">
+      <div className="container mx-auto px-4 sm:px-5 md:px-0 lg:px-0">
         <ShoppingCart />
       </div>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 }

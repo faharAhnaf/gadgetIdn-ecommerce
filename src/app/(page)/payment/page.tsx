@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import Navbar from "@/components/fragments/Navbar/index";
-import DropdownShipping from "@/components/core/Dropdown/Shipping";
+import Navbar from "@/components/fragments/Navbar/Navbar";
+import DropdownShipping from "@/components/core/Dropdown/ShippingDropdown";
 import QuantitySelectorPayment from "@/components/core/Input/QuantitySelectorPayment";
 import { handleCheckout } from "@/app/api/transaksi/transaksi";
 
-import { getProfileByUserId } from "@/app/api/profile/profile"
+import { getProfileByUserId } from "@/app/api/profile/profile";
 
 interface Product {
   cart_id: string;
@@ -70,8 +70,8 @@ export default function Checkout() {
   }, []);
 
   const subtotal = products.reduce(
-    (sum, product) => sum + (product.price * product.quantity), 
-    0
+    (sum, product) => sum + product.price * product.quantity,
+    0,
   );
 
   const HANDLING_FEE = 1500;
@@ -79,7 +79,11 @@ export default function Checkout() {
 
   const totalOrder = subtotal + shippingCost + HANDLING_FEE + SERVICE_COST;
 
-  const handleShippingSelect = (option: { price: string, name: string, eta: string }) => {
+  const handleShippingSelect = (option: {
+    price: string;
+    name: string;
+    eta: string;
+  }) => {
     setShippingCost(parseInt(option.price));
     setSelectedShipping(option.name);
     setSelectedETA(option.eta);
@@ -95,16 +99,16 @@ export default function Checkout() {
         });
         return;
       }
-  
+
       const profile = await getProfileByUserId(userData.user_id);
-  
+
       if (profile) {
         setFormInput({
           nama: profile.name || "Nama Penerima",
           nomor: profile.phone || "(+62) 888-8888-8888",
           detail: profile.location || "Alamat Lengkap",
         });
-  
+
         Swal.fire({
           icon: "success",
           title: "Profile Loaded",
@@ -118,7 +122,7 @@ export default function Checkout() {
         text: "Failed to load default profile. Please try again.",
       });
     }
-  }
+  };
 
   const handleCheckoutClick = async () => {
     if (!selectedMethod) {
@@ -154,7 +158,8 @@ export default function Checkout() {
       recipient: alamat.nama ?? "",
       telepon: alamat.nomor ?? "",
       address: alamat.detail ?? "",
-      description: "Terima kasih telah berbelanja di toko kami! 😊, Kami sangat menghargai kepercayaan Anda dalam memilih produk kami. Silakan selesaikan pembayaran untuk memproses pesanan Anda segera. Jangan khawatir, proses pembayaran aman dan mudah! 💳, Jika Anda mengalami kesulitan, tim kami siap membantu kapan saja. Selamat berbelanja dan semoga hari Anda menyenangkan! 🌟",
+      description:
+        "Terima kasih telah berbelanja di toko kami! 😊, Kami sangat menghargai kepercayaan Anda dalam memilih produk kami. Silakan selesaikan pembayaran untuk memproses pesanan Anda segera. Jangan khawatir, proses pembayaran aman dan mudah! 💳, Jika Anda mengalami kesulitan, tim kami siap membantu kapan saja. Selamat berbelanja dan semoga hari Anda menyenangkan! 🌟",
       price: products.map((p) => p.price),
       amount: products.map((p) => p.quantity),
       color: products.map((p) => p.selectedColor),
@@ -166,109 +171,122 @@ export default function Checkout() {
       shippingCost: shippingCost,
       shippingETA: selectedShippingETA,
     });
-
   };
 
   return (
     <div>
       <Navbar />
-      <div className="bg-gray-100 min-h-screen">
-        <div className="max-w-7xl mx-auto my-24 p-6 bg-white shadow-lg rounded-lg">
-          <h1 className="text-3xl font-bold mb-20 text-center">Check Out</h1>
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-5">
-
-          <div className="mt-6">
-            <div className="p-6 border rounded-lg bg-gray-50 shadow-md">
-              <h2 className="text-2xl font-medium mb-4">Alamat Pengiriman</h2>
-              {!isEditing ? (
-                <div>
-                  <p className="font-semibold">{alamat.nama}</p>
-                  <p>{alamat.nomor}</p>
-                  <p>{alamat.detail}</p>
-                  <button
-                    onClick={handleUbah}
-                    className="text-blue-500 underline mt-2 hover:text-blue-700"
-                  >
-                    Ubah
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
+      <div className="min-h-screen bg-gray-100">
+        <div className="mx-auto my-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
+          <h1 className="mb-20 text-center text-3xl font-bold">Check Out</h1>
+          <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
+            <div className="mt-6">
+              <div className="rounded-lg border bg-gray-50 p-6 shadow-md">
+                <h2 className="mb-4 text-2xl font-medium">Alamat Pengiriman</h2>
+                {!isEditing ? (
                   <div>
-                    <label className="block font-semibold mb-2" htmlFor="nama">
-                      Nama Penerima
-                    </label>
-                    <input
-                      id="nama"
-                      type="text"
-                      value={formInput.nama}
-                      onChange={(e) =>
-                        setFormInput((prev) => ({ ...prev, nama: e.target.value }))
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold mb-2" htmlFor="nomor">
-                      Nomor Telepon
-                    </label>
-                    <input
-                      id="nomor"
-                      type="text"
-                      value={formInput.nomor}
-                      onChange={(e) =>
-                        setFormInput((prev) => ({ ...prev, nomor: e.target.value }))
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold mb-2" htmlFor="detail">
-                      Alamat Lengkap
-                    </label>
-                    <textarea
-                      id="detail"
-                      value={formInput.detail}
-                      onChange={(e) =>
-                        setFormInput((prev) => ({ ...prev, detail: e.target.value }))
-                      }
-                      rows={4}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="flex gap-3">
-
+                    <p className="font-semibold">{alamat.nama}</p>
+                    <p>{alamat.nomor}</p>
+                    <p>{alamat.detail}</p>
                     <button
-                      onClick={handleSimpan}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
+                      onClick={handleUbah}
+                      className="mt-2 text-blue-500 underline hover:text-blue-700"
                     >
-                      Simpan
+                      Ubah
                     </button>
-
-                    <button
-                      onClick={handleDefault}
-                      className="border border-blue-500 text-blue-500 px-4 py-2 rounded-lg shadow hover:bg-blue-500 hover:text-white"
-                    >
-                      Default Profile
-                    </button>
-
-
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label
+                        className="mb-2 block font-semibold"
+                        htmlFor="nama"
+                      >
+                        Nama Penerima
+                      </label>
+                      <input
+                        id="nama"
+                        type="text"
+                        value={formInput.nama}
+                        onChange={(e) =>
+                          setFormInput((prev) => ({
+                            ...prev,
+                            nama: e.target.value,
+                          }))
+                        }
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className="mb-2 block font-semibold"
+                        htmlFor="nomor"
+                      >
+                        Nomor Telepon
+                      </label>
+                      <input
+                        id="nomor"
+                        type="text"
+                        value={formInput.nomor}
+                        onChange={(e) =>
+                          setFormInput((prev) => ({
+                            ...prev,
+                            nomor: e.target.value,
+                          }))
+                        }
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className="mb-2 block font-semibold"
+                        htmlFor="detail"
+                      >
+                        Alamat Lengkap
+                      </label>
+                      <textarea
+                        id="detail"
+                        value={formInput.detail}
+                        onChange={(e) =>
+                          setFormInput((prev) => ({
+                            ...prev,
+                            detail: e.target.value,
+                          }))
+                        }
+                        rows={4}
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleSimpan}
+                        className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow hover:bg-blue-600"
+                      >
+                        Simpan
+                      </button>
+
+                      <button
+                        onClick={handleDefault}
+                        className="rounded-lg border border-blue-500 px-4 py-2 text-blue-500 shadow hover:bg-blue-500 hover:text-white"
+                      >
+                        Default Profile
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
             <div className="row-span-3">
-              <div className="p-4 border rounded-lg bg-gray-50">
-                <h2 className="text-2xl font-medium mb-4">Order Summary</h2>
+              <div className="rounded-lg border bg-gray-50 p-4">
+                <h2 className="mb-4 text-2xl font-medium">Order Summary</h2>
                 <div className="space-y-4">
                   {products.map((product) => (
                     <div key={product.cart_id} className="flex border-b pb-4">
                       <img
                         src={"assets" + product.image_url}
                         alt="Product"
-                        className="w-[100px] h-[100px]"
+                        className="h-[100px] w-[100px]"
                       />
                       <div>
                         <p className="font-semibold">{product.name}</p>
@@ -280,17 +298,24 @@ export default function Checkout() {
                         </p>
                         <QuantitySelectorPayment
                           onQuantityChange={(quantity, price) => {
-                            const cartSessions = JSON.parse(localStorage.getItem("cartSession") || "[]");
-                            const cartIndex = cartSessions.findIndex((item: any) => item.cart_id === product.cart_id);
-                            
+                            const cartSessions = JSON.parse(
+                              localStorage.getItem("cartSession") || "[]",
+                            );
+                            const cartIndex = cartSessions.findIndex(
+                              (item: any) => item.cart_id === product.cart_id,
+                            );
+
                             if (cartIndex > -1) {
                               cartSessions[cartIndex] = {
                                 ...cartSessions[cartIndex],
                                 quantity: quantity,
-                                total_price: price
+                                total_price: price,
                               };
-                              
-                              localStorage.setItem("cartSession", JSON.stringify(cartSessions));
+
+                              localStorage.setItem(
+                                "cartSession",
+                                JSON.stringify(cartSessions),
+                              );
                               window.dispatchEvent(new Event("storage"));
                             }
                           }}
@@ -308,9 +333,9 @@ export default function Checkout() {
                   <input
                     type="text"
                     placeholder="Masukkan Kode Voucher"
-                    className="border w-full p-2 rounded mb-2"
+                    className="mb-2 w-full rounded border p-2"
                   />
-                  <button className="w-full bg-blue-500 text-white py-2 rounded">
+                  <button className="w-full rounded bg-blue-500 py-2 text-white">
                     Apply
                   </button>
                 </div>
@@ -339,10 +364,10 @@ export default function Checkout() {
                   </div>
                 </div>
               </div>
-              <div className="mt-6 row-span-4">
+              <div className="row-span-4 mt-6">
                 <button
                   onClick={handleCheckoutClick}
-                  className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold"
+                  className="w-full rounded-lg bg-blue-500 py-3 font-semibold text-white"
                 >
                   Checkout
                 </button>
@@ -350,9 +375,9 @@ export default function Checkout() {
             </div>
 
             <div>
-              <div className="p-4 border rounded-lg bg-gray-50">
+              <div className="rounded-lg border bg-gray-50 p-4">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-medium mb-4">Payment Method</h2>
+                  <h2 className="mb-4 text-2xl font-medium">Payment Method</h2>
                   <div>
                     <input
                       type="radio"
@@ -389,4 +414,4 @@ export default function Checkout() {
       </div>
     </div>
   );
-};
+}

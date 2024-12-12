@@ -19,5 +19,5 @@ export default function ModalsPage({
     }
   }, [slugString, router]);
 
-  return <UserProfile productId={id} slug={slugString}></UserProfile>;
+  return <UserProfile productId={id}></UserProfile>;
 }

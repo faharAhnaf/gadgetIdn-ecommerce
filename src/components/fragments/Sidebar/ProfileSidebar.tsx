@@ -1,7 +1,7 @@
 import updatePicture from "@/app/api/profile/update-picture";
-import { SaveChangeButton } from "@/components/core/Button/save-change";
-import ProfileAnimateDropdown from "@/components/core/Dropdown/Sidebar";
-import TokoAnimateDropdown from "@/components/core/Dropdown/Toko";
+import { SaveChangeButton } from "@/components/core/Button/SaveChangeButton";
+import ProfileAnimateDropdown from "@/components/core/Dropdown/ProfileAnimateDropdown";
+import TokoAnimateDropdown from "@/components/core/Dropdown/TokoAnimateDropdown";
 import {
   Dialog,
   DialogContent,

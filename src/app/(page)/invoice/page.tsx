@@ -1,18 +1,27 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
-import Navbar from "@/components/fragments/Navbar";
-import { AllProductDropdown } from "@/components/core/Dropdown/all-product";
-import { DatePicker } from "@/components/core/Button/date-picker";
+import Navbar from "@/components/fragments/Navbar/Navbar";
+import { DatePicker } from "@/components/core/Button/DatePicker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import CardInvoice from "@/components/core/Card/card-invoice";
+import CardInvoice from "@/components/core/Card/CardInvoice";
 import { InvoiceData } from "@/app/lib/model/invoice";
 import invoice from "@/app/api/invoice/invoice";
+import CardInvoiceSkeleton from "@/components/core/Skeleton/CardInvoiceSkeleton";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
+import { SquareArrowLeft } from "lucide-react";
 
 export default function InvoicePage() {
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
-  // const [productData, setProductData] = useState<ProductWithInvoice[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [confirm, setConfirm] = useState<boolean | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,10 +32,8 @@ export default function InvoicePage() {
 
         if (userId) {
           const userInvoice = await invoice({ userId });
-          console.log("tes: ", userInvoice);
-
+          setLoading(false);
           if (userInvoice) {
-            console.log("Invoices fetched: ", userInvoice);
             setInvoices(userInvoice);
           } else {
             console.error("No invoices found for this user.");
@@ -37,74 +44,125 @@ export default function InvoicePage() {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchProductData = async () => {
-  //     const allProducts = await Promise.all(
-  //       invoices.flatMap(async (invoiceItem) => {
-  //         return await Promise.all(
-  //           invoiceItem.product_id.map(async (id) => {
-  //             if (!id) return null;
+  const handleFilterConfirm = (filterStatus: boolean | null) => {
+    setConfirm(filterStatus);
+  };
 
-  //             const productDoc = doc(db, "product", id.id);
-  //             const productSnap = await getDoc(productDoc);
-  //             return productSnap.exists()
-  //               ? { ...productSnap.data(), invoice: invoiceItem }
-  //               : null;
-  //           }),
-  //         );
-  //       }),
-  //     );
+  const handleDateChange = (date: string | null) => {
+    setSelectedDate(date);
+  };
 
-  //     const filteredProducts = allProducts
-  //       .flat()
-  //       .filter((product): product is ProductWithInvoice => product !== null);
-  //     setProductData(filteredProducts);
-  //   };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
-  //   if (invoices.length > 0) {
-  //     fetchProductData();
-  //   }
-  // }, [invoices]);
+  const resetFilters = () => {
+    setSearchTerm("");
+    setConfirm(null);
+    setSelectedDate(null);
+  };
+
+  const filteredInvoices = invoices.filter((invoice) => {
+    const isConfirmed = invoice.confirmed === true;
+
+    if (confirm !== null && isConfirmed !== confirm) {
+      return false;
+    }
+
+    if (
+      searchTerm &&
+      !invoice.products.some((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      selectedDate &&
+      !dayjs(invoice.created_at).isSame(dayjs(selectedDate), "day")
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const getButtonStyle = (status: boolean | null) => {
+    if (confirm === status) {
+      return "bg-[#A3D3BD] hover:bg-[#76c8a4]";
+    }
+    return "bg-white hover:bg-[#D9D9D9]";
+  };
 
   return (
     <div className="mt-20">
       <Navbar />
       <div className="mx-10 grid">
-        <p className="m-10 text-3xl font-bold">Daftar Transaksi</p>
+        <Button
+          onClick={() => router.back()}
+          variant="empty"
+          className="my-5 w-10 bg-white hover:bg-[#D9D9D9] [&_svg]:size-9"
+        >
+          <SquareArrowLeft />
+        </Button>
+
         <div className="space-y-10 rounded-lg border-4 border-[#D9D9D9] px-10 py-5 shadow-md">
+          <p className="text-3xl font-bold">Daftar Transaksi</p>
           <div className="grid grid-cols-3 gap-5">
             <Input
-              type="email"
-              placeholder="Search"
-              // onChange={(e: any) => setSearch(e.event.target)}
+              type="text"
+              placeholder="Search by Product Name"
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
-            <AllProductDropdown />
-            <DatePicker />
-          </div>
-          <div className={cn(`flex items-center gap-8`)}>
-            <p>Status</p>
-            <Button variant={"outline"}>Semua</Button>
-            <Button variant={"outline"}>Berlangsung</Button>
-            <Button variant={"outline"}>Berhasil</Button>
-            <Button variant={"outline"}>Batal</Button>
-            <p>reset filter</p>
+            <DatePicker
+              selectedDate={selectedDate}
+              onDateChange={handleDateChange}
+            />
           </div>
 
-          {invoices.length > 0 ? (
-            invoices.map((product) => (
-              <CardInvoice
-                key={product.transaksi_id}
-                date={product.updated_at}
-                status={product.status}
-                quantity={product.totalQuantity}
-                paidAmount={product.paid_amount}
-                products={product.products}
-                transactionId={product.transaksi_id}
-                productAmount={product.amount}
-              />
-            ))
+          <div className={cn(`flex items-center gap-8`)}>
+            <p>Status</p>
+            {["Telah Dikonfirmasi", "Belum Dikonfirmasi"].map((value, i) => (
+              <Button
+                onClick={() => handleFilterConfirm(i === 0 ? true : false)}
+                key={i}
+                variant={"outline"}
+                className={cn(getButtonStyle(i === 0 ? true : false))}
+              >
+                {value}
+              </Button>
+            ))}
+            <Button
+              onClick={resetFilters}
+              variant={"outline"}
+              className="bg-white hover:bg-[#D9D9D9]"
+            >
+              Reset Filter
+            </Button>
+          </div>
+
+          {!loading ? (
+            filteredInvoices.length > 0 ? (
+              filteredInvoices.map((product) => (
+                <CardInvoice
+                  key={product.transaksi_id}
+                  date={product.created_at}
+                  status={product.status}
+                  quantity={product.totalQuantity}
+                  paidAmount={product.paid_amount}
+                  products={product.products}
+                  transactionId={product.transaksi_id}
+                  productAmount={product.amount}
+                  confirmed={product.confirmed}
+                />
+              ))
+            ) : (
+              <p>No invoices found with the selected filter.</p>
+            )
           ) : (
-            <p> data not found</p>
+            <CardInvoiceSkeleton />
           )}
         </div>
       </div>

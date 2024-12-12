@@ -1,19 +1,30 @@
+import { ConfirmTransaction } from "@/app/api/transaksi/konfirmasi_transaksi";
 import Product from "@/app/lib/model/product";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { faBagShopping, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Ellipsis } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 interface Props {
-  date?: string;
+  date?: Date;
   status?: string;
   quantity?: number;
   paidAmount?: number;
   products?: Product[];
   transactionId: string;
   productAmount: number[];
+  confirmed: boolean;
 }
 
 export default function CardInvoice({
@@ -23,36 +34,73 @@ export default function CardInvoice({
   transactionId = "",
   products,
   productAmount,
+  confirmed,
 }: Props) {
+  const [confirm, setConfirm] = useState<boolean>(confirmed);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleConfirmTransaction = async () => {
+    setLoading(true);
+    try {
+      const confirmed = await ConfirmTransaction(transactionId, true);
+      if (confirmed) {
+        setConfirm(true);
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: `Transaction confirmed successfully.`,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "There was an error confirming the transaction.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConfirmed = () => {
+    if (confirm) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Your Transaction Was Confirmed!",
+      });
+    }
+  };
+
   return (
     <div className="rounded-lg border border-[#D9D9D9] shadow-md">
       <div className="flex items-center gap-10 bg-[#D9D9D9] px-10 py-5">
         <FontAwesomeIcon icon={faBagShopping} className="text-4xl" />
         <p>Belanja</p>
-        <p>{date && new Date(date).toLocaleString("en-US")}</p>
+        <p>{date?.toLocaleString("en-US")}</p>
         <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
           {status?.charAt(0) + status?.slice(1).toLowerCase()}
         </p>
+        {confirm && (
+          <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
+            Pesanan Telah Dikonfirmasi
+          </p>
+        )}
       </div>
       <div className="flex justify-between">
         <div className="grid space-y-3 p-10">
           <div className="flex items-center gap-3">
-            <Image
-              src="/logo.png"
-              width={30}
-              height={30}
-              alt="Claw Image"
-            ></Image>
+            <Image src="/logo.png" width={30} height={30} alt="Claw Image" />
             <p>BelanjaKuy</p>
           </div>
           {products?.map((product, index) => (
             <div key={product.product_id} className="grid space-y-5">
               <div className="flex gap-8">
-                <img
-                  src={product.image_url}
+                <Image
+                  src={`/assets${product.image_url}`}
                   width={70}
                   height={70}
-                  alt="Claw Image"
+                  alt="Product Image"
                 />
                 <ul>
                   <li>
@@ -72,9 +120,9 @@ export default function CardInvoice({
             </div>
           ))}
         </div>
-        <div className="grid gap-5">
+        <div className="grid">
           <ul className="grid grid-cols-3 gap-3 text-end">
-            <li className="col-span-2 grid items-center">
+            <li className="col-span-2 grid items-end">
               <div>
                 <p>Total Belanja</p>
                 <p>
@@ -95,6 +143,7 @@ export default function CardInvoice({
                 Lihat Detail Transaksi
               </Button>
             </Link>
+            {/* <Link href={`/detail-product/${}`}> */}
             <Button
               variant={"outline"}
               className={cn(
@@ -103,7 +152,38 @@ export default function CardInvoice({
             >
               Beli Lagi
             </Button>
-            <FontAwesomeIcon icon={faEllipsis} className="mx-5 text-3xl" />
+            {/* </Link> */}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                onClick={handleConfirmed}
+                className="flex w-10 justify-center focus:border-none focus:outline-none [&_svg]:size-8"
+              >
+                <Ellipsis />
+              </DropdownMenuTrigger>
+              {!confirm && !loading && (
+                <DropdownMenuContent
+                  align="end"
+                  side="right"
+                  className="m-0 p-0"
+                >
+                  <DropdownMenuLabel className="p-0">
+                    <Button
+                      variant="outline"
+                      className="w-full border-none outline-none"
+                      onClick={handleConfirmTransaction}
+                    >
+                      Konfirmasi Pesanan
+                    </Button>
+                    {loading && (
+                      <Button variant="outline" className="w-full" disabled>
+                        Loading...
+                      </Button>
+                    )}
+                  </DropdownMenuLabel>
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
           </div>
         </div>
       </div>

@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/fragments/Navbar";
+import Navbar from "@/components/fragments/Navbar/Navbar";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import updateDataProfile from "@/app/api/profile/update-profile";
 import Swal from "sweetalert2";
-import ProfileSidebar from "@/components/fragments/Sidebar/sidebar-profile";
-import { SaveChangeButton } from "@/components/core/Button/save-change";
+import ProfileSidebar from "@/components/fragments/Sidebar/ProfileSidebar";
+import { SaveChangeButton } from "@/components/core/Button/SaveChangeButton";
 import updatePicture from "@/app/api/profile/update-picture";
 import { Form } from "@/app/lib/model/form";
 import { useParams, usePathname } from "next/navigation";
 import { getProfileByUserId } from "@/app/api/profile/profile";
-import MyProfile from "./modals/my-profile";
-import UploadProduct from "./modals/upload-product";
-import { ListProduct } from "./modals/list-product";
-import UpdateProduct from "./modals/update-product";
+import MyProfile from "./modals/MyProfile";
+import UploadProduct from "./modals/UploadProduct";
+import { ListProduct } from "./modals/ListProduct";
+import UpdateProduct from "./modals/UpdateProduct";
 
 export default function UserProfile({
   productId,
