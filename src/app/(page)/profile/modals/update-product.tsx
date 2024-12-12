@@ -90,8 +90,8 @@ export default function UpdateProduct({
         setImagePreview(`/assets${dataProduct.image_url}`);
         setFormVC((prev) => ({
           ...prev,
-          variants: dataProduct.variant,
-          colors: dataProduct.color,
+          variants: dataProduct.variant || [],
+          colors: dataProduct.color || [],
         }));
       }
     };
