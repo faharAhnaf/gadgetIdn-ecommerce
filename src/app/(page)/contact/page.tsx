@@ -57,7 +57,7 @@ export default function Contact() {
             <FaEnvelope className="mr-4 text-4xl text-red-500" />
             <div>
               <h2 className="text-xl font-bold">Email</h2>
-              <p className="text-gray-700">contact@yourdomain.com</p>
+              <p className="text-gray-700">rprawiratama.ramadhan@gmail.com</p>
             </div>
           </div>
 
@@ -74,7 +74,8 @@ export default function Contact() {
             <div>
               <h2 className="text-xl font-bold">Location</h2>
               <p className="text-gray-700">
-                123 Main Street, Your City, Your Country
+                Jl. A. Yani No.1, Bantarjati, Kec. Bogor Utara, Kota Bogor, Jawa
+                Barat 16153
               </p>
             </div>
           </div>
