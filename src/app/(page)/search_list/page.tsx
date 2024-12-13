@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Card from "@/components/core/Card/Card";
+import Card from "@/components/core/Card/search_list";
 import Navbar from "@/components/fragments/Navbar/Navbar";
 import Footer from "@/components/fragments/Footer/Footer";
 import SideBar from "@/components/fragments/Sidebar/ProductList";

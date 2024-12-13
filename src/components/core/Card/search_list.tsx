@@ -44,12 +44,16 @@ const Card: React.FC<ProductCardProps> = ({
 
       <div className="mt-auto flex w-full flex-col">
         <p className="mb-4 font-semibold text-black">{formatRupiah(price)}</p>
-        <button
-          onClick={() => router.push(`/detail-product/${product_id}`)}
-          className="rounded-lg bg-black px-3 py-2 text-sm text-white hover:bg-gray-800"
-        >
-          + Add to Cart
-        </button>
+        
+        <Link href={`/detail-product/${product_id}`}>
+          <button
+            onClick={() => router.push(`/detail-product/${product_id}`)}
+            className="rounded-lg bg-black px-3 py-2 text-sm text-white hover:bg-gray-800"
+          >
+            + Add to Cart
+          </button>
+        </Link>
+      
       </div>
     </div>
   );
