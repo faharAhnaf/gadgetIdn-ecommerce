@@ -179,7 +179,7 @@ export default function ShoppingCart() {
               key={item.cart_id}
               className="border-1 mb-5 flex items-center justify-between rounded-lg border-[#f4f1eb] px-6 py-8 shadow-md"
             >
-              <label className="flex items-start">
+              <label className="flex items-start w-full">
                 <input
                   type="checkbox"
                   checked={selectedItems.includes(item.cart_id)}
@@ -191,7 +191,7 @@ export default function ShoppingCart() {
                   alt={item.product?.name}
                   className="mr-4 h-[100px] w-[100px] rounded-md"
                 />
-                <div className="pr-5">
+                <div className="pr-5 w-full">
                   <div className="mb-2 flex items-center justify-between">
                     <h2 className="text-lg font-semibold">
                       {item.product?.name}
@@ -206,7 +206,7 @@ export default function ShoppingCart() {
                       : item.product!.description}
                   </p>
 
-                  <div className="mt-5 flex justify-between">
+                  <div className="mt-5 flex justify-between w-full">
                     <div className="flex">
                       <button
                         className={`rounded-md bg-[#f9f7f3] px-4 py-2 font-semibold text-[#a7a39b]`}
