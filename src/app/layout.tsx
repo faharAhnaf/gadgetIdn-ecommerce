@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-import { config } from '@fortawesome/fontawesome-svg-core';
-import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the CSS
+import { UserProfileProvider } from "./context/ProfileContext";
 config.autoAddCss = false; // Prevents Font Awesome from automatically adding CSS
 
 const geistSans = localFont({
@@ -17,12 +18,11 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-
 export const metadata = {
   title: "BelanjaKuy",
   description: "Ecommerce application that is cooperative and fast in service",
   manifest: "/manifest.json",
-}
+};
 
 export default function RootLayout({
   children,
@@ -34,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <UserProfileProvider>{children}</UserProfileProvider>
       </body>
     </html>
   );

@@ -147,7 +147,7 @@ export default function CardInvoice({
             <Button
               variant={"outline"}
               className={cn(
-                `mx-auto w-full rounded-xl bg-[#A3D3BD] hover:bg-[#76c8a4]`,
+                `mx-auto w-full rounded-xl bg-blue-500 text-white hover:bg-blue-600 hover:text-white`,
               )}
             >
               Beli Lagi

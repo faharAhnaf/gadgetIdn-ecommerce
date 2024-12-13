@@ -19,21 +19,30 @@ import { getProfileByUserId } from "@/app/api/profile/profile";
 import Profile from "@/app/lib/model/profile";
 import Image from "next/image";
 import SkeletonUserPicture from "../Skeleton/SkeletonUserPicture";
+import { useUserProfile } from "@/app/context/ProfileContext";
 
 export function ProfileDropdown() {
   const session = localStorage.getItem("userSession");
-  const [profile, setProfile] = useState<Profile | null>();
+  const [dataProfile, setDataProfile] = useState<Profile | null>();
   const [loading, setLoading] = useState<boolean>(true);
+  const { profile } = useUserProfile();
+
   useEffect(() => {
     (async () => {
       if (session) {
         const userData = JSON.parse(session);
-        const profile = await getProfileByUserId(userData.user_id);
-        setProfile(profile);
-        setLoading(false);
+        const dataProfile = await getProfileByUserId(userData.user_id);
+        if (dataProfile) {
+          setDataProfile(dataProfile);
+          setLoading(false);
+        }
+      }
+
+      if (profile) {
+        setDataProfile(null);
       }
     })();
-  }, []);
+  }, [profile]);
 
   const router = useRouter();
   const handleLogout = async (e: any) => {
@@ -52,7 +61,7 @@ export function ProfileDropdown() {
                 <SkeletonUserPicture />
               ) : (
                 <Image
-                  src={`/assets/picture/${profile?.picture}`}
+                  src={`/assets/picture/${dataProfile?.picture || profile?.picture || "bussiness-man.png"}`}
                   width={50}
                   height={50}
                   className="h-10 w-10 rounded-full object-cover transition duration-300 ease-in-out"
