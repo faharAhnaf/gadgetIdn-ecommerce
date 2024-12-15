@@ -57,7 +57,13 @@ export default function Contact() {
             <FaEnvelope className="mr-4 text-4xl text-red-500" />
             <div>
               <h2 className="text-xl font-bold">Email</h2>
-              <p className="text-gray-700">rprawiratama.ramadhan@gmail.com</p>
+
+              <a
+                href="mailto:rprawiratama.ramadhan@gmail.com&subject=tes"
+                className="text-blue-600 hover:underline"
+              >
+                rprawiratama.ramadhan@gmail.com
+              </a>
             </div>
           </div>
 

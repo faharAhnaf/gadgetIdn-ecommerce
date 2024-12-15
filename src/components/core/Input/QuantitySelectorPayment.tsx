@@ -15,35 +15,41 @@ export default function QuantitySelectorPayment({
 }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(() => {
     // Initialize quantity from localStorage
-    const cartSessions = JSON.parse(localStorage.getItem("cartSession") || "[]");
+    const cartSessions = JSON.parse(
+      localStorage.getItem("cartSession") || "[]",
+    );
     const cartItem = cartSessions.find((item: any) => item.cart_id === cartId);
     return cartItem ? cartItem.quantity : 1;
   });
 
   const updateLocalStorage = (newQuantity: number) => {
-    const cartSessions = JSON.parse(localStorage.getItem("cartSession") || "[]");
+    const cartSessions = JSON.parse(
+      localStorage.getItem("cartSession") || "[]",
+    );
     const newPrice = newQuantity * unitPrice;
-    const cartIndex = cartSessions.findIndex((item: any) => item.cart_id === cartId);
-  
+    const cartIndex = cartSessions.findIndex(
+      (item: any) => item.cart_id === cartId,
+    );
+
     if (cartIndex > -1) {
       // Only update quantity and price (total_price)
       cartSessions[cartIndex] = {
         ...cartSessions[cartIndex], // Preserve other existing properties
-        quantity: newQuantity, 
-        total_price: newPrice 
+        quantity: newQuantity,
+        total_price: newPrice,
       };
     } else {
-      cartSessions.push({ 
-        cart_id: cartId, 
-        quantity: newQuantity, 
-        total_price: newPrice 
+      cartSessions.push({
+        cart_id: cartId,
+        quantity: newQuantity,
+        total_price: newPrice,
       });
     }
-  
+
     localStorage.setItem("cartSession", JSON.stringify(cartSessions));
     onQuantityChange(newQuantity, newPrice);
   };
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
     const newQuantity = value ? Math.max(1, parseInt(value, 10)) : 1;
@@ -58,10 +64,10 @@ export default function QuantitySelectorPayment({
   };
 
   return (
-    <div className="flex items-center rounded-md border border-gray-300">
+    <div className="flex items-center justify-center rounded-md border border-gray-300">
       <button
         onClick={() => changeQuantity(-1)}
-        className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
+        className="w-full bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
       >
         -
       </button>
@@ -75,7 +81,7 @@ export default function QuantitySelectorPayment({
 
       <button
         onClick={() => changeQuantity(1)}
-        className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
+        className="w-full bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
       >
         +
       </button>

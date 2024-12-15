@@ -54,7 +54,7 @@ export function ProfileDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="group flex cursor-pointer items-center justify-center rounded-full bg-black hover:bg-white">
+        <div className="group flex cursor-pointer items-center justify-center rounded-full hover:bg-white">
           {session ? (
             <>
               {loading ? (

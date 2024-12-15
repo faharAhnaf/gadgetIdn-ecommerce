@@ -76,7 +76,7 @@ export default function CardInvoice({
     <div className="rounded-lg border border-[#D9D9D9] shadow-md">
       <div className="flex items-center gap-10 bg-[#D9D9D9] px-10 py-5">
         <FontAwesomeIcon icon={faBagShopping} className="text-4xl" />
-        <p>Belanja</p>
+        <p>Shopping</p>
         <p>{date?.toLocaleString("en-US")}</p>
         <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
           {status?.charAt(0) + status?.slice(1).toLowerCase()}
@@ -108,7 +108,8 @@ export default function CardInvoice({
                   </li>
                   <li>
                     <p>
-                      {productAmount[index]} barang x &nbsp;
+                      {productAmount[index]}&nbsp;
+                      {productAmount[index] === 1 ? `Item` : ` Items`} x &nbsp;
                       {new Intl.NumberFormat("id-ID", {
                         style: "currency",
                         currency: "IDR",
@@ -124,7 +125,7 @@ export default function CardInvoice({
           <ul className="grid grid-cols-3 gap-3 text-end">
             <li className="col-span-2 grid items-end">
               <div>
-                <p>Total Belanja</p>
+                <p>Total Payment</p>
                 <p>
                   {new Intl.NumberFormat("id-ID", {
                     style: "currency",
@@ -140,7 +141,7 @@ export default function CardInvoice({
                 variant={"ghost"}
                 className={cn(`mx-auto w-full rounded-xl`)}
               >
-                Lihat Detail Transaksi
+                View Transaction Details
               </Button>
             </Link>
             {/* <Link href={`/detail-product/${}`}> */}
@@ -150,7 +151,7 @@ export default function CardInvoice({
                 `mx-auto w-full rounded-xl bg-blue-500 text-white hover:bg-blue-600 hover:text-white`,
               )}
             >
-              Beli Lagi
+              Buy Again
             </Button>
             {/* </Link> */}
 
@@ -173,7 +174,7 @@ export default function CardInvoice({
                       className="w-full border-none outline-none"
                       onClick={handleConfirmTransaction}
                     >
-                      Konfirmasi Pesanan
+                      Order Confirmation
                     </Button>
                     {loading && (
                       <Button variant="outline" className="w-full" disabled>

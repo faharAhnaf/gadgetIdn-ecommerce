@@ -2,9 +2,7 @@ import { db } from "@/app/lib/firebase";
 import { collection, query, where, getDocs, doc } from "firebase/firestore";
 import ProductList from "@/app/lib/model/product_list";
 
-export const getProductsByUserId = async (
-  userId: string,
-): Promise<ProductList[] | null> => {
+export const getProductsByUserId = async (): Promise<ProductList[] | null> => {
   try {
     const productCollection = collection(db, "product");
 
@@ -24,15 +22,15 @@ export const getProductsByUserId = async (
       
   */
 
-    const productQuery = query(
-      productCollection,
-      where("user_id", "==", doc(db, "users", userId)),
-    );
+    // const productQuery = query(
+    //   productCollection,
+    //   where("user_id", "==", doc(db, "users", userId)),
+    // );
 
-    const productSnap = await getDocs(productQuery);
+    const productSnap = await getDocs(productCollection);
 
     if (productSnap.empty) {
-      console.warn("No products found for user ID:", userId);
+      console.warn("No products found");
       return null;
     }
 

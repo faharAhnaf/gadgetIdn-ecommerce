@@ -150,7 +150,7 @@ export default function ShoppingCart() {
   return (
     <div className="mb-10 mt-[100px] flex min-h-[700px] justify-between p-8">
       <div className="w-2/3">
-        <h1 className="mb-4 text-2xl font-semibold">Keranjang</h1>
+        <h1 className="mb-4 text-2xl font-semibold">Cart</h1>
         <div className="mb-4 rounded-md p-4 shadow-md">
           <label className="flex items-center">
             <input
@@ -159,14 +159,12 @@ export default function ShoppingCart() {
               onChange={toggleSelectAll}
               className="mr-3 h-[20px] w-[20px]"
             />
-            <span className="font-medium">
-              Pilih Semua ({cartItems.length})
-            </span>
+            <span className="font-medium">Select All ({cartItems.length})</span>
           </label>
         </div>
 
         {isLoading ? (
-          Array.from({ length: 3 }).map((_, index) => (
+          Array.from({ length: 1 }).map((_, index) => (
             <CartSkeleton key={index} />
           ))
         ) : cartItems.length === 0 ? (
@@ -177,9 +175,9 @@ export default function ShoppingCart() {
           cartItems.map((item) => (
             <div
               key={item.cart_id}
-              className="border-1 mb-5 flex items-center justify-between rounded-lg border-[#f4f1eb] px-6 py-8 shadow-md"
+              className="border-1 mb-5 flex items-center justify-between rounded-lg border-[#f4f1eb] px-4 py-8 shadow-md"
             >
-              <label className="flex items-start w-full">
+              <label className="flex w-full items-start">
                 <input
                   type="checkbox"
                   checked={selectedItems.includes(item.cart_id)}
@@ -191,7 +189,7 @@ export default function ShoppingCart() {
                   alt={item.product?.name}
                   className="mr-4 h-[100px] w-[100px] rounded-md"
                 />
-                <div className="pr-5 w-full">
+                <div className="w-full pr-5">
                   <div className="mb-2 flex items-center justify-between">
                     <h2 className="text-lg font-semibold">
                       {item.product?.name}
@@ -206,7 +204,7 @@ export default function ShoppingCart() {
                       : item.product!.description}
                   </p>
 
-                  <div className="mt-5 flex justify-between w-full">
+                  <div className="mt-5 flex w-full justify-between">
                     <div className="flex">
                       <button
                         className={`rounded-md bg-[#f9f7f3] px-4 py-2 font-semibold text-[#a7a39b]`}
@@ -247,8 +245,8 @@ export default function ShoppingCart() {
         )}
       </div>
 
-      <div className="max-h-[500px] w-1/4 rounded-md p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold">Ringkasan Belanja</h2>
+      <div className="w-1/4 rounded-md p-6 shadow-md">
+        <h2 className="mb-4 text-xl font-semibold">Shopping Summary</h2>
         <div className="mb-4 flex justify-between">
           <span className="text-gray-600">Total</span>
           <span className="text-lg font-bold">

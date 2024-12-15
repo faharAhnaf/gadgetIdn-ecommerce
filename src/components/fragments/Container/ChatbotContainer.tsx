@@ -6,14 +6,15 @@ type Props = {
 
 export default function ChatbotContainer({ children }: Props) {
   return (
-    <div className="flex flex-col overflow-y-auto max-h-[79vh] custom-scrollbar">
-      <div className="mb-5 flex flex-col justify-center items-center min-h-[80vh] my-auto">
-        <p className="text-black text-[32px] italic my-4">Chat Bot</p>
-        <p className="text-black text-center">
-        Dapatkan informasi eksklusif tentang diskon spesial, tips memilih produk yang sesuai dengan kebutuhanmu, <br></br>
-        hingga konsultasi penggunaan aplikasi untuk memaksimalkan pengalaman belanja. <br></br>
-        Kami siap menemanimu dalam setiap langkah untuk memastikan belanja online <br></br>
-        terasa lebih aman, mudah, dan tentunya, menyenangkan!
+    <div className="custom-scrollbar flex max-h-[79vh] flex-col overflow-y-auto">
+      <div className="my-auto mb-5 flex min-h-[80vh] flex-col items-center justify-center">
+        <p className="my-4 text-[32px] italic text-black">Chat Bot</p>
+        <p className="max-w-2xl text-center text-black">
+          Get exclusive information about special discounts, tips on choosing
+          products that suit your needs, and even consultation on using the app
+          to maximize your shopping experience. We are here to guide you every
+          step of the way to ensure that online shopping feels safer, easier,
+          and of course, more enjoyable!
         </p>
       </div>
       <div className="">

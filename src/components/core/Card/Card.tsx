@@ -1,9 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import formatRupiah from "@/app/lib/format_money";
-import addCartItem from "@/app/api/cart/add_cart";
-import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 interface ProductCardProps {
   product_id: string;
@@ -27,19 +26,17 @@ const Card: React.FC<ProductCardProps> = ({
   const router = useRouter();
 
   const handleAddToCart = async () => {
-    router.push(id);
+    !session ? router.push("/auth/sign-in") : router.push(id);
   };
 
   return (
     <div className="flex h-full min-h-[425px] flex-col items-start rounded-lg bg-white p-4 shadow-lg">
       <div className="mb-4 h-48 w-full overflow-hidden rounded-md bg-gray-200">
-        <Link href={id}>
-          <img
-            src={imageUrl}
-            alt={title}
-            className="h-full w-full object-cover"
-          />
-        </Link>
+        <img
+          src={imageUrl}
+          alt={title}
+          className="h-full w-full object-cover"
+        />
       </div>
 
       <h3 className="mb-1 text-lg font-semibold">{title}</h3>

@@ -49,25 +49,26 @@ export default function Keranjang() {
     <div className="">
       <Navbar />
 
-      <div className="container mx-auto mt-28 flex justify-center">
-        <div className="flex w-full">
-          <div className="fixed mb-5 w-1/5">
-            <SideBar onSubmitFilters={handleFilterSubmit} params="" />
-          </div>
-
-          <div className="ml-80 w-full p-5">
-           
-            {
-              loading ? '' : products.length === 0 ? (
-                  <div className="h-[400px]">
-                    <p className="text-center text-gray-500 mt-10">No items match</p>
-                  </div>
-              ) : (
-                <p className="mb-2 font-semibold">
-                  `Menampilkan 1 - {products.length} dari total barang untuk "Seluruh Kategori"`
+      <div className="container mt-16 min-h-[77vh]">
+        <div className="fixed mb-5 h-full w-1/5">
+          <SideBar onSubmitFilters={handleFilterSubmit} params="" />
+        </div>
+        <div className="flex w-full pt-10">
+          <div className="ml-96 w-full p-5">
+            {loading ? (
+              ""
+            ) : products.length === 0 ? (
+              <div className="h-[400px]">
+                <p className="mt-10 text-center text-gray-500">
+                  No items match
                 </p>
-              )
-            }
+              </div>
+            ) : (
+              <p className="mb-2 font-semibold">
+                `Showing 1 - {products.length} of total items for 'All
+                Categories'`
+              </p>
+            )}
 
             <div className="pb-4">
               {loading ? (
@@ -80,7 +81,9 @@ export default function Keranjang() {
                 </div>
               ) : noItems ? (
                 <div className="h-[400px]">
-                  <p className="text-center text-gray-500 mt-10">No items match</p>
+                  <p className="mt-10 text-center text-gray-500">
+                    No items match
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -100,8 +103,11 @@ export default function Keranjang() {
           </div>
         </div>
       </div>
-
-      <Footer />
+      {!loading && (
+        <div className="ml-[20.9rem]">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 }

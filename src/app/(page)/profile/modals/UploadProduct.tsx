@@ -106,6 +106,8 @@ export default function UploadProduct() {
 
     const formData = new FormData();
     formData.append("file", file);
+    // console.log(formData.get("file"));
+
     try {
       const response = await fetch("/api/upload-product", {
         method: "POST",

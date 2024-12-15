@@ -102,7 +102,7 @@ export default function DetailInvoice({ params }: Props) {
               className="bg-blue-500 text-white"
             >
               <Printer />
-              Cetak
+              Print
             </Button>
           </div>
 

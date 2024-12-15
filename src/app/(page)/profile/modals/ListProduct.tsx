@@ -65,9 +65,8 @@ export function ListProduct() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const dataProduct = await getProductsByUserId(
-        "70aYS0UUUfON9bjusEwHnjAZtb43",
-      );
+      const dataProduct = await getProductsByUserId();
+      console.log(dataProduct);
       const mappedData =
         dataProduct?.map((item) => ({
           product_id: item.product_id,
@@ -97,9 +96,9 @@ export function ListProduct() {
       setData((prevData) =>
         prevData.filter((item) => item.product_id !== productId),
       );
-      Swal.fire("Dihapus!", "Data Anda telah dihapus.", "success");
+      Swal.fire("Deleted!", "Your Data Has Been Deleted.", "success");
     } else {
-      console.log("Hapus dibatalkan");
+      console.log("Delete Canceled");
     }
   };
 

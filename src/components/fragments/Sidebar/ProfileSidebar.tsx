@@ -18,6 +18,7 @@ import { logout } from "@/app/api/auth/google";
 import { ChevronRight, LogOut, Settings, Store } from "lucide-react";
 import Profile from "@/app/lib/model/profile";
 import { useUserProfile } from "@/app/context/ProfileContext";
+import { useRouter } from "next/navigation";
 
 type Props = {
   data: Profile;
@@ -30,6 +31,7 @@ const ProfileSidebar = ({ data }: Props) => {
   const [pictureUrl, setPictureUrl] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const { setProfile } = useUserProfile();
+  const router = useRouter();
 
   const toggleMenu = (value: string) => {
     setCurrentMenu((oldValue) => (oldValue === value ? "" : value));
@@ -99,6 +101,7 @@ const ProfileSidebar = ({ data }: Props) => {
   const handleLogout = async (e: any) => {
     e.preventDefault();
     await logout();
+    router.push("/");
   };
 
   return (

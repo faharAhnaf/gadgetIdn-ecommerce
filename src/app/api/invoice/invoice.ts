@@ -22,7 +22,7 @@ export default async function invoice({
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      console.error("No transactions found for this user");
+      console.log("No transactions found for this user");
       return null;
     }
 
@@ -32,7 +32,7 @@ export default async function invoice({
 
         // Check if product_id is an array
         if (!Array.isArray(transactionData.product_id)) {
-          console.error(
+          console.log(
             "product_id is not an array:",
             transactionData.product_id,
           );
@@ -49,7 +49,7 @@ export default async function invoice({
                 ...productSnap.data(),
               } as Product;
             } else {
-              console.error("Product not found for ID:", id);
+              console.log("Product not found for ID:", id);
               return null;
             }
           }),
@@ -98,7 +98,7 @@ export default async function invoice({
       (transaction): transaction is InvoiceData => transaction !== null,
     );
   } catch (e) {
-    console.error("Error fetching transactions:", e);
+    console.log("Error fetching transactions:", e);
     return null;
   }
 }

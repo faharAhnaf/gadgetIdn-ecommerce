@@ -12,9 +12,13 @@ interface ShippingDropdownProps {
   onShippingSelect: (selectedOption: ShippingOption) => void;
 }
 
-const ShippingDropdown: React.FC<ShippingDropdownProps> = ({ onShippingSelect }) => {
+const ShippingDropdown: React.FC<ShippingDropdownProps> = ({
+  onShippingSelect,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<ShippingOption | null>(null);
+  const [selectedOption, setSelectedOption] = useState<ShippingOption | null>(
+    null,
+  );
 
   const shippingOptions: ShippingOption[] = [
     {
@@ -64,7 +68,7 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({ onShippingSelect })
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-2 text-left bg-white border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full rounded-md border bg-white px-4 py-2 text-left shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         {selectedOption
           ? `${selectedOption.name} - Rp${parseInt(selectedOption.price).toLocaleString()}`
@@ -72,18 +76,18 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({ onShippingSelect })
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-2 bg-white border rounded-md shadow-lg">
+        <div className="absolute z-10 mt-2 max-h-60 w-full overflow-y-auto rounded-md border bg-white shadow-lg">
           <ul className="divide-y divide-gray-200">
             {shippingOptions.map((option) => (
               <li
                 key={option.id}
-                className="flex items-center p-4 hover:bg-gray-100 cursor-pointer"
+                className="flex cursor-pointer items-center p-4 hover:bg-gray-100"
                 onClick={() => handleSelect(option)}
               >
                 <img
                   src={option.logo}
                   alt={`${option.name} logo`}
-                  className="w-10 h-10 mr-4"
+                  className="mr-4 h-10 w-10"
                 />
                 <div>
                   <h3 className="text-sm font-medium">{option.name}</h3>
@@ -99,7 +103,7 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({ onShippingSelect })
                     value={option.id}
                     checked={selectedOption?.id === option.id}
                     readOnly
-                    className="w-4 h-4 text-blue-500"
+                    className="h-4 w-4 text-blue-500"
                   />
                 </div>
               </li>

@@ -8,10 +8,5 @@ interface Props {
 }
 
 export default function PageLayout({ children }: Props) {
-  return (
-    <div>
-      <Navbar />
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 }

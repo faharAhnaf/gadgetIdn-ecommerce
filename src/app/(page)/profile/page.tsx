@@ -1,26 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/fragments/Navbar/Navbar";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import updateDataProfile from "@/app/api/profile/update-profile";
 import Swal from "sweetalert2";
 import ProfileSidebar from "@/components/fragments/Sidebar/ProfileSidebar";
-import { SaveChangeButton } from "@/components/core/Button/SaveChangeButton";
-import updatePicture from "@/app/api/profile/update-picture";
 import { Form } from "@/app/lib/model/form";
-import { useParams, usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getProfileByUserId } from "@/app/api/profile/profile";
 import MyProfile from "./modals/MyProfile";
 import UploadProduct from "./modals/UploadProduct";
 import { ListProduct } from "./modals/ListProduct";
 import UpdateProduct from "./modals/UpdateProduct";
-import User from "@/app/lib/model/user";
 import Profile from "@/app/lib/model/profile";
-import { useUserProfile } from "@/app/context/ProfileContext";
+import Navbar from "@/components/fragments/Navbar/Navbar";
 
 export default function UserProfile({
   productId,
@@ -37,13 +29,16 @@ export default function UserProfile({
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [isLoading, setIsloading] = useState<boolean>(true);
+  const router = useRouter();
 
-  const storedData = localStorage.getItem("userSession");
+  const session = localStorage.getItem("userSession");
+
   useEffect(() => {
-    if (!storedData) {
+    if (!session) {
+      router.push("/");
       return;
     }
-    const userData = JSON.parse(storedData);
+    const userData = JSON.parse(session);
     (async () => {
       try {
         const userProfile = await getProfileByUserId(userData.user_id);
@@ -108,28 +103,37 @@ export default function UserProfile({
   const params = usePathname();
 
   return (
-    <div>
-      <div className="mx-28 mb-10 mt-28 grid grid-cols-2 rounded-xl border-2">
-        <div className="grid w-full border-r-2">
-          {isLoading ? <Skeleton /> : data && <ProfileSidebar data={data} />}
+    <>
+      {session && (
+        <div>
+          <Navbar />
+          <div className="mx-28 mb-10 mt-28 grid grid-cols-2 rounded-xl border-2">
+            <div className="grid w-full border-r-2">
+              {isLoading ? (
+                <Skeleton />
+              ) : (
+                data && <ProfileSidebar data={data} />
+              )}
+            </div>
+            <div className="flex justify-center">
+              {params == "/profile" && (
+                <MyProfile
+                  handleSubmit={handleSubmit}
+                  handleChange={handleChange}
+                  formData={formData}
+                  loading={loading}
+                />
+              )}
+              {params == "/profile/upload-product" && <UploadProduct />}
+              {params == "/profile/list-product" && <ListProduct />}
+              {params == `/profile/list-product/${productId}` && (
+                <UpdateProduct productId={productId} />
+              )}
+            </div>
+          </div>
         </div>
-        <div className="flex justify-center">
-          {params == "/profile" && (
-            <MyProfile
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-              formData={formData}
-              loading={loading}
-            />
-          )}
-          {params == "/profile/upload-product" && <UploadProduct />}
-          {params == "/profile/list-product" && <ListProduct />}
-          {params == `/profile/list-product/${productId}` && (
-            <UpdateProduct productId={productId} />
-          )}
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

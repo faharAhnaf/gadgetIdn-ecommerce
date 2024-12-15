@@ -40,11 +40,10 @@ export default function Navbar() {
   };
 
   const session = localStorage.getItem("userSession");
-
   useEffect(() => {
     setIsMobileMenuOpen(false);
     if (session) {
-      const userData = JSON.parse(session!);
+      const userData = JSON.parse(session);
       setUserData(userData);
     }
   }, [session]);
@@ -78,11 +77,13 @@ export default function Navbar() {
             <Link href="/contact">
               <p className="hover:text-blue-500 hover:duration-700">Contact</p>
             </Link>
-            <Link href="/invoice">
-              <p className="hover:text-blue-500 hover:duration-700">
-                Detail Transaksi
-              </p>
-            </Link>
+            {session && (
+              <Link href="/invoice">
+                <p className="hover:text-blue-500 hover:duration-700">
+                  Transaction Details
+                </p>
+              </Link>
+            )}
             <Link href="/chatbot">
               <p className="hover:text-blue-500 hover:duration-700">Chatbot</p>
             </Link>
@@ -105,7 +106,7 @@ export default function Navbar() {
             />
           </div>
 
-          {userData && (
+          {session && (
             <div className="flex items-center gap-4 text-lg text-black">
               <Link href="/keranjang">
                 <FiShoppingCart className="cursor-pointer" />
@@ -117,7 +118,7 @@ export default function Navbar() {
 
           <div className="hidden h-[40px] w-[1.5px] rounded-md bg-black lg:block"></div>
 
-          {userData ? <p>{userData.name}</p> : buttonLogin()}
+          {session && userData ? <p>{userData.name}</p> : buttonLogin()}
 
           <div className="lg:hidden">
             <FiMenu
