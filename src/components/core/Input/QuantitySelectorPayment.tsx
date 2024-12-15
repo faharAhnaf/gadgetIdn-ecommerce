@@ -14,7 +14,6 @@ export default function QuantitySelectorPayment({
   unitPrice,
 }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(() => {
-    // Initialize quantity from localStorage
     const cartSessions = JSON.parse(localStorage.getItem("cartSession") || "[]");
     const cartItem = cartSessions.find((item: any) => item.cart_id === cartId);
     return cartItem ? cartItem.quantity : 1;
@@ -26,9 +25,8 @@ export default function QuantitySelectorPayment({
     const cartIndex = cartSessions.findIndex((item: any) => item.cart_id === cartId);
   
     if (cartIndex > -1) {
-      // Only update quantity and price (total_price)
       cartSessions[cartIndex] = {
-        ...cartSessions[cartIndex], // Preserve other existing properties
+        ...cartSessions[cartIndex], 
         quantity: newQuantity, 
         total_price: newPrice 
       };
@@ -58,27 +56,31 @@ export default function QuantitySelectorPayment({
   };
 
   return (
-    <div className="flex items-center rounded-md border border-gray-300">
-      <button
-        onClick={() => changeQuantity(-1)}
-        className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
-      >
-        -
-      </button>
+    <div className="flex border-gray-300">
 
-      <input
-        type="text"
-        value={quantity}
-        onChange={handleInputChange}
-        className="w-12 p-2 text-center outline-none"
-      />
+      <div className="rounded-md border">
+        <button
+          onClick={() => changeQuantity(-1)}
+          className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
+        >
+          -
+        </button>
 
-      <button
-        onClick={() => changeQuantity(1)}
-        className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
-      >
-        +
-      </button>
+        <input
+          type="text"
+          value={quantity}
+          onChange={handleInputChange}
+          className="w-12 p-2 text-center outline-none"
+        />
+
+        <button
+          onClick={() => changeQuantity(1)}
+          className="bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"
+        >
+          +
+        </button>
+      </div>
+
     </div>
   );
 }

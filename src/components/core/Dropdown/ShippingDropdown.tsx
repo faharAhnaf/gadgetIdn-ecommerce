@@ -68,7 +68,7 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({ onShippingSelect })
       >
         {selectedOption
           ? `${selectedOption.name} - Rp${parseInt(selectedOption.price).toLocaleString()}`
-          : "Pilih ekspedisi"}
+          : "Select Expedition"}
       </button>
 
       {isOpen && (

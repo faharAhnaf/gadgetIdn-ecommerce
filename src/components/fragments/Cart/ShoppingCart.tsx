@@ -150,7 +150,7 @@ export default function ShoppingCart() {
   return (
     <div className="mb-10 mt-[100px] flex min-h-[700px] justify-between p-8">
       <div className="w-2/3">
-        <h1 className="mb-4 text-2xl font-semibold">Keranjang</h1>
+        <h1 className="mb-4 text-2xl font-semibold">Cart</h1>
         <div className="mb-4 rounded-md p-4 shadow-md">
           <label className="flex items-center">
             <input
@@ -160,7 +160,7 @@ export default function ShoppingCart() {
               className="mr-3 h-[20px] w-[20px]"
             />
             <span className="font-medium">
-              Pilih Semua ({cartItems.length})
+              Select All ({cartItems.length})
             </span>
           </label>
         </div>
@@ -248,7 +248,7 @@ export default function ShoppingCart() {
       </div>
 
       <div className="max-h-[500px] w-1/4 rounded-md p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold">Ringkasan Belanja</h2>
+        <h2 className="mb-4 text-xl font-semibold">Shopping Summary</h2>
         <div className="mb-4 flex justify-between">
           <span className="text-gray-600">Total</span>
           <span className="text-lg font-bold">

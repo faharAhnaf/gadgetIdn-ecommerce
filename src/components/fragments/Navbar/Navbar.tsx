@@ -80,7 +80,7 @@ export default function Navbar() {
             </Link>
             <Link href="/invoice">
               <p className="hover:text-blue-500 hover:duration-700">
-                Detail Transaksi
+                Transaction Details
               </p>
             </Link>
             <Link href="/chatbot">
@@ -150,20 +150,20 @@ export default function Navbar() {
               Home
             </p>
           </Link>
-          <Link href="/shop">
-            <p
-              onClick={toggleMobileMenu}
-              className="hover:text-blue-500 hover:duration-700"
-            >
-              Shop
-            </p>
-          </Link>
           <Link href="/contact">
             <p
               onClick={toggleMobileMenu}
               className="hover:text-blue-500 hover:duration-700"
             >
               Contact
+            </p>
+          </Link>
+          <Link href="/invoice">
+            <p
+              onClick={toggleMobileMenu}
+              className="hover:text-blue-500 hover:duration-700"
+            >
+              Transaction Details
             </p>
           </Link>
           <Link href="/chatbot">

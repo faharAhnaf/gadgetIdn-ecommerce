@@ -35,7 +35,7 @@ export default function Checkout() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [alamat, setAlamat] = useState({
-    nama: "Nama Penerima",
+    nama: "Recipient's name",
     nomor: "(+62) 888-8888-8888",
     detail:
       "Jl. Moch Kahfi II Gg. Suro, Cipedak, Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta, ID 12630.",
@@ -104,9 +104,9 @@ export default function Checkout() {
 
       if (profile) {
         setFormInput({
-          nama: profile.name || "Nama Penerima",
+          nama: profile.name || "Recipient's name",
           nomor: profile.phone || "(+62) 888-8888-8888",
-          detail: profile.location || "Alamat Lengkap",
+          detail: profile.location || "Complete address",
         });
 
         Swal.fire({
@@ -176,15 +176,17 @@ export default function Checkout() {
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen bg-gray-100">
+      <div className="h-full w-full pb-5 pt-5 bg-gray-100">
         <div className="mx-auto my-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
-          <h1 className="mb-20 text-center text-3xl font-bold">Check Out</h1>
+          <h1 className="my-10 text-center text-3xl font-bold">Check Out</h1>
+          
           <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
-            <div className="mt-6">
+            
+            <div>
               <div className="rounded-lg border bg-gray-50 p-6 shadow-md">
-                <h2 className="mb-4 text-2xl font-medium">Alamat Pengiriman</h2>
+                <h2 className="mb-4 text-2xl font-medium">Shipping address</h2>
                 {!isEditing ? (
-                  <div>
+                  <div className="space-y-2">
                     <p className="font-semibold">{alamat.nama}</p>
                     <p>{alamat.nomor}</p>
                     <p>{alamat.detail}</p>
@@ -192,7 +194,7 @@ export default function Checkout() {
                       onClick={handleUbah}
                       className="mt-2 text-blue-500 underline hover:text-blue-700"
                     >
-                      Ubah
+                      Edit
                     </button>
                   </div>
                 ) : (
@@ -202,7 +204,7 @@ export default function Checkout() {
                         className="mb-2 block font-semibold"
                         htmlFor="nama"
                       >
-                        Nama Penerima
+                        Recipient's name
                       </label>
                       <input
                         id="nama"
@@ -222,7 +224,7 @@ export default function Checkout() {
                         className="mb-2 block font-semibold"
                         htmlFor="nomor"
                       >
-                        Nomor Telepon
+                        Phone number
                       </label>
                       <input
                         id="nomor"
@@ -242,7 +244,7 @@ export default function Checkout() {
                         className="mb-2 block font-semibold"
                         htmlFor="detail"
                       >
-                        Alamat Lengkap
+                        Complete address
                       </label>
                       <textarea
                         id="detail"
@@ -262,7 +264,7 @@ export default function Checkout() {
                         onClick={handleSimpan}
                         className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow hover:bg-blue-600"
                       >
-                        Simpan
+                        Save
                       </button>
 
                       <button
@@ -282,20 +284,30 @@ export default function Checkout() {
                 <h2 className="mb-4 text-2xl font-medium">Order Summary</h2>
                 <div className="space-y-4">
                   {products.map((product) => (
-                    <div key={product.cart_id} className="flex border-b pb-4">
+                    <div key={product.cart_id} className="flex border-b pb-4 space-x-2">
                       <img
                         src={"assets" + product.image_url}
                         alt="Product"
-                        className="h-[100px] w-[100px]"
+                        className="h-[80px] w-[80px]"
                       />
-                      <div>
-                        <p className="font-semibold">{product.name}</p>
+
+                      <div className="w-full">
+
+                        <div className="flex justify-between">
+                          <p className="font-semibold">{product.name}</p>
+                          <p className="ml-64 font-semibold">
+                            Rp{product.total_price.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+
                         <p className="text-sm text-gray-600">
                           Variant: {product.selectedSize}
                         </p>
-                        <p className="text-sm text-gray-600">
+
+                        <p className="text-sm text-gray-600 mb-3">
                           Color: {product.selectedColor}
                         </p>
+
                         <QuantitySelectorPayment
                           onQuantityChange={(quantity, price) => {
                             const cartSessions = JSON.parse(
@@ -323,16 +335,14 @@ export default function Checkout() {
                           unitPrice={product.price}
                         />
                       </div>
-                      <p className="ml-64 font-semibold">
-                        Rp{product.total_price.toLocaleString("id-ID")}
-                      </p>
+
                     </div>
                   ))}
                 </div>
                 <div className="mt-4">
                   <input
                     type="text"
-                    placeholder="Masukkan Kode Voucher"
+                    placeholder="Enter Voucher Code"
                     className="mb-2 w-full rounded border p-2"
                   />
                   <button className="w-full rounded bg-blue-500 py-2 text-white">
@@ -342,24 +352,24 @@ export default function Checkout() {
                 <div className="mt-4 text-sm">
                   <hr className="my-2" />
                   <div className="flex justify-between">
-                    <span>Subtotal Produk</span>
+                    <span>Subtotal Products</span>
                     <span>Rp{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Subtotal Pelayanan</span>
+                    <span>Subtotal Service</span>
                     <span>Rp {SERVICE_COST.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Biaya Penanganan</span>
+                    <span>Handling Fee</span>
                     <span>Rp {HANDLING_FEE.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Biaya Expedisi</span>
+                    <span>Shipping Costs</span>
                     <span>Rp {shippingCost.toLocaleString()}</span>
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between font-bold">
-                    <span>Total Pesanan</span>
+                    <span>Total Orders</span>
                     <span>Rp {totalOrder.toLocaleString()}</span>
                   </div>
                 </div>
