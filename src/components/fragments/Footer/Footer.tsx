@@ -42,7 +42,7 @@ export default function Footer() {
             </Link>
             <Link href="/invoice">
               <p className="text-gray-600 hover:text-gray-900">
-                Detail Transaksi
+                Transaction Details
               </p>
             </Link>
             <Link href="/chatbot">

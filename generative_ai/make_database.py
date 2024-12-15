@@ -13,7 +13,9 @@ os.environ['PINECONE_API_KEY'] = 'a89c0db2-bf43-4d8b-ad20-6a78f6a460aa'
 os.environ['COHERE_API_KEY'] = 'fnG3bEeE72QgamxF2bXIupoHHwPBttKKHbhZvg09'
 
 urls = [
-
+    "https://lilianweng.github.io/posts/2023-06-23-agent/",
+    "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
+    "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
 ]
 
 docs = [WebBaseLoader(url).load() for url in urls]

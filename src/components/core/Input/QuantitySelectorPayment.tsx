@@ -32,7 +32,6 @@ export default function QuantitySelectorPayment({
     );
 
     if (cartIndex > -1) {
-      // Only update quantity and price (total_price)
       cartSessions[cartIndex] = {
         ...cartSessions[cartIndex], // Preserve other existing properties
         quantity: newQuantity,

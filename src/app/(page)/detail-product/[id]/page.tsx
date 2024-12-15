@@ -121,7 +121,7 @@ export default function DetailProduct() {
       return;
     }
 
-    if (!selectedColor && !selectedSize) {
+    if (!selectedColor || !selectedSize) {
       Swal.fire({
         icon: "warning",
         title: "Oops...",
@@ -211,10 +211,15 @@ export default function DetailProduct() {
 
               <p className="mb-5 text-sm text-gray-500">
                 {product ? (
-                  `${product.category} | ⭐️ 4.9 (2130 reviews) | ${formatRupiah(product.price)}`
+                  `${product.category} | ${formatRupiah(product.price)}`
                 ) : (
                   <SkeletonText width="70%" />
                 )}
+                {/* {product ? (
+                  `${product.category} | ⭐️ 4.9 (2130 reviews) | ${formatRupiah(product.price)}`
+                ) : (
+                  <SkeletonText width="70%" />
+                )} */}
               </p>
 
               <h1 className="text-lg font-semibold">Description :</h1>
@@ -264,8 +269,8 @@ export default function DetailProduct() {
                     <span>(8 rb)</span>
                   </div>
                   <div className="flex items-center space-x-1 text-sm text-gray-500">
-                    <span>⏱️ ± 1 jam</span>
-                    <span>pesanan diproses</span>
+                    <span>⏱️ ± 1 hour</span>
+                    <span>order processed</span>
                   </div>
                 </div>
               </div>

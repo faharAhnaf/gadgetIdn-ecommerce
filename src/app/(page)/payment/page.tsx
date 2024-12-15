@@ -31,7 +31,7 @@ export default function Checkout() {
   const [selectedShippingETA, setSelectedETA] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [alamat, setAlamat] = useState({
-    nama: "Nama Penerima",
+    nama: "Recipient's name",
     nomor: "(+62) 888-8888-8888",
     detail:
       "Jl. Moch Kahfi II Gg. Suro, Cipedak, Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta, ID 12630.",
@@ -103,9 +103,9 @@ export default function Checkout() {
 
       if (profile) {
         setFormInput({
-          nama: profile.name || "Nama Penerima",
+          nama: profile.name || "Recipient's name",
           nomor: profile.phone || "(+62) 888-8888-8888",
-          detail: profile.location || "Alamat Lengkap",
+          detail: profile.location || "Complete address",
         });
 
         Swal.fire({
@@ -175,97 +175,96 @@ export default function Checkout() {
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen bg-gray-100">
-        <div className="mx-auto grid min-h-screen max-w-7xl items-center">
-          <div className="rounded-lg bg-white p-6 shadow-lg">
-            <h1 className="mb-20 text-center text-3xl font-bold">Check Out</h1>
-            <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
-              <div className="mt-6">
-                <div className="rounded-lg border bg-gray-50 p-6 shadow-md">
-                  <h2 className="mb-4 text-2xl font-medium">
-                    Alamat Pengiriman
-                  </h2>
-                  {!isEditing ? (
+      <div className="h-full w-full pb-5 pt-5 bg-gray-100">
+        <div className="mx-auto my-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
+          <h1 className="my-10 text-center text-3xl font-bold">Check Out</h1>
+          
+          <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
+            
+            <div>
+              <div className="rounded-lg border bg-gray-50 p-6 shadow-md">
+                <h2 className="mb-4 text-2xl font-medium">Shipping address</h2>
+                {!isEditing ? (
+                  <div className="space-y-2">
+                    <p className="font-semibold">{alamat.nama}</p>
+                    <p>{alamat.nomor}</p>
+                    <p>{alamat.detail}</p>
+                    <button
+                      onClick={handleUbah}
+                      className="mt-2 text-blue-500 underline hover:text-blue-700"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
                     <div>
-                      <p className="font-semibold">{alamat.nama}</p>
-                      <p>{alamat.nomor}</p>
-                      <p>{alamat.detail}</p>
-                      <button
-                        onClick={handleUbah}
-                        className="mt-2 text-blue-500 underline hover:text-blue-700"
+                      <label
+                        className="mb-2 block font-semibold"
+                        htmlFor="nama"
                       >
-                        Ubah
-                      </button>
+                        Recipient's name
+                      </label>
+                      <input
+                        id="nama"
+                        type="text"
+                        value={formInput.nama}
+                        onChange={(e) =>
+                          setFormInput((prev) => ({
+                            ...prev,
+                            nama: e.target.value,
+                          }))
+                        }
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div>
-                        <label
-                          className="mb-2 block font-semibold"
-                          htmlFor="nama"
-                        >
-                          Nama Penerima
-                        </label>
-                        <input
-                          id="nama"
-                          type="text"
-                          value={formInput.nama}
-                          onChange={(e) =>
-                            setFormInput((prev) => ({
-                              ...prev,
-                              nama: e.target.value,
-                            }))
-                          }
-                          className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          className="mb-2 block font-semibold"
-                          htmlFor="nomor"
-                        >
-                          Nomor Telepon
-                        </label>
-                        <input
-                          id="nomor"
-                          type="text"
-                          value={formInput.nomor}
-                          onChange={(e) =>
-                            setFormInput((prev) => ({
-                              ...prev,
-                              nomor: e.target.value,
-                            }))
-                          }
-                          className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          className="mb-2 block font-semibold"
-                          htmlFor="detail"
-                        >
-                          Alamat Lengkap
-                        </label>
-                        <textarea
-                          id="detail"
-                          value={formInput.detail}
-                          onChange={(e) =>
-                            setFormInput((prev) => ({
-                              ...prev,
-                              detail: e.target.value,
-                            }))
-                          }
-                          rows={4}
-                          className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div className="flex gap-3">
-                        <button
-                          onClick={handleSimpan}
-                          className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow hover:bg-blue-600"
-                        >
-                          Simpan
-                        </button>
+                    <div>
+                      <label
+                        className="mb-2 block font-semibold"
+                        htmlFor="nomor"
+                      >
+                        Phone number
+                      </label>
+                      <input
+                        id="nomor"
+                        type="text"
+                        value={formInput.nomor}
+                        onChange={(e) =>
+                          setFormInput((prev) => ({
+                            ...prev,
+                            nomor: e.target.value,
+                          }))
+                        }
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className="mb-2 block font-semibold"
+                        htmlFor="detail"
+                      >
+                        Complete address
+                      </label>
+                      <textarea
+                        id="detail"
+                        value={formInput.detail}
+                        onChange={(e) =>
+                          setFormInput((prev) => ({
+                            ...prev,
+                            detail: e.target.value,
+                          }))
+                        }
+                        rows={4}
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleSimpan}
+                        className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
 
                         <button
                           onClick={handleDefault}
@@ -279,40 +278,43 @@ export default function Checkout() {
                 </div>
               </div>
 
-              <div className="row-span-3">
-                <div className="rounded-lg border bg-gray-50 p-4">
-                  <h2 className="mb-4 text-2xl font-medium">Order Summary</h2>
-                  <div className="space-y-4">
-                    {products.map((product) => (
-                      <div
-                        key={product.cart_id}
-                        className="flex gap-3 border-b pb-4"
-                      >
-                        <Image
-                          src={`/assets${product.image_url}`}
-                          width={70}
-                          height={70}
-                          alt="Product"
-                        />
-                        <div className="space-y-3">
-                          <div>
-                            <p className="font-semibold">{product.name}</p>
-                            <p className="text-sm text-gray-600">
-                              Variant: {product.selectedSize}
-                            </p>
-                            <p className="text-sm text-gray-600">
-                              Color: {product.selectedColor}
-                            </p>
-                          </div>
+            <div className="row-span-3">
+              <div className="rounded-lg border bg-gray-50 p-4">
+                <h2 className="mb-4 text-2xl font-medium">Order Summary</h2>
+                <div className="space-y-4">
+                  {products.map((product) => (
+                    <div key={product.cart_id} className="flex border-b pb-4 space-x-2">
+                      <img
+                        src={"assets" + product.image_url}
+                        alt="Product"
+                        className="h-[80px] w-[80px]"
+                      />
 
-                          <QuantitySelectorPayment
-                            onQuantityChange={(quantity, price) => {
-                              const cartSessions = JSON.parse(
-                                localStorage.getItem("cartSession") || "[]",
-                              );
-                              const cartIndex = cartSessions.findIndex(
-                                (item: any) => item.cart_id === product.cart_id,
-                              );
+                      <div className="w-full">
+
+                        <div className="flex justify-between">
+                          <p className="font-semibold">{product.name}</p>
+                          <p className="ml-64 font-semibold">
+                            Rp{product.total_price.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+
+                        <p className="text-sm text-gray-600">
+                          Variant: {product.selectedSize}
+                        </p>
+
+                        <p className="text-sm text-gray-600 mb-3">
+                          Color: {product.selectedColor}
+                        </p>
+
+                        <QuantitySelectorPayment
+                          onQuantityChange={(quantity, price) => {
+                            const cartSessions = JSON.parse(
+                              localStorage.getItem("cartSession") || "[]",
+                            );
+                            const cartIndex = cartSessions.findIndex(
+                              (item: any) => item.cart_id === product.cart_id,
+                            );
 
                               if (cartIndex > -1) {
                                 cartSessions[cartIndex] = {
@@ -321,67 +323,65 @@ export default function Checkout() {
                                   total_price: price,
                                 };
 
-                                localStorage.setItem(
-                                  "cartSession",
-                                  JSON.stringify(cartSessions),
-                                );
-                                window.dispatchEvent(new Event("storage"));
-                              }
-                            }}
-                            cartId={product.cart_id}
-                            unitPrice={product.price}
-                          />
-                        </div>
-                        <p className="ml-64 font-semibold">
-                          Rp{product.total_price.toLocaleString("id-ID")}
-                        </p>
+                              localStorage.setItem(
+                                "cartSession",
+                                JSON.stringify(cartSessions),
+                              );
+                              window.dispatchEvent(new Event("storage"));
+                            }
+                          }}
+                          cartId={product.cart_id}
+                          unitPrice={product.price}
+                        />
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-4">
-                    <input
-                      type="text"
-                      placeholder="Masukkan Kode Voucher"
-                      className="mb-2 w-full rounded border p-2"
-                    />
-                    <button className="w-full rounded bg-blue-500 py-2 text-white">
-                      Apply
-                    </button>
-                  </div>
-                  <div className="mt-4 text-sm">
-                    <hr className="my-2" />
-                    <div className="flex justify-between">
-                      <span>Subtotal Produk</span>
-                      <span>Rp{subtotal.toLocaleString()}</span>
+
                     </div>
-                    <div className="flex justify-between">
-                      <span>Subtotal Pelayanan</span>
-                      <span>Rp {SERVICE_COST.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Biaya Penanganan</span>
-                      <span>Rp {HANDLING_FEE.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Biaya Expedisi</span>
-                      <span>Rp {shippingCost.toLocaleString()}</span>
-                    </div>
-                    <hr className="my-2" />
-                    <div className="flex justify-between font-bold">
-                      <span>Total Pesanan</span>
-                      <span>Rp {totalOrder.toLocaleString()}</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-                <div className="row-span-4 mt-6">
-                  <button
-                    onClick={handleCheckoutClick}
-                    className="w-full rounded-lg bg-blue-500 py-3 font-semibold text-white"
-                  >
-                    Checkout
+                <div className="mt-4">
+                  <input
+                    type="text"
+                    placeholder="Enter Voucher Code"
+                    className="mb-2 w-full rounded border p-2"
+                  />
+                  <button className="w-full rounded bg-blue-500 py-2 text-white">
+                    Apply
                   </button>
                 </div>
+                <div className="mt-4 text-sm">
+                  <hr className="my-2" />
+                  <div className="flex justify-between">
+                    <span>Subtotal Products</span>
+                    <span>Rp{subtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Subtotal Service</span>
+                    <span>Rp {SERVICE_COST.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Handling Fee</span>
+                    <span>Rp {HANDLING_FEE.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping Costs</span>
+                    <span>Rp {shippingCost.toLocaleString()}</span>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="flex justify-between font-bold">
+                    <span>Total Orders</span>
+                    <span>Rp {totalOrder.toLocaleString()}</span>
+                  </div>
+                </div>
               </div>
+              <div className="row-span-4 mt-6">
+                <button
+                  onClick={handleCheckoutClick}
+                  className="w-full rounded-lg bg-blue-500 py-3 font-semibold text-white"
+                >
+                  Checkout
+                </button>
+              </div>
+            </div>
 
               <div>
                 <div className="rounded-lg border bg-gray-50 p-4">
