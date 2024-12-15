@@ -63,7 +63,7 @@ export default function QuantitySelectorPayment({
   };
 
   return (
-    <div className="flex items-center justify-center rounded-md border border-gray-300">
+    <div className="flex w-1/4 items-center justify-center rounded-md border border-gray-300">
       <button
         onClick={() => changeQuantity(-1)}
         className="w-full bg-gray-100 px-3 py-2 font-bold text-gray-700 hover:bg-gray-200"

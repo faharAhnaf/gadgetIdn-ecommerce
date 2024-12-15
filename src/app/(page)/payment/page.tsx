@@ -175,12 +175,11 @@ export default function Checkout() {
   return (
     <div>
       <Navbar />
-      <div className="h-full w-full pb-5 pt-5 bg-gray-100">
+      <div className="h-full w-full bg-gray-100 pb-5 pt-5">
         <div className="mx-auto my-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
           <h1 className="my-10 text-center text-3xl font-bold">Check Out</h1>
-          
+
           <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
-            
             <div>
               <div className="rounded-lg border bg-gray-50 p-6 shadow-md">
                 <h2 className="mb-4 text-2xl font-medium">Shipping address</h2>
@@ -266,24 +265,27 @@ export default function Checkout() {
                         Save
                       </button>
 
-                        <button
-                          onClick={handleDefault}
-                          className="rounded-lg border border-blue-500 px-4 py-2 text-blue-500 shadow hover:bg-blue-500 hover:text-white"
-                        >
-                          Default Profile
-                        </button>
-                      </div>
+                      <button
+                        onClick={handleDefault}
+                        className="rounded-lg border border-blue-500 px-4 py-2 text-blue-500 shadow hover:bg-blue-500 hover:text-white"
+                      >
+                        Default Profile
+                      </button>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
+            </div>
 
             <div className="row-span-3">
               <div className="rounded-lg border bg-gray-50 p-4">
                 <h2 className="mb-4 text-2xl font-medium">Order Summary</h2>
                 <div className="space-y-4">
                   {products.map((product) => (
-                    <div key={product.cart_id} className="flex border-b pb-4 space-x-2">
+                    <div
+                      key={product.cart_id}
+                      className="flex space-x-2 border-b pb-4"
+                    >
                       <img
                         src={"assets" + product.image_url}
                         alt="Product"
@@ -291,7 +293,6 @@ export default function Checkout() {
                       />
 
                       <div className="w-full">
-
                         <div className="flex justify-between">
                           <p className="font-semibold">{product.name}</p>
                           <p className="ml-64 font-semibold">
@@ -303,7 +304,7 @@ export default function Checkout() {
                           Variant: {product.selectedSize}
                         </p>
 
-                        <p className="text-sm text-gray-600 mb-3">
+                        <p className="mb-3 text-sm text-gray-600">
                           Color: {product.selectedColor}
                         </p>
 
@@ -316,12 +317,12 @@ export default function Checkout() {
                               (item: any) => item.cart_id === product.cart_id,
                             );
 
-                              if (cartIndex > -1) {
-                                cartSessions[cartIndex] = {
-                                  ...cartSessions[cartIndex],
-                                  quantity: quantity,
-                                  total_price: price,
-                                };
+                            if (cartIndex > -1) {
+                              cartSessions[cartIndex] = {
+                                ...cartSessions[cartIndex],
+                                quantity: quantity,
+                                total_price: price,
+                              };
 
                               localStorage.setItem(
                                 "cartSession",
@@ -334,7 +335,6 @@ export default function Checkout() {
                           unitPrice={product.price}
                         />
                       </div>
-
                     </div>
                   ))}
                 </div>
@@ -383,43 +383,40 @@ export default function Checkout() {
               </div>
             </div>
 
-              <div>
-                <div className="rounded-lg border bg-gray-50 p-4">
-                  <div className="space-y-2">
-                    <h2 className="mb-4 text-2xl font-medium">
-                      Payment Method
-                    </h2>
-                    <div>
-                      <input
-                        type="radio"
-                        id="transfer-bank"
-                        name="payment-method"
-                        className="mr-2"
-                        value="transfer"
-                        onChange={(e) => setSelectedMethod(e.target.value)}
-                      />
-                      <label htmlFor="transfer-bank">Cashless</label>
-                    </div>
-                    <div>
-                      <input
-                        type="radio"
-                        id="cod"
-                        name="payment-method"
-                        className="mr-2"
-                        value="cod"
-                        onChange={(e) => setSelectedMethod(e.target.value)}
-                      />
-                      <label htmlFor="cod">Cash on Delivery</label>
-                    </div>
+            <div>
+              <div className="rounded-lg border bg-gray-50 p-4">
+                <div className="space-y-2">
+                  <h2 className="mb-4 text-2xl font-medium">Payment Method</h2>
+                  <div>
+                    <input
+                      type="radio"
+                      id="transfer-bank"
+                      name="payment-method"
+                      className="mr-2"
+                      value="transfer"
+                      onChange={(e) => setSelectedMethod(e.target.value)}
+                    />
+                    <label htmlFor="transfer-bank">Cashless</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="cod"
+                      name="payment-method"
+                      className="mr-2"
+                      value="cod"
+                      onChange={(e) => setSelectedMethod(e.target.value)}
+                    />
+                    <label htmlFor="cod">Cash on Delivery</label>
                   </div>
                 </div>
-
-                {selectedMethod === "transfer" && (
-                  <div className="mt-4">
-                    <DropdownShipping onShippingSelect={handleShippingSelect} />
-                  </div>
-                )}
               </div>
+
+              {selectedMethod === "transfer" && (
+                <div className="mt-4">
+                  <DropdownShipping onShippingSelect={handleShippingSelect} />
+                </div>
+              )}
             </div>
           </div>
         </div>
