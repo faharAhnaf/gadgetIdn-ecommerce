@@ -71,7 +71,12 @@ export default function Contact() {
             <FaPhoneAlt className="mr-4 text-4xl text-green-500" />
             <div>
               <h2 className="text-xl font-bold">Phone</h2>
-              <p className="text-gray-700">+62 818-0819-1102</p>
+              <a
+                href="https://wa.me/6281808191102"
+                className="text-blue-600 hover:underline"
+              >
+                +62 818-0819-1102
+              </a>
             </div>
           </div>
 

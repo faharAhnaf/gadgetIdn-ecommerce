@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Ellipsis } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -38,6 +39,7 @@ export default function CardInvoice({
 }: Props) {
   const [confirm, setConfirm] = useState<boolean>(confirmed);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleConfirmTransaction = async () => {
     setLoading(true);
@@ -143,6 +145,7 @@ export default function CardInvoice({
             {/* <Link href={`/detail-product/${}`}> */}
             <Button
               variant={"outline"}
+              onClick={() => router.push("/")}
               className={cn(
                 `mx-auto w-full rounded-xl bg-blue-500 text-white hover:bg-blue-600 hover:text-white`,
               )}
