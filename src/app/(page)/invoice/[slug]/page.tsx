@@ -109,7 +109,7 @@ export default function DetailInvoice({ params }: Props) {
           {/* Main Content */}
           <div className="mx-auto my-auto grid min-h-screen max-w-4xl space-y-5">
             {/* Header */}
-            <div className="grid grid-cols-2 items-center">
+            <div className="grid grid-cols-2 items-center mt-[50px]">
               <p className="text-4xl">BelanjaKuy</p>
               <div className="ml-auto grid text-right">
                 <p className="text-xl">INVOICE</p>

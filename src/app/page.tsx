@@ -7,6 +7,7 @@ import Header from "@/components/fragments/Header/Header";
 import HeaderSection from "@/components/fragments/HeaderSection/HeaderSection";
 import EditorPick from "@/components/fragments/EditorPick/EditorPick";
 import SliderComp from "@/components/fragments/Carousel/SliderComp";
+import SliderBestProduct from "@/components/fragments/Carousel/SliderBestProduct";
 
 export default function Home() {
   return (
@@ -51,7 +52,7 @@ export default function Home() {
             <div className="mb-10 overflow-x-hidden">
               <div className="mx-auto max-w-7xl">
                 <div>
-                  <SliderComp></SliderComp>
+                  <SliderBestProduct></SliderBestProduct>
                 </div>
               </div>
             </div>
