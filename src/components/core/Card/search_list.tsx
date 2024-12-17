@@ -19,7 +19,6 @@ const Card: React.FC<ProductCardProps> = ({
 }) => {
   const router = useRouter();
   const session = localStorage.getItem("userSession");
-  console.log("session", session);
 
   const handleAddToCart = async () => {
     !session
@@ -31,7 +30,7 @@ const Card: React.FC<ProductCardProps> = ({
     <div className="flex w-full flex-col items-start rounded-lg bg-white p-4 shadow-lg">
       <div className="mb-4 h-48 w-full rounded-md bg-gray-200">
         <img
-          src={`${imageUrl}`}
+          src={imageUrl}
           alt={title}
           className="h-full w-full object-cover"
         />
