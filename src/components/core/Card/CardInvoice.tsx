@@ -81,11 +81,7 @@ export default function CardInvoice({
         <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
           {status?.charAt(0) + status?.slice(1).toLowerCase()}
         </p>
-        {confirm && (
-          <p className={`rounded-lg bg-[#A3D3BD] p-2`}>
-            Pesanan Telah Dikonfirmasi
-          </p>
-        )}
+        {confirm && <p className={`rounded-lg bg-[#A3D3BD] p-2`}>Confirmed</p>}
       </div>
       <div className="flex justify-between">
         <div className="grid space-y-3 p-10">

@@ -173,10 +173,10 @@ export default function Checkout() {
   };
 
   return (
-    <div>
+    <div className="">
       <Navbar />
-      <div className="h-full w-full bg-gray-100 pb-5 pt-5">
-        <div className="mx-auto my-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
+      <div className="flex min-h-screen justify-center bg-gray-100">
+        <div className="mx-auto mb-10 mt-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
           <h1 className="my-10 text-center text-3xl font-bold">Check Out</h1>
 
           <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
@@ -286,11 +286,13 @@ export default function Checkout() {
                       key={product.cart_id}
                       className="flex space-x-2 border-b pb-4"
                     >
-                      <img
-                        src={"assets" + product.image_url}
-                        alt="Product"
-                        className="h-[80px] w-[80px]"
-                      />
+                      <div className="w-24">
+                        <img
+                          src={"assets" + product.image_url}
+                          alt="Product"
+                          className="h-[80px] w-[80px]"
+                        />
+                      </div>
 
                       <div className="w-full">
                         <div className="flex justify-between">

@@ -148,7 +148,7 @@ export default function ShoppingCart() {
   };
 
   return (
-    <div className="mb-10 mt-[100px] flex min-h-[700px] justify-between p-8">
+    <div className="mt-[100px] flex min-h-[700px] justify-between p-8">
       <div className="w-2/3">
         <h1 className="mb-4 text-2xl font-semibold">Cart</h1>
         <div className="mb-4 rounded-md p-4 shadow-md">
