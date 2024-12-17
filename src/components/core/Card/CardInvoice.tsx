@@ -145,7 +145,7 @@ export default function CardInvoice({
             {/* <Link href={`/detail-product/${}`}> */}
             <Button
               variant={"outline"}
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/search_list")}
               className={cn(
                 `mx-auto w-full rounded-xl bg-blue-500 text-white hover:bg-blue-600 hover:text-white`,
               )}
