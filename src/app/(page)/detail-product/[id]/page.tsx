@@ -153,19 +153,27 @@ export default function DetailProduct() {
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, add it!",
         cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (selectedCartItems.length > 0) {
+          if (result.isConfirmed) {
+            localStorage.setItem(
+              "cartSession",
+              JSON.stringify(selectedCartItems),
+            );
+            router.push("/payment");
+            console.log(
+              "Selected items saved to localStorage:",
+              selectedCartItems,
+            );
+          }
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "No matching items found",
+          });
+        }
       });
-
-      if (selectedCartItems.length > 0) {
-        localStorage.setItem("cartSession", JSON.stringify(selectedCartItems));
-        router.push("/payment");
-        console.log("Selected items saved to localStorage:", selectedCartItems);
-      } else {
-        Swal.fire({
-          icon: "warning",
-          title: "Oops...",
-          text: "No matching items found",
-        });
-      }
     } catch (error) {
       Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
     }
@@ -329,16 +337,15 @@ export default function DetailProduct() {
 
           <div className="flex flex-col items-center justify-between space-y-4 overflow-x-auto rounded-b-xl bg-white p-4 shadow-md sm:px-4 md:left-20 md:right-20 md:flex-row md:space-x-8 md:space-y-0 md:p-6">
             <div className="flex flex-shrink-0 items-center space-x-4">
-              {
-                product ? (
-                  <img
-                    src={'/assets' + product!.image_url}
-                    alt="Detail Produk"
-                    className="h-[40px] w-[40px] rounded-md"
-                  />
-                ) :
+              {product ? (
+                <img
+                  src={"/assets" + product!.image_url}
+                  alt="Detail Produk"
+                  className="h-[40px] w-[40px] rounded-md"
+                />
+              ) : (
                 <SkeletonImg width="40px" height="40px" />
-              }
+              )}
               <div className="text-center md:text-left">
                 <p className="text-sm font-semibold md:text-base">
                   {product ? product.name : <SkeletonText width="150px" />}
