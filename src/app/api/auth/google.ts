@@ -1,5 +1,10 @@
 import { auth, db, provider } from "@/lib/firebase";
-import { signInWithPopup, signOut, browserLocalPersistence, setPersistence } from "firebase/auth";
+import {
+  signInWithPopup,
+  signOut,
+  browserLocalPersistence,
+  setPersistence,
+} from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
@@ -36,6 +41,7 @@ const signInWithGoogle = async () => {
     await setPersistence(auth, browserLocalPersistence);
 
     const result = await signInWithPopup(auth, provider);
+
     if (!result) {
       throw new Error("Sign-in popup was blocked or closed");
     }
@@ -58,21 +64,22 @@ const signInWithGoogle = async () => {
     }
 
     saveToSession(user);
-    
+
     // Close the loading dialog
     Swal.close();
 
     return user;
   } catch (error: any) {
     console.error("Error signing in with Google:", error);
-    
+
     let errorMessage = "An error occurred during Google sign-in.";
-    if (error.code === 'auth/popup-blocked') {
+    if (error.code === "auth/popup-blocked") {
       errorMessage = "Popup was blocked. Please allow popups for this site.";
-    } else if (error.code === 'auth/popup-closed-by-user') {
+    } else if (error.code === "auth/popup-closed-by-user") {
       errorMessage = "Sign-in was cancelled. Please try again.";
-    } else if (error.code === 'auth/missing-initial-state') {
-      errorMessage = "Browser storage is not accessible. Please enable cookies and try again.";
+    } else if (error.code === "auth/missing-initial-state") {
+      errorMessage =
+        "Browser storage is not accessible. Please enable cookies and try again.";
     }
 
     Swal.fire({

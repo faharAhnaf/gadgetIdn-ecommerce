@@ -27,10 +27,7 @@ export default function GmailSign() {
       setIsLoading(true);
 
       // Ensure we're in a browser environment
-      if (typeof window === 'undefined') return;
-
-      // Add a small delay to ensure DOM is ready
-      await new Promise(resolve => setTimeout(resolve, 100));
+      if (typeof window === "undefined") return;
 
       await signInWithGoogle();
 
@@ -44,10 +41,10 @@ export default function GmailSign() {
 
       router.push("/");
     } catch (error: any) {
-      console.error('Login error:', error);
-      
+      console.error("Login error:", error);
+
       // Don't show error if it's just the user closing the popup
-      if (error.code !== 'auth/popup-closed-by-user') {
+      if (error.code !== "auth/popup-closed-by-user") {
         await Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -66,7 +63,7 @@ export default function GmailSign() {
       setIsLoading(true);
       await logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       await Swal.fire({
         icon: "error",
         title: "Logout Failed",
