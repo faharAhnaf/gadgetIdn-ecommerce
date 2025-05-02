@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import updateDataProfile from "@/app/api/profile/update-profile";
 import Swal from "sweetalert2";
 import ProfileSidebar from "@/components/fragments/Sidebar/ProfileSidebar";
-import { Form } from "@/app/lib/model/form";
 import { usePathname, useRouter } from "next/navigation";
 import { getProfileByUserId } from "@/app/api/profile/profile";
 import MyProfile from "./modals/MyProfile";
 import UploadProduct from "./modals/UploadProduct";
 import { ListProduct } from "./modals/ListProduct";
 import UpdateProduct from "./modals/UpdateProduct";
-import Profile from "@/app/lib/model/profile";
 import Navbar from "@/components/fragments/Navbar/Navbar";
+import Profile from "@/interfaces/profile";
+import { Form } from "@/interfaces/form";
 
 export default function UserProfile({
   productId,

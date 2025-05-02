@@ -1,5 +1,3 @@
-import Category from "@/app/lib/model/category";
-
 interface Product {
   product_id: string;
   updated_at: Date;

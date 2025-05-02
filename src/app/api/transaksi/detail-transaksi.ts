@@ -1,5 +1,6 @@
-import { Ekspedisi } from "./../../lib/model/ekspedisi";
-import { db } from "@/app/lib/firebase";
+import { InvoiceData } from "@/interfaces/invoice";
+import Product from "@/interfaces/product";
+import { db } from "@/lib/firebase";
 import {
   collection,
   doc,
@@ -8,9 +9,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import Profile from "@/app/lib/model/profile";
-import { InvoiceData } from "@/app/lib/model/invoice";
-import Product from "@/app/lib/model/product";
 
 export async function detailInvoice({
   transaksiId,

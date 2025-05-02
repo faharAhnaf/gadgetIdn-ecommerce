@@ -4,8 +4,8 @@ import Slider from "react-slick";
 import { useRef, useEffect, useState } from "react";
 import Card from "@/components/core/Card/Card";
 import CardSkeleton from "@/components/core/Skeleton/CardSkeleton";
-import { getLatestProducts } from "@/app/api/product/latest_product";
-import ProductPreview from "@/app/lib/model/product_review";
+import { getLatestProducts } from "@/app/api/product/latest-product";
+import ProductPreview from "@/interfaces/product-preview";
 
 export default function SliderComp() {
   const sliderRef = useRef(null);
@@ -26,7 +26,7 @@ export default function SliderComp() {
     snapToGrid: false,
     swipeToSlide: true,
     dots: false,
-    infinite: true,
+    infinite: products.length > 3,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -61,25 +61,23 @@ export default function SliderComp() {
   };
 
   return (
-    <>
-      <Slider ref={sliderRef} {...settings}>
-        {products.length === 0
-          ? Array.from({ length: 3 }).map((_, index) => (
-              <div key={index}>
-                <CardSkeleton />
-              </div>
-            ))
-          : products.map((product, index) => (
-              <Card
-                key={index}
-                product_id={product.product_id}
-                title={product.name}
-                description={product.description}
-                price={product.price}
-                imageUrl={"assets" + product.image_url}
-              />
-            ))}
-      </Slider>
-    </>
+    <Slider ref={sliderRef} {...settings}>
+      {products.length === 0
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <div key={index}>
+              <CardSkeleton />
+            </div>
+          ))
+        : products.map((product, index) => (
+            <Card
+              key={product.product_id}
+              product_id={product.product_id}
+              title={product.name}
+              description={product.description}
+              price={product.price}
+              imageUrl={"assets" + product.image_url}
+            />
+          ))}
+    </Slider>
   );
 }

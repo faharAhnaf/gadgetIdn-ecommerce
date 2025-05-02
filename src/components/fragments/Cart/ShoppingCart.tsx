@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import QuantitySelectorCart from "@/components/core/Input/QuantitySelectorCart";
 import CartSkeleton from "@/components/core/Skeleton/CartSkeleton";
-import Cart from "@/app/lib/model/cart";
-import updateCartItem from "@/app/api/cart/update_cart";
-import removeCartItem from "@/app/api/cart/remove_cart";
+import updateCartItem from "@/app/api/cart/update-cart";
+import removeCartItem from "@/app/api/cart/remove-cart";
 import Swal from "sweetalert2";
 
 import { useRouter } from "next/navigation";
-import CartItem from "@/app/lib/model/cartItem";
+import Cart from "@/interfaces/cart";
+import CartItem from "@/interfaces/cart-item";
 
 export default function ShoppingCart() {
   const [cartItems, setCartItems] = useState<Cart[]>([]);

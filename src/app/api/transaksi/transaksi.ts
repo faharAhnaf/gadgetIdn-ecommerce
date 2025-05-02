@@ -1,10 +1,10 @@
 import Swal from "sweetalert2";
-import { axios } from "@/app/lib/axios";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/app/lib/firebase";
-import { xendit_invoice } from "@/app/lib/constant";
 import { redirect } from "next/navigation";
-import removeCartItem from '@/app/api/cart/remove_cart';
+import removeCartItem from "@/app/api/cart/remove-cart";
+import { xendit_invoice } from "@/utils/constant";
+import { db } from "@/lib/firebase";
+import axios from "axios";
 
 /* Example Result
 
@@ -85,7 +85,6 @@ const checkPaymentStatus = async (
     Swal.fire("Please complete the payment", "Waiting for Payment!", "warning");
 
     if (invoiceStatus === "PAID") {
-
       const productReferences = product_id.map((id) => doc(db, "product", id));
 
       const data = {
@@ -121,14 +120,13 @@ const checkPaymentStatus = async (
       };
 
       try {
-        
         Swal.fire("Waiting for the system to finish", "Please Wait", "info");
 
         const docRef = doc(db, "transaksi", data.transaksi_id);
         await setDoc(docRef, data);
 
         for (let i = 0; i < cart_id.length; i++) {
-          if(cart_id[i] && cart_id[i] != ""){
+          if (cart_id[i] && cart_id[i] != "") {
             await removeCartItem(cart_id[i]);
           }
         }
@@ -143,13 +141,11 @@ const checkPaymentStatus = async (
           confirmButtonText: "Yes!",
           cancelButtonText: "Cancel",
         });
-    
+
         if (result.isConfirmed) {
-      
           localStorage.removeItem("cartSession");
           window.location.href = "http://localhost:3000/invoice";
         }
-
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -221,7 +217,6 @@ export const handleCheckout = async ({
   shippingCost: number;
   shippingETA: string;
 }) => {
-
   if (color?.length && variant?.length) {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -240,7 +235,7 @@ export const handleCheckout = async ({
         const userEmail = email || "guest@example.com";
         const timestamp = Date.now();
 
-        const total = totalAmount.total + shippingCost + 1000 + 1500
+        const total = totalAmount.total + shippingCost + 1000 + 1500;
 
         const response = await axios.post(
           xendit_invoice,
@@ -262,7 +257,6 @@ export const handleCheckout = async ({
         );
 
         if (response.data.invoice_url) {
-          
           await Swal.fire(
             "Success",
             "Redirecting to payment page...",
@@ -288,7 +282,6 @@ export const handleCheckout = async ({
             shippingCost,
             shippingETA,
           );
-
         } else {
           throw new Error("Invoice URL is missing.");
         }

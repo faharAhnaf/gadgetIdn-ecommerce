@@ -16,9 +16,9 @@ import Swal from "sweetalert2";
 import Image from "next/image";
 import { logout } from "@/app/api/auth/google";
 import { ChevronRight, LogOut, Settings, Store } from "lucide-react";
-import Profile from "@/app/lib/model/profile";
-import { useUserProfile } from "@/app/context/ProfileContext";
+import { useUserProfile } from "@/context/ProfileContext";
 import { useRouter } from "next/navigation";
+import Profile from "@/interfaces/profile";
 
 type Props = {
   data: Profile;

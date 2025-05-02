@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleRight,
+  faBriefcase,
   faCircleInfo,
   faFileCirclePlus,
   faHeadphones,
+  faHouseSignal,
   faKeyboard,
   faLaptop,
   faMobile,
@@ -17,11 +19,11 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import Product from "@/app/lib/model/product";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import uploadDataProduct from "@/app/api/product/upload_product";
+import uploadDataProduct from "@/app/api/product/upload-product";
 import { Plus } from "lucide-react";
+import Product from "@/interfaces/product";
 
 interface productType {
   name: string;
@@ -64,20 +66,20 @@ export default function UploadProduct() {
 
   const productType: productType[] = [
     {
-      name: "Electronic",
+      name: "Phones & Tablets",
       icon: faMobile,
     },
     {
-      name: "Accessories",
-      icon: faHeadphones,
+      name: "Computers & Laptops",
+      icon: faLaptop,
     },
     {
-      name: "Sports",
-      icon: faPersonRunning,
+      name: "Smart Devices",
+      icon: faHouseSignal,
     },
     {
-      name: "Clothes",
-      icon: faShirt,
+      name: "Bags & Protections",
+      icon: faBriefcase,
     },
   ];
 
@@ -89,6 +91,8 @@ export default function UploadProduct() {
     setProductTypeVal(type);
     setValue("category", type);
   };
+
+  console.log(productTypeVal);
 
   const storedData = localStorage.getItem("userSession");
   useEffect(() => {
@@ -197,7 +201,7 @@ export default function UploadProduct() {
                 <Button
                   variant={`outline`}
                   key={index}
-                  className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-blue-500 text-white"}`}
+                  className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-blue-500 text-white hover:!bg-blue-500 hover:!text-white"}`}
                   onClick={(e) => handleProductType(e, type.name)}
                 >
                   <FontAwesomeIcon icon={type.icon} />

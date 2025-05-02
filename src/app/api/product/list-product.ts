@@ -1,6 +1,6 @@
-import { db } from "@/app/lib/firebase";
+import ProductList from "@/interfaces/product-list";
+import { db } from "@/lib/firebase";
 import { collection, query, where, getDocs, doc } from "firebase/firestore";
-import ProductList from "@/app/lib/model/product_list";
 
 export const getProductsByUserId = async (): Promise<ProductList[] | null> => {
   try {

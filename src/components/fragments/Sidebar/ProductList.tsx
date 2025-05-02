@@ -1,5 +1,5 @@
 import { useState } from "react";
-import searchProductsByName from "@/app/api/search_list/product";
+import searchProductsByName from "@/app/api/search-list/product";
 
 type Props = {
   params: string;

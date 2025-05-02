@@ -1,6 +1,6 @@
-import { db } from '@/app/lib/firebase';
+import Transaction from "@/interfaces/transaksi";
+import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import Transaction from '@/app/lib/model/transaksi';
 
 export const getTransactions = async (): Promise<Transaction[] | null> => {
   try {
@@ -13,13 +13,15 @@ export const getTransactions = async (): Promise<Transaction[] | null> => {
       return null;
     }
 
-    const transactions: Transaction[] = transactionSnapshot.docs.map(docSnap => {
-      const transactionData = docSnap.data();
-      return {
-        transaction_id: docSnap.id,
-        ...transactionData,
-      } as Transaction;
-    });
+    const transactions: Transaction[] = transactionSnapshot.docs.map(
+      (docSnap) => {
+        const transactionData = docSnap.data();
+        return {
+          transaction_id: docSnap.id,
+          ...transactionData,
+        } as Transaction;
+      },
+    );
 
     return transactions;
   } catch (error) {

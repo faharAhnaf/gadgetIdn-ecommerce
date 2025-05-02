@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleRight,
+  faBriefcase,
   faCircleInfo,
   faFileCirclePlus,
   faHeadphones,
+  faHouseSignal,
   faKeyboard,
   faLaptop,
   faMobile,
@@ -17,13 +19,13 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { getProductByProductId } from "@/app/api/product/detail_product";
-import Product from "@/app/lib/model/product";
+import { getProductByProductId } from "@/app/api/product/detail-product";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import updateDataProduct from "@/app/api/product/update_product";
+import updateDataProduct from "@/app/api/product/update-product";
 import { randomUUID } from "crypto";
 import { Plus } from "lucide-react";
+import Product from "@/interfaces/product";
 
 interface productType {
   name: string;
@@ -68,10 +70,22 @@ export default function UpdateProduct({
   });
 
   const productType: productType[] = [
-    { name: "Electronic", icon: faMobile },
-    { name: "Accessories", icon: faHeadphones },
-    { name: "Sports", icon: faPersonRunning },
-    { name: "Clothes", icon: faShirt },
+    {
+      name: "Phones & Tablets",
+      icon: faMobile,
+    },
+    {
+      name: "Computers & Laptops",
+      icon: faLaptop,
+    },
+    {
+      name: "Smart Devices",
+      icon: faHouseSignal,
+    },
+    {
+      name: "Bags & Protections",
+      icon: faBriefcase,
+    },
   ];
 
   useEffect(() => {
@@ -207,18 +221,20 @@ export default function UpdateProduct({
           <li className="grid items-center justify-between gap-3 border-b-2 py-5">
             <p>Product Type</p>
             <div className="flex space-x-3">
-              {productType.map((type, index) => (
-                <Button
-                  variant={`outline`}
-                  key={index}
-                  className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-blue-500 text-white"}`}
-                  onClick={(e) => handleProductType(e, type.name)}
-                >
-                  <FontAwesomeIcon icon={type.icon} />
-                  <p className="text-left">{type.name}</p>
-                  <Input type="hidden" {...register("category")}></Input>
-                </Button>
-              ))}
+              {productType.map((type, index) => {
+                return (
+                  <Button
+                    variant={`outline`}
+                    key={index}
+                    className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-blue-500 text-white"}`}
+                    onClick={(e) => handleProductType(e, type.name)}
+                  >
+                    <FontAwesomeIcon icon={type.icon} />
+                    <p className="text-left">{type.name}</p>
+                    <Input type="hidden" {...register("category")}></Input>
+                  </Button>
+                );
+              })}
             </div>
           </li>
           <li className="grid items-center gap-3 border-b-2 pb-5">

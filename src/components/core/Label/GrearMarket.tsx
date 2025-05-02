@@ -10,10 +10,8 @@ export default function GrearMarket({ size, children, classname }: Props) {
   return (
     <Link href="/">
       <div className={`${classname} flex items-end gap-2`}>
-        <p
-          className={`text-black ${size && "text-xl"} text-2xl font-bold`}
-        >
-          BelanjaKuy.
+        <p className={`text-black ${size && "text-xl"} text-2xl font-bold`}>
+          GadgetIDN
         </p>
         {children}
       </div>

@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/app/lib/firebase";
 import crypto from "crypto";
+import { auth, db } from "@/lib/firebase";
 
 interface RegisterData {
   name: string;
@@ -45,7 +45,7 @@ export const registerUser = async (data: RegisterData) => {
 
   if (!isValidPassword(password)) {
     throw new Error(
-      "Password must contain at least one uppercase letter, one number, one symbol, and be at least 8 characters long."
+      "Password must contain at least one uppercase letter, one number, one symbol, and be at least 8 characters long.",
     );
   }
 
@@ -56,7 +56,7 @@ export const registerUser = async (data: RegisterData) => {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     );
     const user = userCredential.user;
 

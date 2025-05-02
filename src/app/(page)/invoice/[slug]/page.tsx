@@ -10,10 +10,10 @@ import {
   Truck,
   Undo2,
 } from "lucide-react";
-import { InvoiceData } from "@/app/lib/model/invoice";
 import InvoiceSkeleton from "@/components/core/Skeleton/InvoiceSkeleton";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { InvoiceData } from "@/interfaces/invoice";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -109,7 +109,7 @@ export default function DetailInvoice({ params }: Props) {
           {/* Main Content */}
           <div className="mx-auto my-auto grid min-h-screen max-w-4xl space-y-5">
             {/* Header */}
-            <div className="grid grid-cols-2 items-center mt-[50px]">
+            <div className="mt-[50px] grid grid-cols-2 items-center">
               <p className="text-4xl">BelanjaKuy</p>
               <div className="ml-auto grid text-right">
                 <p className="text-xl">INVOICE</p>

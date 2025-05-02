@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import formatRupiah from "@/app/lib/format_money";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import formatRupiah from "@/utils/format-money";
 
 interface ProductCardProps {
   product_id: string;

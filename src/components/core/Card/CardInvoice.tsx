@@ -1,5 +1,4 @@
-import { ConfirmTransaction } from "@/app/api/transaksi/konfirmasi_transaksi";
-import Product from "@/app/lib/model/product";
+import { ConfirmTransaction } from "@/app/api/transaksi/konfirmasi-transaksi";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Product from "@/interfaces/product";
 import { cn } from "@/lib/utils";
 import { faBagShopping, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -145,7 +145,7 @@ export default function CardInvoice({
             {/* <Link href={`/detail-product/${}`}> */}
             <Button
               variant={"outline"}
-              onClick={() => router.push("/search_list")}
+              onClick={() => router.push("/search-list")}
               className={cn(
                 `mx-auto w-full rounded-xl bg-blue-500 text-white hover:bg-blue-600 hover:text-white`,
               )}

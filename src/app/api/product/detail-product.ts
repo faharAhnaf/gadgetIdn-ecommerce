@@ -1,4 +1,5 @@
-import { db } from "@/app/lib/firebase";
+import Product from "@/interfaces/product";
+import { db } from "@/lib/firebase";
 import {
   collection,
   query,
@@ -7,8 +8,6 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import Category from "@/app/lib/model/category";
-import Product from "@/app/lib/model/product";
 
 export const getProductByProductId = async (
   productId: string | string[] | undefined,

@@ -1,23 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import Card from "@/components/core/Card/search_list";
+import Card from "@/components/core/Card/search-list";
 import Navbar from "@/components/fragments/Navbar/Navbar";
 import Footer from "@/components/fragments/Footer/Footer";
 import SideBar from "@/components/fragments/Sidebar/ProductList";
-import searchProductsByName from "@/app/api/search_list/product";
-import ProductPreview from "@/app/lib/model/product_review";
+import searchProductsByName from "@/app/api/search-list/product";
 import SearchListSkeleton from "@/components/core/Skeleton/SearchListSkeleton";
 
 import "@/app/assets/css/home.css";
+import ProductPreview from "@/interfaces/product-preview";
 
 export default function Keranjang() {
-  const { keyword } = useParams();
   const [products, setProducts] = useState<ProductPreview[]>([]);
-  const [filters, setFilters] = useState<any>({
-    name: keyword,
-  });
+  const [filters, setFilters] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [noItems, setNoItems] = useState(false);
 
@@ -34,21 +30,20 @@ export default function Keranjang() {
       setLoading(false);
     };
 
-    if (keyword) {
-      applyFilters();
-    }
-  }, [keyword, filters]);
+    applyFilters();
+  }, [filters]);
 
   useEffect(() => {
     if (loading) {
-      if (products.length == 0) {
-        const timer = setTimeout(() => {
+      const timer = setTimeout(() => {
+        if (products.length === 0) {
           setNoItems(true);
-        }, 4000);
-        return () => clearTimeout(timer);
-      }
+        }
+      }, 4000);
+
+      return () => clearTimeout(timer);
     }
-  }, [loading, products, keyword]);
+  }, [loading, products]);
 
   return (
     <div className="">
@@ -56,10 +51,7 @@ export default function Keranjang() {
 
       <div className="container mt-16 min-h-[77vh]">
         <div className="fixed mb-5 h-full w-1/5">
-          <SideBar
-            onSubmitFilters={handleFilterSubmit}
-            params={keyword as string}
-          />
+          <SideBar onSubmitFilters={handleFilterSubmit} params="" />
         </div>
         <div className="flex w-full pt-10">
           <div className="ml-96 w-full p-5">
@@ -102,7 +94,7 @@ export default function Keranjang() {
                       title={product.name}
                       description={product.description}
                       price={product.price}
-                      imageUrl={"/assets" + product.image_url}
+                      imageUrl={"assets" + product.image_url}
                     />
                   ))}
                 </div>

@@ -42,12 +42,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-import { getProductsByUserId } from "@/app/api/product/list_product";
-import Product from "@/app/lib/model/product";
-import ProductList from "@/app/lib/model/product_list";
+import { getProductsByUserId } from "@/app/api/product/list-product";
 import { useRouter } from "next/navigation";
-import { deleteProductById } from "@/app/api/product/delete_product";
+import { deleteProductById } from "@/app/api/product/delete-product";
 import Swal from "sweetalert2";
+import ProductList from "@/interfaces/product-list";
 
 export function ListProduct() {
   const [sorting, setSorting] = React.useState<SortingState>([]);

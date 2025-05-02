@@ -1,6 +1,6 @@
 import React from "react";
-import formatRupiah from "@/app/lib/format_money";
 import { useRouter } from "next/navigation";
+import formatRupiah from "@/utils/format-money";
 
 interface ProductCardProps {
   product_id: string;

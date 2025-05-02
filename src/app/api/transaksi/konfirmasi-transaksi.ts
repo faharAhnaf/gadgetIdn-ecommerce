@@ -1,4 +1,4 @@
-import { db } from "@/app/lib/firebase";
+import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 

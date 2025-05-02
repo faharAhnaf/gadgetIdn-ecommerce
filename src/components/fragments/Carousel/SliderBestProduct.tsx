@@ -4,8 +4,8 @@ import Slider from "react-slick";
 import { useRef, useEffect, useState } from "react";
 import Card from "@/components/core/Card/Card";
 import CardSkeleton from "@/components/core/Skeleton/CardSkeleton";
-import { getLowStockProducts } from "@/app/api/product/best_saller";
-import ProductPreview from "@/app/lib/model/product_review";
+import { getLowStockProducts } from "@/app/api/product/best-seller";
+import ProductPreview from "@/interfaces/product-preview";
 
 export default function SliderBestProduct() {
   const sliderRef = useRef(null);
@@ -26,7 +26,7 @@ export default function SliderBestProduct() {
     snapToGrid: false,
     swipeToSlide: true,
     dots: false,
-    infinite: true,
+    infinite: products.length > 3,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,

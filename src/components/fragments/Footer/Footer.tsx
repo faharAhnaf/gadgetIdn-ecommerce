@@ -8,8 +8,8 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-between lg:flex-row">
           <div className="flex items-center space-x-4">
-            <span className="text-2xl font-bold">BelanjaKuy.</span>
-            <div className="flex items-center space-x-3 text-xl">
+            <span className="text-2xl font-bold">GadgetIdn.</span>
+            {/* <div className="flex items-center space-x-3 text-xl">
               <a
                 href="https://www.instagram.com/rezatamaar"
                 target="_blank"
@@ -30,10 +30,10 @@ export default function Footer() {
                   className="ml-3 mr-3 text-gray-700 hover:text-black"
                 />
               </a>
-            </div>
+            </div> */}
           </div>
 
-          <div className="mt-4 flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:space-x-10 lg:space-y-0">
+          {/* <div className="mt-4 flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:space-x-10 lg:space-y-0">
             <Link href="/">
               <p className="text-gray-600 hover:text-gray-900">Home</p>
             </Link>
@@ -48,9 +48,9 @@ export default function Footer() {
             <Link href="/chatbot">
               <p className="text-gray-600 hover:text-gray-900">Chatbot</p>
             </Link>
-          </div>
+          </div> */}
 
-          <div className="mt-6 lg:mt-0">
+          {/* <div className="mt-6 lg:mt-0">
             <form className="flex space-x-2">
               <input
                 type="email"
@@ -64,7 +64,7 @@ export default function Footer() {
                 Subscribe
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-8 border-t border-gray-300 pt-4 text-center text-sm text-gray-500">

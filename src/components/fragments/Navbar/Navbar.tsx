@@ -17,12 +17,12 @@ function buttonLogin() {
   return (
     <div className="hidden gap-4 lg:flex">
       <Link href="/auth/sign-in">
-        <button className="text-md rounded-full border border-blue-500 px-4 py-1 text-blue-500 transition duration-300 hover:bg-blue-500 hover:text-white">
+        <button className="text-md rounded-lg border border-blue-500 px-4 py-1 text-blue-500 transition duration-300 hover:bg-blue-500 hover:text-white">
           Sign In
         </button>
       </Link>
       <Link href="/auth/sign-up">
-        <button className="text-md rounded-full bg-blue-500 px-4 py-1 text-white transition duration-300 hover:bg-blue-600">
+        <button className="text-md rounded-lg bg-blue-500 px-4 py-1 text-white transition duration-300 hover:bg-blue-600">
           Sign Up
         </button>
       </Link>
@@ -52,9 +52,9 @@ export default function Navbar() {
 
   const handleSearch = () => {
     if (searchKeyword.trim()) {
-      router.push(`/search_list/${searchKeyword}`);
+      router.push(`/search-list/${searchKeyword}`);
     } else {
-      router.push(`/search_list/`);
+      router.push(`/search-list`);
     }
   };
 
@@ -70,7 +70,7 @@ export default function Navbar() {
         <div className="flex items-center">
           <GrearMarket />
 
-          <div className="ml-5 hidden gap-6 text-black lg:flex">
+          {/* <div className="ml-5 hidden gap-6 text-black lg:flex">
             <Link href="/">
               <p className="hover:text-blue-500 hover:duration-700">Home</p>
             </Link>
@@ -87,7 +87,7 @@ export default function Navbar() {
             <Link href="/chatbot">
               <p className="hover:text-blue-500 hover:duration-700">Chatbot</p>
             </Link>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center gap-4">
@@ -98,7 +98,7 @@ export default function Navbar() {
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full max-w-[350px] rounded-full border bg-gray-100 px-5 py-2 text-sm focus:outline-none"
+              className="w-full max-w-[350px] rounded-lg border bg-gray-100 px-5 py-2 text-sm focus:outline-none"
             />
             <FiSearch
               onClick={handleSearch}
@@ -107,7 +107,7 @@ export default function Navbar() {
           </div>
 
           {session && (
-            <div className="flex items-center gap-4 text-lg text-black">
+            <div className="flex items-center gap-4 text-lg text-gray-500">
               <Link href="/keranjang">
                 <FiShoppingCart className="cursor-pointer" />
               </Link>
@@ -116,7 +116,7 @@ export default function Navbar() {
             </div>
           )}
 
-          <div className="hidden h-[40px] w-[1.5px] rounded-md bg-black lg:block"></div>
+          <div className="hidden h-[40px] w-[1.5px] rounded-lg bg-gray-500 lg:block"></div>
 
           {session && userData ? <p>{userData.name}</p> : buttonLogin()}
 

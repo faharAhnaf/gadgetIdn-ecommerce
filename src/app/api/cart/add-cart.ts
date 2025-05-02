@@ -1,4 +1,3 @@
-import { db } from "@/app/lib/firebase";
 import {
   collection,
   query,
@@ -10,8 +9,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import Cart from "@/app/lib/model/cart";
 import Swal from "sweetalert2";
+import Cart from "@/interfaces/cart";
+import { db } from "@/lib/firebase";
 
 export default async function addCartItem(
   userId: string,

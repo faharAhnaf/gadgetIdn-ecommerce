@@ -1,9 +1,14 @@
-import { collection, query, where, getDocs, deleteDoc } from "firebase/firestore";
-import { db } from "@/app/lib/firebase";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 
 export default async function removeCartItem(cartId: string): Promise<void> {
   try {
-    
     const cartCollection = collection(db, "cart");
     const cartQuery = query(cartCollection, where("cart_id", "==", cartId));
     const querySnapshot = await getDocs(cartQuery);

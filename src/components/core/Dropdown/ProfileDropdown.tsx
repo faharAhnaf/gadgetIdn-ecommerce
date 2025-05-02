@@ -16,10 +16,10 @@ import { logout } from "@/app/api/auth/google";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getProfileByUserId } from "@/app/api/profile/profile";
-import Profile from "@/app/lib/model/profile";
 import Image from "next/image";
 import SkeletonUserPicture from "../Skeleton/SkeletonUserPicture";
-import { useUserProfile } from "@/app/context/ProfileContext";
+import { useUserProfile } from "@/context/ProfileContext";
+import Profile from "@/interfaces/profile";
 
 export function ProfileDropdown() {
   const session = localStorage.getItem("userSession");

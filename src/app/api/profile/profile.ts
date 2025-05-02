@@ -1,5 +1,5 @@
-import { db } from "@/app/lib/firebase";
-import Profile from "@/app/lib/model/profile";
+import Profile from "@/interfaces/profile";
+import { db } from "@/lib/firebase";
 import {
   collection,
   doc,

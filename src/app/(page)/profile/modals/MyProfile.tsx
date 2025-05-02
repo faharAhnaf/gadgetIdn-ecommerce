@@ -1,5 +1,5 @@
-import { Form } from "@/app/lib/model/form";
 import { SaveChangeButton } from "@/components/core/Button/SaveChangeButton";
+import { Form } from "@/interfaces/form";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

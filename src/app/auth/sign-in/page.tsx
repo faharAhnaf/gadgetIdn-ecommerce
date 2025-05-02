@@ -9,6 +9,7 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/app/api/auth/login";
+import { ArrowLeft } from "lucide-react";
 
 export default function Sign_In() {
   const [email, setEmail] = useState("");
@@ -63,7 +64,7 @@ export default function Sign_In() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto grid min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="flex w-full max-w-[1000px] flex-col items-center rounded-[12px] bg-white p-5 shadow-lg lg:h-[500px] lg:flex-row">
         <div className="hidden w-1/2 lg:block">
           <Image
@@ -109,7 +110,7 @@ export default function Sign_In() {
             Forgot Your Password?
             <Link
               href="/auth/sign-up"
-              className="ml-3 text-base text-sky-400 duration-300 hover:text-sky-500"
+              className="ml-3 text-base text-blue-500 duration-300 hover:text-blue-400"
             >
               Sign Up
             </Link>

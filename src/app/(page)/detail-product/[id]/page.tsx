@@ -4,16 +4,16 @@ import React, { useState, useEffect } from "react";
 import "@/app/assets/css/detail_produk.css";
 import "@/app/assets/css/skeleton-loading.css";
 import QuantitySelector from "@/components/core/Input/QuantitySelector";
-import formatRupiah from "@/app/lib/format_money";
 import Swal from "sweetalert2";
 import { useRouter, useParams } from "next/navigation";
-import { getProductByProductId } from "@/app/api/product/detail_product";
-import CartItem from "@/app/lib/model/cartItem";
+import { getProductByProductId } from "@/app/api/product/detail-product";
 import Image from "next/image";
-import addCartItem from "@/app/api/cart/add_cart";
-import Product from "@/app/lib/model/product";
+import addCartItem from "@/app/api/cart/add-cart";
 import { Button } from "@/components/ui/button";
 import { Check, SquareArrowLeft } from "lucide-react";
+import Product from "@/interfaces/product";
+import CartItem from "@/interfaces/cart-item";
+import formatRupiah from "@/utils/format-money";
 
 const SkeletonText = ({ width }: { width: string }) => (
   <span className="skeleton-loading" style={{ width }}></span>

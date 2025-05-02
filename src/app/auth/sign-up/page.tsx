@@ -115,7 +115,7 @@ export default function Sign_Up() {
             Already Have an Account?
             <Link
               href="/auth/sign-in"
-              className="ml-3 text-base text-sky-400 duration-300 hover:text-sky-500"
+              className="ml-3 text-base text-blue-500 duration-300 hover:text-blue-400"
             >
               Sign In
             </Link>

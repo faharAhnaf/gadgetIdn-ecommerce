@@ -6,7 +6,6 @@ import Navbar from "@/components/fragments/Navbar/Navbar";
 import DropdownShipping from "@/components/core/Dropdown/ShippingDropdown";
 import QuantitySelectorPayment from "@/components/core/Input/QuantitySelectorPayment";
 import { handleCheckout } from "@/app/api/transaksi/transaksi";
-import Image from "next/image";
 
 import { getProfileByUserId } from "@/app/api/profile/profile";
 

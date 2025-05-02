@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the CSS
-import { UserProfileProvider } from "./context/ProfileContext";
+import { UserProfileProvider } from "../context/ProfileContext";
 config.autoAddCss = false; // Prevents Font Awesome from automatically adding CSS
 
 const geistSans = localFont({

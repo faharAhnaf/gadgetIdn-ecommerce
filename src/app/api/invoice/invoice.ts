@@ -1,6 +1,6 @@
-import { db } from "@/app/lib/firebase";
-import { InvoiceData } from "@/app/lib/model/invoice";
-import Product from "@/app/lib/model/product";
+import { InvoiceData } from "@/interfaces/invoice";
+import Product from "@/interfaces/product";
+import { db } from "@/lib/firebase";
 import {
   collection,
   getDocs,

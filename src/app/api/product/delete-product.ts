@@ -1,8 +1,8 @@
-import { db } from "@/app/lib/firebase";
+import { db } from "@/lib/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 
 export const deleteProductById = async (
-  productId: string
+  productId: string,
 ): Promise<boolean> => {
   try {
     const productRef = doc(db, "product", productId);

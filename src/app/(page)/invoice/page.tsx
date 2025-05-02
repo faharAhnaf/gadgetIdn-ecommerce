@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import CardInvoice from "@/components/core/Card/CardInvoice";
-import { InvoiceData } from "@/app/lib/model/invoice";
 import invoice from "@/app/api/invoice/invoice";
 import CardInvoiceSkeleton from "@/components/core/Skeleton/CardInvoiceSkeleton";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { SquareArrowLeft } from "lucide-react";
+import { InvoiceData } from "@/interfaces/invoice";
 
 export default function InvoicePage() {
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
