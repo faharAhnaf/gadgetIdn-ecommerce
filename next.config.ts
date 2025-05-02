@@ -10,23 +10,31 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["static.nike.com"], // Ganti dengan domain yang sesuai
   },
-  // async headers() {
-  //   return [
-  //     {
-  //       source: "/(.*)",
-  //       headers: [
-  //         {
-  //           key: "Cross-Origin-Opener-Policy",
-  //           value: "same-origin",
-  //         },
-  //         {
-  //           key: "Cross-Origin-Embedder-Policy",
-  //           value: "require-corp",
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "require-corp",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "unsafe-none",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
