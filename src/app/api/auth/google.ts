@@ -81,6 +81,10 @@ const logout = async () => {
       text: "You have successfully logged out.",
       icon: "info",
       confirmButtonText: "OK",
+    }).then(() => {
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
     });
   }
 };
