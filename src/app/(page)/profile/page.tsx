@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import updateDataProfile from "@/app/api/profile/update-profile";
 import Swal from "sweetalert2";
 import ProfileSidebar from "@/components/fragments/Sidebar/ProfileSidebar";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { getProfileByUserId } from "@/app/api/profile/profile";
 import MyProfile from "./modals/MyProfile";
 import UploadProduct from "./modals/UploadProduct";
@@ -25,36 +25,43 @@ export default function UserProfile() {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [isLoading, setIsloading] = useState<boolean>(true);
+  const [session, setSession] = useState<string | null>(null);
   const router = useRouter();
-
-  const session = typeof window !== "undefined" ? localStorage.getItem("userSession") : null;
+  const { id } = useParams();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!session) {
-      router.push("/");
-      return;
-    }
-    const userData = JSON.parse(session);
-    (async () => {
-      try {
-        const userProfile = await getProfileByUserId(userData.user_id);
+    if (typeof window !== "undefined") {
+      const userData = localStorage.getItem("userSession");
+      setSession(userData);
 
-        if (userProfile) {
-          setData(userProfile);
-          setFormData({
-            name: userProfile.name || "",
-            email: userProfile.email || "",
-            phone: userProfile.phone || "",
-            location: userProfile.location || "",
-            picture: userProfile.picture || "",
-          });
-          setIsloading(false);
-        }
-      } catch (e) {
-        console.error(e);
+      if (!userData) {
+        router.push("/");
+        return;
       }
-    })();
-  }, []);
+
+      const user = JSON.parse(userData);
+      (async () => {
+        try {
+          const userProfile = await getProfileByUserId(user.user_id);
+
+          if (userProfile) {
+            setData(userProfile);
+            setFormData({
+              name: userProfile.name || "",
+              email: userProfile.email || "",
+              phone: userProfile.phone || "",
+              location: userProfile.location || "",
+              picture: userProfile.picture || "",
+            });
+            setIsloading(false);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+    }
+  }, [session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -96,9 +103,6 @@ export default function UserProfile() {
     }
   };
 
-  const params = usePathname();
-
-  // Remove productId from props and use params or other hooks as needed
   return (
     <>
       {session && (
@@ -113,7 +117,7 @@ export default function UserProfile() {
               )}
             </div>
             <div className="flex justify-center">
-              {params == "/profile" && (
+              {pathname == "/profile" && (
                 <MyProfile
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
@@ -121,12 +125,11 @@ export default function UserProfile() {
                   loading={loading}
                 />
               )}
-              {params == "/profile/upload-product" && <UploadProduct />}
-              {params == "/profile/list-product" && <ListProduct />}
-              {/* If you need productId, extract it from params or useParams */}
-              {/* {params == `/profile/list-product/${productId}` && (
-                <UpdateProduct productId={productId} />
-              )} */}
+              {pathname == "/profile/upload-product" && <UploadProduct />}
+              {pathname == "/profile/list-product" && <ListProduct />}
+              {pathname == `/profile/list-product/${id}` && (
+                <UpdateProduct productId={id} />
+              )}
             </div>
           </div>
         </div>

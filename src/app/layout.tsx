@@ -19,8 +19,8 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "BelanjaKuy",
-  description: "Ecommerce application that is cooperative and fast in service",
+  title: "GadgetIdn",
+  description: "Platform e-commerce terpercaya untuk semua kebutuhan gadget dan teknologi Anda. Nikmati pengalaman berbelanja yang aman, cepat, dan nyaman dengan layanan pelanggan 24/7.",
   manifest: "/manifest.json",
 };
 

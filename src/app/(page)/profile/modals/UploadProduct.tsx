@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -191,7 +192,7 @@ export default function UploadProduct() {
         <ul className="mx-2 mt-8 space-y-6">
           <li className="flex items-center gap-3 border-b-2 pb-5">
             <FontAwesomeIcon icon={faCircleInfo} />
-            <p>Update Product</p>
+            <p>Upload Product</p>
             <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
           </li>
           <li className="grid items-center justify-between gap-3 border-b-2 py-5">

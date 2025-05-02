@@ -1,3 +1,5 @@
+"use client";
+
 import { SaveChangeButton } from "@/components/core/Button/SaveChangeButton";
 import { Form } from "@/interfaces/form";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
