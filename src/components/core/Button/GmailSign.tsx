@@ -3,14 +3,13 @@
 import Image from "next/image";
 import { signInWithGoogle, logout } from "@/app/api/auth/google";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 
 export default function GmailSign() {
   const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,57 +19,30 @@ export default function GmailSign() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = useCallback(async () => {
-    if (isLoading) return;
-
+  const handleLogin = async () => {
     try {
-      setIsLoading(true);
-
-      // Ensure we're in a browser environment
-      if (typeof window === "undefined") return;
-
       await signInWithGoogle();
 
-      // Only show success message if we get here (no error thrown)
-      await Swal.fire({
+      Swal.fire({
         title: "Login Successful!",
         text: "You have successfully logged in.",
         icon: "success",
         confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed || result.isDismissed) {
+          router.push("/");
+        }
       });
-
-      router.push("/");
-    } catch (error: any) {
-      console.error("Login error:", error);
-
-      // Don't show error if it's just the user closing the popup
-      if (error.code !== "auth/popup-closed-by-user") {
-        await Swal.fire({
-          icon: "error",
-          title: "Login Failed",
-          text: error.message || "Failed to login. Please try again.",
-        });
-      }
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      alert("Failed to login");
     }
-  }, [router, isLoading]);
+  };
 
   const handleLogout = async () => {
-    if (isLoading) return;
-
     try {
-      setIsLoading(true);
       await logout();
     } catch (error) {
-      console.error("Logout error:", error);
-      await Swal.fire({
-        icon: "error",
-        title: "Logout Failed",
-        text: "Failed to logout. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
+      alert("Failed to logout");
     }
   };
 
@@ -79,16 +51,14 @@ export default function GmailSign() {
       {user ? (
         <button
           onClick={handleLogout}
-          disabled={isLoading}
-          className="mb-4 flex w-full flex-row justify-center rounded-lg border border-gray-300 bg-transparent px-4 py-2 font-semibold text-black shadow-md transition duration-700 hover:bg-red-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 disabled:opacity-50"
+          className="mb-4 flex w-full flex-row justify-center rounded-lg border border-gray-300 bg-transparent px-4 py-2 font-semibold text-black shadow-md transition duration-700 hover:bg-red-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
         >
-          <span>{isLoading ? "Signing Out..." : "Sign Out"}</span>
+          <span>Sign Out</span>
         </button>
       ) : (
         <button
           onClick={handleLogin}
-          disabled={isLoading}
-          className="mb-4 flex w-full flex-row justify-center rounded-lg border border-gray-300 bg-transparent px-4 py-2 font-semibold text-black shadow-md transition duration-700 hover:bg-blue-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 disabled:opacity-50"
+          className="mb-4 flex w-full flex-row justify-center rounded-lg border border-gray-300 bg-transparent px-4 py-2 font-semibold text-black shadow-md transition duration-700 hover:bg-blue-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
         >
           <Image
             src="/assets/icon/Icon_Google.svg"
@@ -96,9 +66,8 @@ export default function GmailSign() {
             height={20}
             className="mr-3"
             alt="Icon_Google"
-            priority
           />
-          <span>{isLoading ? "Signing In..." : "Sign In With Google"}</span>
+          <span>Sign In With Google</span>
         </button>
       )}
     </div>

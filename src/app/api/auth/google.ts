@@ -1,10 +1,5 @@
 import { auth, db, provider } from "@/lib/firebase";
-import {
-  signInWithPopup,
-  signOut,
-  browserLocalPersistence,
-  setPersistence,
-} from "firebase/auth";
+import { signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
@@ -18,11 +13,7 @@ const saveToSession = (user: any) => {
       role: user.role,
       expiresAt: Date.now() + oneDayInMs,
     };
-    try {
-      localStorage.setItem("userSession", JSON.stringify(sessionData));
-    } catch (error) {
-      console.error("Error saving to localStorage:", error);
-    }
+    localStorage.setItem("userSession", JSON.stringify(sessionData));
   }
 };
 
@@ -37,16 +28,9 @@ const signInWithGoogle = async () => {
       },
     });
 
-    // Set persistence to LOCAL before sign in
-    await setPersistence(auth, browserLocalPersistence);
-
     const result = await signInWithPopup(auth, provider);
-
-    if (!result) {
-      throw new Error("Sign-in popup was blocked or closed");
-    }
-
     const user = result.user;
+
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
@@ -65,28 +49,13 @@ const signInWithGoogle = async () => {
 
     saveToSession(user);
 
-    // Close the loading dialog
-    Swal.close();
-
     return user;
-  } catch (error: any) {
-    console.error("Error signing in with Google:", error);
-
-    let errorMessage = "An error occurred during Google sign-in.";
-    if (error.code === "auth/popup-blocked") {
-      errorMessage = "Popup was blocked. Please allow popups for this site.";
-    } else if (error.code === "auth/popup-closed-by-user") {
-      errorMessage = "Sign-in was cancelled. Please try again.";
-    } else if (error.code === "auth/missing-initial-state") {
-      errorMessage =
-        "Browser storage is not accessible. Please enable cookies and try again.";
-    }
-
+  } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Login Failed",
-      text: errorMessage,
-      footer: `<a href="#">Need help with sign in?</a>`,
+      text: "An error occurred during Google sign-in.",
+      footer: `<a href="#">Why do I have this issue?</a>`,
     });
 
     throw error;
@@ -94,36 +63,25 @@ const signInWithGoogle = async () => {
 };
 
 const logout = async () => {
-  if (typeof window === "undefined") return;
-
   const result = await Swal.fire({
     title: "Confirm Logout",
     text: "Are you sure you want to exit?",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonText: "Yes, Sign out",
-    cancelButtonText: "No, Keep Signed in",
+    confirmButtonText: "Yes, Signout",
+    cancelButtonText: "No, Keep Signin",
   });
 
   if (result.isConfirmed) {
-    try {
-      await signOut(auth);
-      localStorage.removeItem("userSession");
+    await signOut(auth);
+    localStorage.removeItem("userSession");
 
-      Swal.fire({
-        title: "Logged Out",
-        text: "You have successfully logged out.",
-        icon: "info",
-        confirmButtonText: "OK",
-      });
-    } catch (error) {
-      console.error("Error during logout:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Logout Failed",
-        text: "An error occurred during logout. Please try again.",
-      });
-    }
+    Swal.fire({
+      title: "Logged Out",
+      text: "You have successfully logged out.",
+      icon: "info",
+      confirmButtonText: "OK",
+    });
   }
 };
 
