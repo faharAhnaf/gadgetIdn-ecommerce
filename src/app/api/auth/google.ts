@@ -4,17 +4,17 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
 const saveToSession = (user: any) => {
-  const oneDayInMs = 24 * 60 * 60 * 1000;
-
-  const sessionData = {
-    user_id: user.uid,
-    name: user.displayName,
-    email: user.email,
-    role: user.role,
-    expiresAt: Date.now() + oneDayInMs,
-  };
-
-  localStorage.setItem("userSession", JSON.stringify(sessionData));
+  if (typeof window !== 'undefined') {
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+    const sessionData = {
+      user_id: user.uid,
+      name: user.displayName,
+      email: user.email,
+      role: user.role,
+      expiresAt: Date.now() + oneDayInMs,
+    };
+    localStorage.setItem("userSession", JSON.stringify(sessionData));
+  }
 };
 
 const signInWithGoogle = async () => {
