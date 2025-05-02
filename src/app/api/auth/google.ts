@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
 const saveToSession = (user: any) => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     const oneDayInMs = 24 * 60 * 60 * 1000;
     const sessionData = {
       user_id: user.uid,
