@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { signInWithGoogle, logout } from "@/app/api/auth/google";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
@@ -20,51 +20,60 @@ export default function GmailSign() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
+    if (isLoading) return;
+
     try {
       setIsLoading(true);
+
+      // Ensure we're in a browser environment
+      if (typeof window === 'undefined') return;
+
+      // Add a small delay to ensure DOM is ready
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       await signInWithGoogle();
 
-      // Hanya tampilkan success message jika login berhasil
-      Swal.fire({
-        title: "Login Berhasil!",
-        text: "Anda telah berhasil masuk.",
+      // Only show success message if we get here (no error thrown)
+      await Swal.fire({
+        title: "Login Successful!",
+        text: "You have successfully logged in.",
         icon: "success",
         confirmButtonText: "OK",
-      }).then((result) => {
-        if (result.isConfirmed || result.isDismissed) {
-          router.push("/");
-        }
       });
-    } catch (error: any) {
-      // Tangani error dengan lebih spesifik
-      let errorMessage = "Gagal masuk. Silakan coba lagi.";
-      
-      if (error.code === 'auth/popup-closed-by-user') {
-        errorMessage = "Proses login terhenti. Mohon jangan tutup popup Google Sign In.";
-      } else if (error.code === 'auth/popup-blocked') {
-        errorMessage = "Popup diblokir oleh browser. Mohon izinkan popup untuk situs ini.";
-      }
 
-      Swal.fire({
-        icon: "error",
-        title: "Login Gagal",
-        text: errorMessage,
-      });
+      router.push("/");
+    } catch (error: any) {
+      console.error('Login error:', error);
+      
+      // Don't show error if it's just the user closing the popup
+      if (error.code !== 'auth/popup-closed-by-user') {
+        await Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message || "Failed to login. Please try again.",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router, isLoading]);
 
   const handleLogout = async () => {
+    if (isLoading) return;
+
     try {
+      setIsLoading(true);
       await logout();
     } catch (error) {
-      Swal.fire({
+      console.error('Logout error:', error);
+      await Swal.fire({
         icon: "error",
-        title: "Logout Gagal",
-        text: "Gagal keluar dari akun. Silakan coba lagi.",
+        title: "Logout Failed",
+        text: "Failed to logout. Please try again.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,7 +85,7 @@ export default function GmailSign() {
           disabled={isLoading}
           className="mb-4 flex w-full flex-row justify-center rounded-lg border border-gray-300 bg-transparent px-4 py-2 font-semibold text-black shadow-md transition duration-700 hover:bg-red-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 disabled:opacity-50"
         >
-          <span>Sign Out</span>
+          <span>{isLoading ? "Signing Out..." : "Sign Out"}</span>
         </button>
       ) : (
         <button
@@ -90,8 +99,9 @@ export default function GmailSign() {
             height={20}
             className="mr-3"
             alt="Icon_Google"
+            priority
           />
-          <span>{isLoading ? "Sedang Masuk..." : "Sign In With Google"}</span>
+          <span>{isLoading ? "Signing In..." : "Sign In With Google"}</span>
         </button>
       )}
     </div>
