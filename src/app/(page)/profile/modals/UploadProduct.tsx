@@ -94,8 +94,8 @@ export default function UploadProduct() {
 
   console.log(productTypeVal);
 
-  const storedData = localStorage.getItem("userSession");
   useEffect(() => {
+    const storedData = localStorage.getItem("userSession");
     if (storedData) {
       const userData = JSON.parse(storedData);
       setUser(userData.user_id);

@@ -22,18 +22,30 @@ import { useUserProfile } from "@/context/ProfileContext";
 import Profile from "@/interfaces/profile";
 
 export function ProfileDropdown() {
-  const session = localStorage.getItem("userSession");
+  const [session, setSession] = useState<string | null>(null);
   const [dataProfile, setDataProfile] = useState<Profile | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const { profile } = useUserProfile();
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+    }
+  }, []);
+
+  useEffect(() => {
     (async () => {
       if (session) {
-        const userData = JSON.parse(session);
-        const dataProfile = await getProfileByUserId(userData.user_id);
-        if (dataProfile) {
-          setDataProfile(dataProfile);
+        try {
+          const userData = JSON.parse(session);
+          const userProfile = await getProfileByUserId(userData.user_id);
+          if (userProfile) {
+            setDataProfile(userProfile);
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
           setLoading(false);
         }
       }
@@ -42,12 +54,15 @@ export function ProfileDropdown() {
         setDataProfile(null);
       }
     })();
-  }, [profile]);
+  }, [session, profile]);
 
   const router = useRouter();
   const handleLogout = async (e: any) => {
     e.preventDefault();
     await logout();
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("userSession");
+    }
     router.push("/");
   };
 

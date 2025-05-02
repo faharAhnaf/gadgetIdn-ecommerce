@@ -37,6 +37,8 @@ export default function Checkout() {
   });
 
   const [formInput, setFormInput] = useState(alamat);
+  const [session, setSession] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   const handleUbah = () => {
     setIsEditing(true);
@@ -47,24 +49,46 @@ export default function Checkout() {
     setIsEditing(false);
   };
 
-  const session = localStorage.getItem("userSession");
-  const userData = JSON.parse(session!);
+  // Memindahkan akses localStorage ke dalam useEffect
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+      
+      if (userSession) {
+        try {
+          const parsedUserData = JSON.parse(userSession);
+          setUserData(parsedUserData);
+        } catch (error) {
+          console.error("Error parsing user session:", error);
+        }
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const updateProducts = () => {
-      const cartData = localStorage.getItem("cartSession");
-      if (cartData) {
-        const parsedCartData = JSON.parse(cartData);
-        setProducts(parsedCartData);
+      if (typeof window !== "undefined") {
+        const cartData = localStorage.getItem("cartSession");
+        if (cartData) {
+          try {
+            const parsedCartData = JSON.parse(cartData);
+            setProducts(parsedCartData);
+          } catch (error) {
+            console.error("Error parsing cart data:", error);
+          }
+        }
       }
     };
 
-    window.addEventListener("storage", updateProducts);
-    updateProducts();
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", updateProducts);
+      updateProducts();
 
-    return () => {
-      window.removeEventListener("storage", updateProducts);
-    };
+      return () => {
+        window.removeEventListener("storage", updateProducts);
+      };
+    }
   }, []);
 
   const subtotal = products.reduce(
@@ -169,6 +193,36 @@ export default function Checkout() {
       shippingCost: shippingCost,
       shippingETA: selectedShippingETA,
     });
+  };
+
+  // Memindahkan akses localStorage ke dalam fungsi yang aman
+  const updateCartItem = (cartId: string, quantity: number, price: number) => {
+    if (typeof window !== "undefined") {
+      try {
+        const cartSessions = JSON.parse(
+          localStorage.getItem("cartSession") || "[]"
+        );
+        const cartIndex = cartSessions.findIndex(
+          (item: any) => item.cart_id === cartId
+        );
+
+        if (cartIndex > -1) {
+          cartSessions[cartIndex] = {
+            ...cartSessions[cartIndex],
+            quantity: quantity,
+            total_price: price,
+          };
+
+          localStorage.setItem(
+            "cartSession",
+            JSON.stringify(cartSessions)
+          );
+          window.dispatchEvent(new Event("storage"));
+        }
+      } catch (error) {
+        console.error("Error updating cart item:", error);
+      }
+    }
   };
 
   return (
@@ -311,26 +365,7 @@ export default function Checkout() {
 
                         <QuantitySelectorPayment
                           onQuantityChange={(quantity, price) => {
-                            const cartSessions = JSON.parse(
-                              localStorage.getItem("cartSession") || "[]",
-                            );
-                            const cartIndex = cartSessions.findIndex(
-                              (item: any) => item.cart_id === product.cart_id,
-                            );
-
-                            if (cartIndex > -1) {
-                              cartSessions[cartIndex] = {
-                                ...cartSessions[cartIndex],
-                                quantity: quantity,
-                                total_price: price,
-                              };
-
-                              localStorage.setItem(
-                                "cartSession",
-                                JSON.stringify(cartSessions),
-                              );
-                              window.dispatchEvent(new Event("storage"));
-                            }
+                            updateCartItem(product.cart_id, quantity, price);
                           }}
                           cartId={product.cart_id}
                           unitPrice={product.price}

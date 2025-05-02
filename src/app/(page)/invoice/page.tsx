@@ -20,12 +20,21 @@ export default function InvoicePage() {
   const [confirm, setConfirm] = useState<boolean | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [session, setSession] = useState<string | null>(null);
 
   const router = useRouter();
-  const session = localStorage.getItem("userSession");
 
   useEffect(() => {
-    !session && router.push("/");
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+      if (!userSession) {
+        router.push("/");
+      }
+    }
+  }, [router]);
+
+  useEffect(() => {
     const fetchData = async () => {
       if (session) {
         const userData = JSON.parse(session);
@@ -43,7 +52,7 @@ export default function InvoicePage() {
       }
     };
     fetchData();
-  }, []);
+  }, [session]);
 
   const handleFilterConfirm = (filterStatus: boolean | null) => {
     setConfirm(filterStatus);

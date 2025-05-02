@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface QuantitySelectorProps {
   onQuantityChange?: (quantity: number, price: number) => void;
@@ -13,40 +13,56 @@ export default function QuantitySelectorPayment({
   cartId,
   unitPrice,
 }: QuantitySelectorProps) {
-  const [quantity, setQuantity] = useState(() => {
-    // Initialize quantity from localStorage
-    const cartSessions = JSON.parse(
-      localStorage.getItem("cartSession") || "[]",
-    );
-    const cartItem = cartSessions.find((item: any) => item.cart_id === cartId);
-    return cartItem ? cartItem.quantity : 1;
-  });
+  const [quantity, setQuantity] = useState(1);
+  const [cartSessions, setCartSessions] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const storedCart = localStorage.getItem("cartSession");
+        const parsedCart = storedCart ? JSON.parse(storedCart) : [];
+        setCartSessions(parsedCart);
+        
+        const cartItem = parsedCart.find((item: any) => item.cart_id === cartId);
+        if (cartItem) {
+          setQuantity(cartItem.quantity);
+        }
+      } catch (error) {
+        console.error("Error loading cart data:", error);
+      }
+    }
+  }, [cartId]);
 
   const updateLocalStorage = (newQuantity: number) => {
-    const cartSessions = JSON.parse(
-      localStorage.getItem("cartSession") || "[]",
-    );
-    const newPrice = newQuantity * unitPrice;
-    const cartIndex = cartSessions.findIndex(
-      (item: any) => item.cart_id === cartId,
-    );
+    if (typeof window === "undefined") return;
 
-    if (cartIndex > -1) {
-      cartSessions[cartIndex] = {
-        ...cartSessions[cartIndex], // Preserve other existing properties
-        quantity: newQuantity,
-        total_price: newPrice,
-      };
-    } else {
-      cartSessions.push({
-        cart_id: cartId,
-        quantity: newQuantity,
-        total_price: newPrice,
-      });
+    try {
+      const newPrice = newQuantity * unitPrice;
+      const updatedCart = [...cartSessions];
+      const cartIndex = updatedCart.findIndex(
+        (item: any) => item.cart_id === cartId
+      );
+
+      if (cartIndex > -1) {
+        updatedCart[cartIndex] = {
+          ...updatedCart[cartIndex],
+          quantity: newQuantity,
+          total_price: newPrice,
+        };
+      } else {
+        updatedCart.push({
+          cart_id: cartId,
+          quantity: newQuantity,
+          total_price: newPrice,
+        });
+      }
+
+      setCartSessions(updatedCart);
+      localStorage.setItem("cartSession", JSON.stringify(updatedCart));
+      onQuantityChange(newQuantity, newPrice);
+    } catch (error) {
+      console.error("Error updating cart:", error);
     }
-
-    localStorage.setItem("cartSession", JSON.stringify(cartSessions));
-    onQuantityChange(newQuantity, newPrice);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

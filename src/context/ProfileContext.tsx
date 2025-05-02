@@ -1,6 +1,6 @@
 "use client";
+import Profile from "@/interfaces/profile";
 import React, { createContext, useContext, useState } from "react";
-import Profile from "@/app/lib/model/profile";
 
 const UserProfileContext = createContext<{
   profile: Profile | null;

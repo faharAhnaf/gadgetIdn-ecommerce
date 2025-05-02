@@ -1,7 +1,8 @@
+"use client";
+
 import GrearMarket from "@/components/core/Label/GrearMarket";
 import Link from "next/link";
 import { FiShoppingCart, FiUser, FiSearch, FiMenu, FiX } from "react-icons/fi";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ProfileDropdown } from "@/components/core/Dropdown/ProfileDropdown";
@@ -34,21 +35,29 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userData, setUserData] = useState<UserData>();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [session, setSession] = useState<string | null>(null);
+  const router = useRouter();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const session = localStorage.getItem("userSession");
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-    if (session) {
-      const userData = JSON.parse(session);
-      setUserData(userData);
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+      
+      if (userSession) {
+        try {
+          const parsedUserData = JSON.parse(userSession);
+          setUserData(parsedUserData);
+        } catch (error) {
+          console.error("Error parsing user session:", error);
+        }
+      }
     }
-  }, [session]);
-
-  const router = useRouter();
+    setIsMobileMenuOpen(false);
+  }, []);
 
   const handleSearch = () => {
     if (searchKeyword.trim()) {

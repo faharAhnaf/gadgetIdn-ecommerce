@@ -27,40 +27,56 @@ export default function DetailProduct() {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
-
   const [quantity, setQuantity] = useState(1);
+  const [userData, setUserData] = useState<any>(null);
+
   const router = useRouter();
   const { id } = useParams();
 
-  const session = localStorage.getItem("userSession");
-  const userData = JSON.parse(session!);
+  useEffect(() => {
+    // Get user session safely
+    const session = typeof window !== "undefined" ? localStorage.getItem("userSession") : null;
+    if (session) {
+      try {
+        setUserData(JSON.parse(session));
+      } catch {
+        setUserData(null);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
       if (id) {
         const fetchedProduct = await getProductByProductId(id as string);
-
         if (fetchedProduct) {
           setProduct(fetchedProduct);
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: `Product Not Found`,
-            confirmButtonText: "OK",
-          }).then((result) => {
-            if (result.isConfirmed || result.isDismissed) {
-              router.push("/");
-            }
-          });
+          showSwalError("Product Not Found", () => router.push("/"));
         }
       }
     };
-
     fetchProduct();
   }, [id, router]);
 
+  const showSwalError = (text: string, callback?: () => void) => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text,
+      confirmButtonText: "OK",
+    }).then((result) => {
+      if ((result.isConfirmed || result.isDismissed) && callback) {
+        callback();
+      }
+    });
+  };
+
   const handleAddToCart = async () => {
+    if (!userData) {
+      showSwalError("User not logged in", () => router.push("/auth/sign-in"));
+      return;
+    }
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -74,108 +90,75 @@ export default function DetailProduct() {
       });
 
       if (result.isConfirmed) {
-        if (selectedSize && selectedColor) {
+        if (selectedSize && selectedColor && product) {
           await addCartItem(
             userData.user_id,
             id as string,
-            product!.price,
+            product.price,
             quantity,
             selectedSize,
             selectedColor,
           );
           router.push("/keranjang");
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Please fill in the color and size first",
-          });
+          showSwalError("Please fill in the color and size first");
         }
       }
     } catch (error) {
-      Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      showSwalError("Failed to add the item to the cart.");
     }
   };
 
-  const handleQuantityChange = (newQuantity: number) => {
-    setQuantity(newQuantity);
-  };
-
-  const handleSizeSelect = (size: string) => {
-    setSelectedSize(size);
-  };
-
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
-  };
+  const handleQuantityChange = (newQuantity: number) => setQuantity(newQuantity);
+  const handleSizeSelect = (size: string) => setSelectedSize(size);
+  const handleColorSelect = (color: string) => setSelectedColor(color);
 
   const handleProceedToPayment = async () => {
-    const selectedCartItems: CartItem[] = [];
-
     if (!product) {
-      Swal.fire({
-        icon: "warning",
-        title: "Product data has not finished loading",
-        text: "Please wait a moment",
-      });
+      showSwalError("Product data has not finished loading. Please wait a moment");
       return;
     }
-
     if (!selectedColor || !selectedSize) {
-      Swal.fire({
-        icon: "warning",
-        title: "Oops...",
-        text: "Please fill in the color and size first",
-      });
+      showSwalError("Please fill in the color and size first");
       return;
     }
 
-    selectedCartItems.push({
-      cart_id: "",
-      product_id: product.product_id,
-      image_url: product?.image_url,
-      name: product.name,
-      description: product.description,
-      selectedColor: selectedColor!,
-      selectedSize: selectedSize!,
-      quantity: quantity,
-      price: product.price,
-      total_price: product.price * quantity,
-    });
+    const selectedCartItems: CartItem[] = [
+      {
+        cart_id: "",
+        product_id: product.product_id,
+        image_url: product.image_url,
+        name: product.name,
+        description: product.description,
+        selectedColor,
+        selectedSize,
+        quantity,
+        price: product.price,
+        total_price: product.price * quantity,
+      },
+    ];
 
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "Are you sure you want to checkout you cart?",
+        text: "Are you sure you want to checkout your cart?",
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, add it!",
         cancelButtonText: "Cancel",
-      }).then((result) => {
-        if (selectedCartItems.length > 0) {
-          if (result.isConfirmed) {
-            localStorage.setItem(
-              "cartSession",
-              JSON.stringify(selectedCartItems),
-            );
-            router.push("/payment");
-            console.log(
-              "Selected items saved to localStorage:",
-              selectedCartItems,
-            );
-          }
-        } else {
-          Swal.fire({
-            icon: "warning",
-            title: "Oops...",
-            text: "No matching items found",
-          });
-        }
       });
+
+      if (selectedCartItems.length > 0 && result.isConfirmed) {
+        localStorage.setItem("cartSession", JSON.stringify(selectedCartItems));
+        router.push("/payment");
+        console.log("Selected items saved to localStorage:", selectedCartItems);
+      } else if (selectedCartItems.length === 0) {
+        showSwalError("No matching items found");
+      }
     } catch (error) {
-      Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      showSwalError("Failed to proceed to payment.");
     }
   };
 

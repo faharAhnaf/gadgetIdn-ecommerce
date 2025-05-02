@@ -14,11 +14,7 @@ import Navbar from "@/components/fragments/Navbar/Navbar";
 import Profile from "@/interfaces/profile";
 import { Form } from "@/interfaces/form";
 
-export default function UserProfile({
-  productId,
-}: {
-  productId: string | string[] | undefined;
-}) {
+export default function UserProfile() {
   const [data, setData] = useState<Profile>();
   const [formData, setFormData] = useState<Form>({
     name: "",
@@ -31,7 +27,7 @@ export default function UserProfile({
   const [isLoading, setIsloading] = useState<boolean>(true);
   const router = useRouter();
 
-  const session = localStorage.getItem("userSession");
+  const session = typeof window !== "undefined" ? localStorage.getItem("userSession") : null;
 
   useEffect(() => {
     if (!session) {
@@ -102,6 +98,7 @@ export default function UserProfile({
 
   const params = usePathname();
 
+  // Remove productId from props and use params or other hooks as needed
   return (
     <>
       {session && (
@@ -126,9 +123,10 @@ export default function UserProfile({
               )}
               {params == "/profile/upload-product" && <UploadProduct />}
               {params == "/profile/list-product" && <ListProduct />}
-              {params == `/profile/list-product/${productId}` && (
+              {/* If you need productId, extract it from params or useParams */}
+              {/* {params == `/profile/list-product/${productId}` && (
                 <UpdateProduct productId={productId} />
-              )}
+              )} */}
             </div>
           </div>
         </div>

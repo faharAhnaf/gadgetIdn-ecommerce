@@ -5,5 +5,5 @@ import ModalsPage from "../page";
 
 export default function GetUserProfileById() {
   const { id } = useParams();
-  return <ModalsPage id={id}></ModalsPage>;
+  return <ModalsPage></ModalsPage>;
 }

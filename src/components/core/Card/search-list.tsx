@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import formatRupiah from "@/utils/format-money";
 
@@ -18,7 +18,14 @@ const Card: React.FC<ProductCardProps> = ({
   imageUrl,
 }) => {
   const router = useRouter();
-  const session = localStorage.getItem("userSession");
+  const [session, setSession] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+    }
+  }, []);
 
   const handleAddToCart = async () => {
     !session

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -20,10 +20,26 @@ const Card: React.FC<ProductCardProps> = ({
   imageUrl,
 }) => {
   const id = `/detail-product/${product_id}`;
-
-  const session = localStorage.getItem("userSession");
-  const userData = JSON.parse(session!);
   const router = useRouter();
+  
+  const [session, setSession] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+      
+      if (userSession) {
+        try {
+          const parsedUserData = JSON.parse(userSession);
+          setUserData(parsedUserData);
+        } catch (error) {
+          console.error("Error parsing user session:", error);
+        }
+      }
+    }
+  }, []);
 
   const handleAddToCart = async () => {
     !session ? router.push("/auth/sign-in") : router.push(id);

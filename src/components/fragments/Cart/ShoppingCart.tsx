@@ -17,24 +17,51 @@ export default function ShoppingCart() {
   const [cartItems, setCartItems] = useState<Cart[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const session = localStorage.getItem("userSession");
-  const userData = JSON.parse(session!);
+  const [session, setSession] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userSession = localStorage.getItem("userSession");
+      setSession(userSession);
+      
+      if (userSession) {
+        try {
+          const parsedUserData = JSON.parse(userSession);
+          setUserData(parsedUserData);
+        } catch (error) {
+          console.error("Error parsing user session:", error);
+          setIsLoading(false);
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchCart = async () => {
-      const Carts = await getCartByUserId(userData.user_id);
-      setCartItems(Carts);
-      setIsLoading(false);
+      if (userData?.user_id) {
+        try {
+          const Carts = await getCartByUserId(userData.user_id);
+          setCartItems(Carts);
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
     };
 
     const timeout = setTimeout(() => {
       setIsLoading(false);
     }, 10000);
 
-    fetchCart();
+    if (userData) {
+      fetchCart();
+    }
+
     return () => clearTimeout(timeout);
-  }, []);
+  }, [userData]);
 
   const toggleSelectAll = () => {
     if (selectedItems.length === cartItems.length) {
@@ -102,7 +129,6 @@ export default function ShoppingCart() {
 
     selectedItems.forEach((id) => {
       const matchedItem = cartItems.find((item) => item.cart_id === id);
-
       if (matchedItem) {
         selectedCartItems.push({
           cart_id: matchedItem.cart_id,
@@ -122,28 +148,33 @@ export default function ShoppingCart() {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "Are you sure you want to checkout you cart?",
+        text: "Are you sure you want to checkout your cart?",
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, add it!",
+        confirmButtonText: "Yes, proceed!",
         cancelButtonText: "Cancel",
       });
 
-      if (selectedCartItems.length > 0) {
-        localStorage.setItem("cartSession", JSON.stringify(selectedCartItems));
+      if (result.isConfirmed && selectedCartItems.length > 0) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("cartSession", JSON.stringify(selectedCartItems));
+        }
         router.push("/payment");
-        console.log("Selected items saved to localStorage:", selectedCartItems);
-      } else {
+      } else if (selectedCartItems.length === 0) {
         Swal.fire({
           icon: "warning",
           title: "Oops...",
-          text: "No matching items found",
+          text: "No items selected for checkout",
         });
       }
     } catch (error) {
-      Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to proceed to checkout. Please try again.",
+      });
     }
   };
 

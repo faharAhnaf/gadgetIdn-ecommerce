@@ -7,8 +7,8 @@ import Navbar from "@/components/fragments/Navbar/Navbar";
 import Footer from "@/components/fragments/Footer/Footer";
 import SideBar from "@/components/fragments/Sidebar/ProductList";
 import searchProductsByName from "@/app/api/search-list/product";
-import ProductPreview from "@/app/lib/model/product_review";
 import SearchListSkeleton from "@/components/core/Skeleton/SearchListSkeleton";
+import ProductPreview from "@/interfaces/product-preview";
 
 import "@/app/assets/css/home.css";
 

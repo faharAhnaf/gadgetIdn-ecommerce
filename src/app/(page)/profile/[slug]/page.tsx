@@ -3,11 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 import UserProfile from "../page";
 import { useEffect } from "react";
 
-export default function ModalsPage({
-  id,
-}: {
-  id: string | string[] | undefined;
-}) {
+export default function ModalsPage() {
   const { slug } = useParams();
   const router = useRouter();
   const validRoutes = ["list-product", "update-product", "upload-product"];
@@ -19,5 +15,5 @@ export default function ModalsPage({
     }
   }, [slugString, router]);
 
-  return <UserProfile productId={id}></UserProfile>;
+  return <UserProfile></UserProfile>;
 }
