@@ -63,8 +63,11 @@ export default function UserProfile() {
     }
   }, [session]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement> | { name: string; value: string },
+  ) => {
+    const name = "target" in e ? e.target.name : e.name;
+    const value = "target" in e ? e.target.value : e.value;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -108,15 +111,15 @@ export default function UserProfile() {
       {session && (
         <div>
           <Navbar />
-          <div className="mx-28 mb-10 mt-28 grid grid-cols-2 rounded-xl border-2">
-            <div className="grid w-full border-r-2">
+          <div className="mx-auto mb-10 mt-28 grid rounded-xl border-2 lg:mx-20 lg:grid-cols-2">
+            <div className="grid w-full lg:border-r-2">
               {isLoading ? (
                 <Skeleton />
               ) : (
                 data && <ProfileSidebar data={data} />
               )}
             </div>
-            <div className="flex justify-center">
+            <div className="grid">
               {pathname == "/profile" && (
                 <MyProfile
                   handleSubmit={handleSubmit}

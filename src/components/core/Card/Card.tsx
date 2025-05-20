@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import formatRupiah from "@/utils/format-money";
+import Image from "next/image";
 
 interface ProductCardProps {
   product_id: string;
@@ -21,7 +22,7 @@ const Card: React.FC<ProductCardProps> = ({
 }) => {
   const id = `/detail-product/${product_id}`;
   const router = useRouter();
-  
+
   const [session, setSession] = useState<string | null>(null);
   const [userData, setUserData] = useState<any>(null);
 
@@ -29,7 +30,7 @@ const Card: React.FC<ProductCardProps> = ({
     if (typeof window !== "undefined") {
       const userSession = localStorage.getItem("userSession");
       setSession(userSession);
-      
+
       if (userSession) {
         try {
           const parsedUserData = JSON.parse(userSession);
@@ -46,12 +47,14 @@ const Card: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="flex h-full min-h-[425px] flex-col items-start rounded-lg bg-white p-4 shadow-lg">
-      <div className="mb-4 h-48 w-full overflow-hidden rounded-md bg-gray-200">
-        <img
-          src={imageUrl}
+    <div className="flex h-full flex-col items-start rounded-lg bg-white p-4 shadow-lg">
+      <div className="mb-4 w-full overflow-hidden rounded-md bg-gray-200">
+        <Image
+          width={500}
+          height={500}
+          src={"/" + imageUrl}
           alt={title}
-          className="h-full w-full object-cover"
+          className="h-full w-full"
         />
       </div>
 
@@ -69,7 +72,7 @@ const Card: React.FC<ProductCardProps> = ({
           onClick={() => handleAddToCart()}
           className="rounded-lg bg-black px-3 py-2 text-sm text-white hover:bg-gray-800"
         >
-          + Add to Cart
+          Detail Produk
         </button>
       </div>
     </div>

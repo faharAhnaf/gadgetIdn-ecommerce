@@ -1,63 +1,39 @@
 import ProductPreview from "@/interfaces/product-preview";
 import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
-
-interface FilterOptions {
-  name?: string;
-  kategori?: string;
-  harga?: string;
-}
+import { collection, query, getDocs } from "firebase/firestore";
 
 const searchProductsByName = async (
-  filtersOrName: FilterOptions | string = {},
+  name: string,
 ): Promise<ProductPreview[]> => {
   const productsRef = collection(db, "product");
 
-  const filters: FilterOptions =
-    typeof filtersOrName === "string" ? { name: filtersOrName } : filtersOrName;
-
-  const { name, kategori, harga } = filters;
-
+  // Ambil semua produk terlebih dahulu
   let q = query(productsRef);
 
-  if (name) {
-    q = query(
-      q,
-      where("name", ">=", name),
-      where("name", "<=", name + "\uf8ff"),
+  try {
+    const querySnapshot = await getDocs(q);
+    let products = querySnapshot.docs.map(
+      (doc) =>
+        ({
+          product_id: doc.id,
+          ...doc.data(),
+        }) as ProductPreview,
     );
-  }
 
-  const initialQuerySnapshot = await getDocs(q);
-  const dataCount = initialQuerySnapshot.docs.length;
-
-  if (dataCount > 2) {
-    if (kategori && kategori.length > 0) {
-      q = query(q, where("category", "==", kategori));
+    // Filter produk berdasarkan nama di sisi klien
+    if (name && name.trim() !== "") {
+      const searchTerm = name.toLowerCase().trim();
+      products = products.filter((product) => {
+        const productName = ((product.name as string) || "").toLowerCase();
+        return productName.includes(searchTerm);
+      });
     }
 
-    if (harga === "termurah") {
-      q = query(q, where("price", ">", 0), orderBy("price", "asc"));
-    } else if (harga === "termahal") {
-      q = query(
-        q,
-        where("price", "<", Number.MAX_SAFE_INTEGER),
-        orderBy("price", "desc"),
-      );
-    } else if (harga === "netral") {
-      q = query(q, orderBy("name"));
-    }
+    return products;
+  } catch (error) {
+    console.error("Error searching products:", error);
+    return [];
   }
-
-  const finalQuerySnapshot = await getDocs(q);
-
-  return finalQuerySnapshot.docs.map(
-    (doc) =>
-      ({
-        product_id: doc.id,
-        ...doc.data(),
-      }) as ProductPreview,
-  );
 };
 
 export default searchProductsByName;

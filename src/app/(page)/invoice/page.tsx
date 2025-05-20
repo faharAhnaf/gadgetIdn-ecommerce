@@ -11,7 +11,7 @@ import invoice from "@/app/api/invoice/invoice";
 import CardInvoiceSkeleton from "@/components/core/Skeleton/CardInvoiceSkeleton";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { SquareArrowLeft } from "lucide-react";
+import { ArrowLeft, Filter, Search } from "lucide-react";
 import { InvoiceData } from "@/interfaces/invoice";
 
 export default function InvoicePage() {
@@ -46,7 +46,7 @@ export default function InvoicePage() {
           if (userInvoice) {
             setInvoices(userInvoice);
           } else {
-            console.log("No invoices found for this user.");
+            console.log("Tidak ada faktur ditemukan untuk pengguna ini.");
           }
         }
       }
@@ -100,82 +100,136 @@ export default function InvoicePage() {
 
   const getButtonStyle = (status: boolean | null) => {
     if (confirm === status) {
-      return "bg-[#A3D3BD] hover:bg-[#76c8a4]";
+      return "bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200";
     }
-    return "bg-white hover:bg-[#D9D9D9]";
+    return "bg-white hover:bg-gray-100";
   };
 
   return (
     <>
       {session && (
-        <div className="mt-20">
+        <div className="my-24 flex min-h-screen items-center">
           <Navbar />
-          <div className="mx-10 grid">
+          <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
             <Button
-              onClick={() => router.back()}
-              variant="empty"
-              className="my-5 w-10 bg-white hover:bg-[#D9D9D9] [&_svg]:size-9"
+              onClick={() => router.push("/")}
+              variant="outline"
+              className="my-5 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md"
             >
-              <SquareArrowLeft />
+              <ArrowLeft className="h-5 w-5" />
+              <span className="hidden sm:inline">Beranda</span>
             </Button>
 
-            <div className="space-y-10 rounded-lg border-4 border-[#D9D9D9] px-10 py-5 shadow-md">
-              <p className="text-3xl font-bold">Invoices</p>
-              <div className="grid grid-cols-3 gap-5">
-                <Input
-                  type="text"
-                  placeholder="Search by Product Name"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
-                <DatePicker
-                  selectedDate={selectedDate}
-                  onDateChange={handleDateChange}
-                />
-              </div>
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-md sm:p-6 md:p-8">
+              <h1 className="mb-6 text-2xl font-bold text-gray-800 sm:text-3xl">
+                Riwayat Transaksi
+              </h1>
 
-              <div className={cn(`flex items-center gap-8`)}>
-                <p>Status</p>
-                {["Confirmed", "Not Confirmed"].map((value, i) => (
-                  <Button
-                    onClick={() => handleFilterConfirm(i === 0 ? true : false)}
-                    key={i}
-                    variant={"outline"}
-                    className={cn(getButtonStyle(i === 0 ? true : false))}
-                  >
-                    {value}
-                  </Button>
-                ))}
-                <Button
-                  onClick={resetFilters}
-                  variant={"outline"}
-                  className="bg-white hover:bg-[#D9D9D9]"
-                >
-                  Reset Filter
-                </Button>
-              </div>
-
-              {!loading ? (
-                filteredInvoices.length > 0 ? (
-                  filteredInvoices.map((product) => (
-                    <CardInvoice
-                      key={product.transaksi_id}
-                      date={product.created_at}
-                      status={product.status}
-                      quantity={product.totalQuantity}
-                      paidAmount={product.paid_amount}
-                      products={product.products}
-                      transactionId={product.transaksi_id}
-                      productAmount={product.amount}
-                      confirmed={product.confirmed}
+              <div className="mb-8 space-y-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Cari berdasarkan nama produk"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="w-full pl-10"
                     />
-                  ))
+                  </div>
+                  <DatePicker
+                    selectedDate={selectedDate}
+                    onDateChange={handleDateChange}
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-gray-600" />
+                    <p className="font-medium text-gray-700">Status:</p>
+                  </div>
+                  <Button
+                    onClick={() => handleFilterConfirm(true)}
+                    variant={"outline"}
+                    size="sm"
+                    className={cn(getButtonStyle(true), "rounded-full")}
+                  >
+                    Terkonfirmasi
+                  </Button>
+                  <Button
+                    onClick={() => handleFilterConfirm(false)}
+                    variant={"outline"}
+                    size="sm"
+                    className={cn(getButtonStyle(false), "rounded-full")}
+                  >
+                    Belum Terkonfirmasi
+                  </Button>
+                  <Button
+                    onClick={resetFilters}
+                    variant={"outline"}
+                    size="sm"
+                    className="rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100"
+                  >
+                    Hapus Filter
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {!loading ? (
+                  filteredInvoices.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-6">
+                      {filteredInvoices.map((product) => (
+                        <CardInvoice
+                          key={product.transaksi_id}
+                          date={product.created_at}
+                          status={product.status}
+                          quantity={product.totalQuantity}
+                          paidAmount={product.paid_amount}
+                          products={product.products}
+                          transactionId={product.transaksi_id}
+                          productAmount={product.amount}
+                          confirmed={product.confirmed}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center rounded-lg bg-gray-50 p-8 text-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="mb-4 h-16 w-16 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                      <p className="text-gray-600">
+                        Tidak ada transaksi ditemukan dengan filter yang
+                        dipilih.
+                      </p>
+                      <Button
+                        onClick={resetFilters}
+                        variant={"outline"}
+                        size="sm"
+                        className="mt-4 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100"
+                      >
+                        Tampilkan Semua Transaksi
+                      </Button>
+                    </div>
+                  )
                 ) : (
-                  <p>No invoices found with the selected filter.</p>
-                )
-              ) : (
-                <CardInvoiceSkeleton />
-              )}
+                  <div className="grid grid-cols-1 gap-6">
+                    <CardInvoiceSkeleton />
+                    <CardInvoiceSkeleton />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

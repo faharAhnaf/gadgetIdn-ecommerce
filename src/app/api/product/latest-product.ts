@@ -9,7 +9,6 @@ export const getLatestProducts = async (): Promise<ProductPreview[]> => {
     const latestProductsQuery = query(
       productCollection,
       orderBy("created_at", "desc"),
-      limit(10),
     );
 
     const productSnap = await getDocs(latestProductsQuery);

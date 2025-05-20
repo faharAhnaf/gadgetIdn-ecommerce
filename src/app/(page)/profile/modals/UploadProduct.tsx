@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import uploadDataProduct from "@/app/api/product/upload-product";
-import { Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 import Product from "@/interfaces/product";
 
 interface productType {
@@ -187,33 +187,46 @@ export default function UploadProduct() {
   };
 
   return (
-    <div className="m-10">
+    <div className="mx-auto w-full px-10 sm:px-6 md:px-8">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ul className="mx-2 mt-8 space-y-6">
+        <ul className="mt-8 space-y-6">
           <li className="flex items-center gap-3 border-b-2 pb-5">
             <FontAwesomeIcon icon={faCircleInfo} />
-            <p>Upload Product</p>
-            <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
+            <p>Unggah Produk</p>
+            <ChevronRight className="ml-auto" />
           </li>
           <li className="grid items-center justify-between gap-3 border-b-2 py-5">
-            <p>Product Type</p>
-            <div className="flex space-x-3">
+            <p>Tipe Produk</p>
+            <div className="flex flex-wrap gap-3">
               {productType.map((type, index) => (
                 <Button
                   variant={`outline`}
                   key={index}
-                  className={`m-0 grid size-28 flex-1 items-center justify-normal gap-0 whitespace-normal py-5 ${productTypeVal === type.name && "bg-blue-500 text-white hover:!bg-blue-500 hover:!text-white"}`}
+                  className={`flex h-36 min-w-[120px] flex-1 flex-col items-center justify-center gap-5 py-4 ${
+                    productTypeVal === type.name &&
+                    "bg-blue-500 text-white hover:!bg-blue-500 hover:!text-white"
+                  }`}
                   onClick={(e) => handleProductType(e, type.name)}
                 >
-                  <FontAwesomeIcon icon={type.icon} />
-                  <p className="text-left">{type.name}</p>
+                  <FontAwesomeIcon icon={type.icon} className="text-xl" />
+                  <p className="text-center text-sm">
+                    {type.name === "Phones & Tablets"
+                      ? "Handphone & Tablet"
+                      : type.name === "Computers & Laptops"
+                        ? "Komputer & Laptop"
+                        : type.name === "Smart Devices"
+                          ? "Perangkat Pintar"
+                          : type.name === "Bags & Protections"
+                            ? "Tas & Pelindung"
+                            : type.name}
+                  </p>
                   <Input type="hidden" {...register("category")}></Input>
                 </Button>
               ))}
             </div>
           </li>
           <li className="grid items-center gap-3 border-b-2 pb-5">
-            <p>Product Media</p>
+            <p>Media Produk</p>
             <div className="flex space-x-3">
               {imagePreview ? (
                 <Image
@@ -224,7 +237,7 @@ export default function UploadProduct() {
                   className="object-cover"
                 />
               ) : (
-                <p>No Image Available</p>
+                <p>Tidak Ada Gambar</p>
               )}
               <div className="flex items-center">
                 <label className="flex cursor-pointer flex-col items-center justify-center rounded text-[13px] text-blue-500 duration-300 hover:text-blue-600">
@@ -232,7 +245,7 @@ export default function UploadProduct() {
                     icon={faFileCirclePlus}
                     className="text-3xl"
                   />
-                  Upload Image
+                  Unggah Gambar
                   <input
                     type="file"
                     {...register("image_url")}
@@ -244,27 +257,27 @@ export default function UploadProduct() {
             </div>
           </li>
           <li className="grid items-center gap-3 border-b-2 pb-5">
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="price" className="text-base">
-                  Price
+                  Harga
                 </Label>
                 <Input
                   {...register("price")}
                   type="number"
                   id="price"
-                  placeholder="Input as number..."
+                  placeholder="Masukkan harga..."
                 />
               </div>
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="stock" className="text-base">
-                  Stock
+                  Stok
                 </Label>
                 <Input
                   {...register("quantityInStock")}
                   type="number"
                   id="stock"
-                  placeholder="stock..."
+                  placeholder="stok..."
                 />
               </div>
             </div>
@@ -273,13 +286,13 @@ export default function UploadProduct() {
             <div className="flex gap-3">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="name" className="text-base">
-                  Product Name
+                  Nama Produk
                 </Label>
                 <Input
                   {...register("name")}
                   type="text"
                   id="name"
-                  placeholder="product name..."
+                  placeholder="nama produk..."
                 />
               </div>
             </div>
@@ -287,7 +300,7 @@ export default function UploadProduct() {
           <li className="grid items-center gap-3 border-b-2 pb-5">
             <div className="grid gap-1.5">
               <Label htmlFor="variant" className="text-base">
-                Variant
+                Varian
               </Label>
               <div className="flex w-full items-center gap-3">
                 <Input
@@ -295,7 +308,7 @@ export default function UploadProduct() {
                   onChange={(e) => handleInputChange(e, "variant")}
                   type="text"
                   id="variant"
-                  placeholder="product variant..."
+                  placeholder="varian produk..."
                 />
                 <Button
                   type="button"
@@ -324,7 +337,7 @@ export default function UploadProduct() {
           <li className="grid items-center gap-3 border-b-2 pb-5">
             <div className="grid gap-1.5">
               <Label htmlFor="name" className="text-base">
-                Color
+                Warna
               </Label>
               <div className="flex w-full items-center gap-3">
                 <Input
@@ -332,7 +345,7 @@ export default function UploadProduct() {
                   onChange={(e) => handleInputChange(e, "color")}
                   type="text"
                   id="color"
-                  placeholder="product color..."
+                  placeholder="warna produk..."
                 />
                 <Button
                   type="button"
@@ -362,10 +375,10 @@ export default function UploadProduct() {
             <div className="flex gap-3">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="brand-name" className="text-base">
-                  Description
+                  Deskripsi
                 </Label>
                 <Textarea
-                  placeholder="Add Description Here..."
+                  placeholder="Tambahkan deskripsi di sini..."
                   id="brand-name"
                   {...register("description")}
                   className="h-60"
@@ -380,14 +393,14 @@ export default function UploadProduct() {
               onClick={router.back}
               type="button"
             >
-              Back
+              Kembali
             </Button>
             <Button
               variant={"outline"}
               className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
               type="submit"
             >
-              Upload Product
+              Unggah Produk
             </Button>
           </li>
         </ul>

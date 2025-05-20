@@ -28,14 +28,14 @@ export default async function updateDataProduct(
 
     Swal.fire({
       icon: "success",
-      title: "Success",
-      text: "Product updated successfully.",
+      title: "Berhasil",
+      text: "Produk berhasil diperbarui.",
     });
   } catch (error) {
     Swal.fire({
       icon: "error",
-      title: "Failed",
-      text: "An error occurred while updating the product. Please try again..",
+      title: "Gagal",
+      text: "Terjadi kesalahan saat memperbarui produk. Silakan coba lagi.",
     });
   }
 }

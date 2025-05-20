@@ -28,8 +28,8 @@ export default function Sign_In() {
       setSuccess("");
 
       Swal.fire({
-        title: "Validation...",
-        text: "Please wait, the system is processing.",
+        title: "Validasi...",
+        text: "Mohon tunggu, sistem sedang memproses.",
         allowOutsideClick: false,
         allowEscapeKey: false,
         didOpen: () => {
@@ -39,11 +39,11 @@ export default function Sign_In() {
 
       const response = await loginUser({ email, password });
 
-      setSuccess(response.message || "Verification successful!");
+      setSuccess(response.message || "Verifikasi berhasil!");
 
       Swal.fire({
-        title: "Successful Verification!",
-        text: "Happy Exploring.",
+        title: "Verifikasi Berhasil!",
+        text: "Selamat Menjelajah.",
         icon: "success",
         confirmButtonText: "OK",
       }).then((result) => {
@@ -58,7 +58,7 @@ export default function Sign_In() {
         icon: "error",
         title: "Oops...",
         text: `${error.message}`,
-        footer: '<a href="#">Why do I have this issue?</a>',
+        footer: '<a href="#">Kenapa saya mengalami masalah ini?</a>',
       });
     }
   };
@@ -78,7 +78,7 @@ export default function Sign_In() {
 
         <div className="w-full p-5 lg:w-1/2">
           <h1 className="mb-4 text-center text-2xl font-semibold lg:text-left">
-            Welcome Back, 👋🏻
+            Selamat Datang Kembali, 👋🏻
           </h1>
 
           <div className="mb-3 flex w-full flex-col">
@@ -101,18 +101,18 @@ export default function Sign_In() {
             onClick={handleSubmit}
             className="mb-3 w-full rounded-lg bg-blue-500 px-4 py-2 font-semibold text-white shadow-md transition duration-700 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
           >
-            Sign In
+            Masuk
           </button>
 
           <GmailSign />
 
           <h4 className="text-center text-base font-medium">
-            Forgot Your Password?
+            Lupa Kata Sandi?
             <Link
               href="/auth/sign-up"
               className="ml-3 text-base text-blue-500 duration-300 hover:text-blue-400"
             >
-              Sign Up
+              Daftar
             </Link>
           </h4>
         </div>

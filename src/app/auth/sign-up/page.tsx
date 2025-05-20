@@ -28,8 +28,8 @@ export default function Sign_Up() {
       setSuccess("");
 
       Swal.fire({
-        title: "Registering...",
-        text: "Please wait while we create your account.",
+        title: "Mendaftarkan...",
+        text: "Mohon tunggu, kami sedang membuat akun Anda.",
         allowOutsideClick: false,
         allowEscapeKey: false,
         didOpen: () => {
@@ -39,11 +39,11 @@ export default function Sign_Up() {
 
       const response = await registerUser({ name, email, password });
 
-      setSuccess(response.message || "Registration successful!");
+      setSuccess(response.message || "Pendaftaran berhasil!");
 
       Swal.fire({
-        title: "Successfully created account!",
-        text: "Data has been saved.",
+        title: "Akun berhasil dibuat!",
+        text: "Data berhasil disimpan.",
         icon: "success",
         confirmButtonText: "OK",
       }).then((result) => {
@@ -58,7 +58,7 @@ export default function Sign_Up() {
         icon: "error",
         title: "Oops...",
         text: `${error.message}`,
-        footer: '<a href="#">Why do I have this issue?</a>',
+        footer: '<a href="#">Kenapa saya mengalami masalah ini?</a>',
       });
     }
   };
@@ -68,12 +68,12 @@ export default function Sign_Up() {
       <div className="flex w-full max-w-[1000px] flex-col items-center rounded-[12px] bg-white p-5 shadow-lg lg:h-[500px] lg:flex-row">
         <div className="w-full p-5 lg:w-1/2">
           <h1 className="mb-4 text-center text-2xl font-semibold lg:text-left">
-            Come Join The Wanderer, ✍🏻️
+            Bergabunglah Bersama Kami, ✍🏻️
           </h1>
 
           <div className="mb-3 flex w-full flex-col">
             <label className="mb-1 text-sm font-semibold text-gray-700">
-              Name
+              Nama
             </label>
             <input
               type="text"
@@ -106,18 +106,18 @@ export default function Sign_Up() {
             onClick={handleSubmit}
             className="mb-3 w-full rounded-lg bg-blue-500 px-4 py-2 font-semibold text-white shadow-md transition duration-700 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
           >
-            Sign Up
+            Daftar
           </button>
 
           <GmailSign />
 
           <h4 className="text-center text-base font-medium">
-            Already Have an Account?
+            Sudah punya akun?
             <Link
               href="/auth/sign-in"
               className="ml-3 text-base text-blue-500 duration-300 hover:text-blue-400"
             >
-              Sign In
+              Masuk
             </Link>
           </h4>
         </div>

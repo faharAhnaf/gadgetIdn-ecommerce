@@ -80,14 +80,14 @@ export function ListProduct() {
 
   const handleDelete = async (productId: string) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to return this!",
+      title: "Apakah Anda yakin?",
+      text: "Data ini tidak dapat dikembalikan!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Delete!",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
     });
 
     if (result.isConfirmed) {
@@ -95,9 +95,9 @@ export function ListProduct() {
       setData((prevData) =>
         prevData.filter((item) => item.product_id !== productId),
       );
-      Swal.fire("Deleted!", "Your Data Has Been Deleted.", "success");
+      Swal.fire("Dihapus!", "Data Anda telah dihapus.", "success");
     } else {
-      console.log("Delete Canceled");
+      console.log("Penghapusan Dibatalkan");
     }
   };
 
@@ -110,7 +110,7 @@ export function ListProduct() {
           className="p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Nama
           <ArrowUpDown />
         </Button>
       ),
@@ -124,7 +124,7 @@ export function ListProduct() {
           className="p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
+          Kategori
           <ArrowUpDown />
         </Button>
       ),
@@ -132,7 +132,7 @@ export function ListProduct() {
     },
     {
       accessorKey: "price",
-      header: () => <div>Price</div>,
+      header: () => <div>Harga</div>,
       cell: ({ row }) => {
         const price = parseFloat(row.getValue("price"));
         const formatted = new Intl.NumberFormat("id-ID", {
@@ -153,12 +153,12 @@ export function ListProduct() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">Buka menu</span>
                 <MoreHorizontal />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Aksi</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => router.push(`list-product/${data.product_id}`)}
               >
@@ -167,7 +167,7 @@ export function ListProduct() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(data.product_id)}>
                 <Trash2 />
-                <span>Delete</span>
+                <span>Hapus</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -198,15 +198,15 @@ export function ListProduct() {
   });
 
   return (
-    <div className="m-5 w-full space-y-3">
-      <div className="flex items-center">
+    <div className="mx-auto w-full space-y-4 overflow-x-auto px-4 py-4 sm:px-6 md:px-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
-          placeholder="Filter Name..."
+          placeholder="Cari Nama..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-full sm:max-w-sm"
         />
       </div>
       <div className="rounded-md border">
@@ -215,7 +215,7 @@ export function ListProduct() {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="whitespace-nowrap">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -235,7 +235,7 @@ export function ListProduct() {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="whitespace-nowrap">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -250,26 +250,26 @@ export function ListProduct() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Tidak ada hasil.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+      <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="order-2 w-full text-center text-sm text-muted-foreground sm:order-1 sm:text-left">
+          {table.getFilteredSelectedRowModel().rows.length} dari{" "}
+          {table.getFilteredRowModel().rows.length} baris dipilih.
         </div>
-        <div className="space-x-2">
+        <div className="order-1 flex w-full justify-center space-x-2 sm:order-2 sm:w-auto sm:justify-end">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Sebelumnya
           </Button>
           <Button
             variant="outline"
@@ -277,7 +277,7 @@ export function ListProduct() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Selanjutnya
           </Button>
         </div>
       </div>

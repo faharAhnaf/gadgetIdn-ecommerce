@@ -20,8 +20,8 @@ const saveToSession = (user: any) => {
 const signInWithGoogle = async () => {
   try {
     Swal.fire({
-      title: "Logging in...",
-      text: "Please wait while we log you in.",
+      title: "Masuk...",
+      text: "Mohon tunggu, sedang memproses login Anda.",
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -53,9 +53,9 @@ const signInWithGoogle = async () => {
   } catch (error) {
     Swal.fire({
       icon: "error",
-      title: "Login Failed",
-      text: "An error occurred during Google sign-in.",
-      footer: `<a href="#">Why do I have this issue?</a>`,
+      title: "Gagal Login",
+      text: "Terjadi kesalahan saat login dengan Google.",
+      footer: `<a href="#">Kenapa saya mengalami masalah ini?</a>`,
     });
 
     throw error;
@@ -64,12 +64,12 @@ const signInWithGoogle = async () => {
 
 const logout = async () => {
   const result = await Swal.fire({
-    title: "Confirm Logout",
-    text: "Are you sure you want to exit?",
+    title: "Konfirmasi Keluar",
+    text: "Apakah Anda yakin ingin keluar?",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonText: "Yes, Signout",
-    cancelButtonText: "No, Keep Signin",
+    confirmButtonText: "Ya, Keluar",
+    cancelButtonText: "Tidak, Tetap Masuk",
   });
 
   if (result.isConfirmed) {
@@ -77,8 +77,8 @@ const logout = async () => {
     localStorage.removeItem("userSession");
 
     Swal.fire({
-      title: "Logged Out",
-      text: "You have successfully logged out.",
+      title: "Berhasil Keluar",
+      text: "Anda berhasil keluar.",
       icon: "info",
       confirmButtonText: "OK",
     }).then(() => {

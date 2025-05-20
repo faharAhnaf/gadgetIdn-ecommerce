@@ -1,14 +1,18 @@
 "use client";
 
 import { SaveChangeButton } from "@/components/core/Button/SaveChangeButton";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Form } from "@/interfaces/form";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronRight } from "lucide-react";
 
 interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement> | { name: string; value: string },
+  ) => void;
   formData: Form;
   loading: boolean;
 }
@@ -20,31 +24,52 @@ export default function MyProfile({
   loading,
 }: Props) {
   return (
-    <div className="m-10 w-full">
+    <div className="mx-auto w-full px-10">
       <form onSubmit={handleSubmit}>
-        <ul className="mx-2 mt-8 space-y-6">
+        <ul className="mt-8 space-y-6">
           <li className="flex items-center gap-3 border-b-2 py-5">
             <FontAwesomeIcon icon={faUser} />
-            <p>My Profile</p>
-            <FontAwesomeIcon icon={faAngleRight} className="ml-auto" />
+            <p>Profil Saya</p>
+            <ChevronRight className="ml-auto" />
           </li>
           {["name", "email", "phone", "location"].map((field) => (
             <li
               key={field}
-              className="flex items-center justify-between gap-3 border-b-2 py-5"
+              className="flex flex-col gap-3 border-b-2 py-5 sm:flex-row sm:items-center sm:justify-between"
             >
-              <label htmlFor={field}>
-                {field.charAt(0).toUpperCase() + field.slice(1)}
+              <label htmlFor={field} className="font-medium">
+                {field === "name"
+                  ? "Nama"
+                  : field === "email"
+                    ? "Email"
+                    : field === "phone"
+                      ? "Telepon"
+                      : field === "location"
+                        ? "Alamat"
+                        : field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
-              <input
-                id={field}
-                name={field}
-                type="text"
-                className="h-10 w-1/2 rounded-lg border p-1 text-right"
-                value={formData[field as keyof Form]}
-                onChange={handleChange}
-                required
-              />
+              {field === "phone" ? (
+                <PhoneInput
+                  className="h-10 w-full sm:w-1/2"
+                  defaultCountry="ID"
+                  name={field}
+                  id={field}
+                  value={formData.phone}
+                  onChange={(value) => {
+                    handleChange({ name: field, value });
+                  }}
+                />
+              ) : (
+                <input
+                  id={field}
+                  name={field}
+                  type="text"
+                  className="h-10 w-full rounded-lg border p-2 sm:w-1/2"
+                  value={formData[field as keyof Form]}
+                  onChange={handleChange}
+                  required
+                />
+              )}
             </li>
           ))}
           <li className="flex items-center justify-end gap-3 py-5">

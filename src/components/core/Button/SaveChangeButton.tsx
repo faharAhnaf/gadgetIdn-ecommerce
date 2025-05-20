@@ -12,7 +12,7 @@ export const SaveChangeButton = ({ loading, className }: Props) => {
       }`}
       disabled={loading}
     >
-      {loading ? "Saving..." : "Save Change"}
+      {loading ? "Menyimpan..." : "Simpan Perubahan"}
     </button>
   );
 };

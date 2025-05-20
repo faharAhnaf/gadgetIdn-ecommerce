@@ -8,7 +8,6 @@ export default function ModalsPage() {
   const router = useRouter();
   const validRoutes = ["list-product", "update-product", "upload-product"];
   const slugString = Array.isArray(slug) ? slug[0] : slug;
-  console.log(slugString);
 
   useEffect(() => {
     if (!slugString || !validRoutes.includes(slugString)) {
@@ -16,5 +15,5 @@ export default function ModalsPage() {
     }
   }, [slugString, router]);
 
-  return <UserProfile></UserProfile>;
+  return <UserProfile />;
 }

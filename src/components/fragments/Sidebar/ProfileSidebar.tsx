@@ -15,7 +15,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Image from "next/image";
 import { logout } from "@/app/api/auth/google";
-import { ChevronRight, LogOut, Settings, Store } from "lucide-react";
+import { Archive, ChevronRight, LogOut, Settings, Store } from "lucide-react";
 import { useUserProfile } from "@/context/ProfileContext";
 import { useRouter } from "next/navigation";
 import Profile from "@/interfaces/profile";
@@ -47,7 +47,7 @@ const ProfileSidebar = ({ data }: Props) => {
     e.preventDefault();
 
     if (!file) {
-      alert("Please select a file to upload.");
+      alert("Silakan pilih file untuk diunggah.");
       setLoading(false);
       return;
     }
@@ -64,7 +64,7 @@ const ProfileSidebar = ({ data }: Props) => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to upload image");
+        throw new Error("Gagal mengunggah gambar");
       }
 
       const result = await response.json();
@@ -82,8 +82,8 @@ const ProfileSidebar = ({ data }: Props) => {
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Failed",
-        text: "An error occurred while updating the profile. Please try again.",
+        title: "Gagal",
+        text: "Terjadi kesalahan saat memperbarui profil. Silakan coba lagi.",
       });
       console.log(error);
     } finally {
@@ -116,20 +116,20 @@ const ProfileSidebar = ({ data }: Props) => {
                   width={500}
                   height={500}
                   className="h-24 w-24 rounded-full object-cover transition duration-300 ease-in-out"
-                  alt="empty"
+                  alt="kosong"
                 />
 
                 <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
-                  <span className="text-lg text-white">Update Picture</span>
+                  <span className="text-lg text-white">Perbarui Foto</span>
                 </div>
               </div>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Edit Image</DialogTitle>
+                <DialogTitle>Edit Gambar</DialogTitle>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3 grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="picture">Profile Picture</Label>
+                    <Label htmlFor="picture">Foto Profil</Label>
                     <Input
                       id="picture"
                       type="file"
@@ -150,7 +150,15 @@ const ProfileSidebar = ({ data }: Props) => {
         </div>
 
         <div className="space-y-20">
-          <ul className="mx-2 mt-8 space-y-6">
+          <ul className="mt-8 space-y-6">
+            <li
+              className="flex cursor-pointer items-center gap-3"
+              onClick={() => router.push("/invoice")}
+            >
+              <Archive className="w-5" />
+              <p>Invoice</p>
+            </li>
+
             <li className="flex flex-col">
               <button
                 type="button"
@@ -159,7 +167,7 @@ const ProfileSidebar = ({ data }: Props) => {
               >
                 <div className="flex items-center gap-3">
                   <Settings className="w-5" />
-                  <span className="text-black">Settings</span>
+                  <span className="text-black">Pengaturan</span>
                   <div
                     className={`ml-auto ${
                       currentMenu === "settings" ? "rotate-90" : ""
@@ -202,7 +210,7 @@ const ProfileSidebar = ({ data }: Props) => {
               onClick={(e) => handleLogout(e)}
             >
               <LogOut className="w-5" />
-              <p>Logout</p>
+              <p>Keluar</p>
             </li>
           </ul>
         </div>

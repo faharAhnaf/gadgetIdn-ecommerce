@@ -24,8 +24,8 @@ export default function GmailSign() {
       await signInWithGoogle();
 
       Swal.fire({
-        title: "Login Successful!",
-        text: "You have successfully logged in.",
+        title: "Login Berhasil!",
+        text: "Anda berhasil masuk.",
         icon: "success",
         confirmButtonText: "OK",
       }).then((result) => {
@@ -34,7 +34,7 @@ export default function GmailSign() {
         }
       });
     } catch (error) {
-      alert("Failed to login");
+      alert("Gagal login");
     }
   };
 
@@ -42,7 +42,7 @@ export default function GmailSign() {
     try {
       await logout();
     } catch (error) {
-      alert("Failed to logout");
+      alert("Gagal logout");
     }
   };
 
@@ -53,7 +53,7 @@ export default function GmailSign() {
           onClick={handleLogout}
           className="mb-4 flex w-full flex-row justify-center rounded-lg border border-gray-300 bg-transparent px-4 py-2 font-semibold text-black shadow-md transition duration-700 hover:bg-red-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
         >
-          <span>Sign Out</span>
+          <span>Keluar</span>
         </button>
       ) : (
         <button
@@ -67,7 +67,7 @@ export default function GmailSign() {
             className="mr-3"
             alt="Icon_Google"
           />
-          <span>Sign In With Google</span>
+          <span>Masuk dengan Google</span>
         </button>
       )}
     </div>

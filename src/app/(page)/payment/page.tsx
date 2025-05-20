@@ -8,6 +8,7 @@ import QuantitySelectorPayment from "@/components/core/Input/QuantitySelectorPay
 import { handleCheckout } from "@/app/api/transaksi/transaksi";
 
 import { getProfileByUserId } from "@/app/api/profile/profile";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 interface Product {
   cart_id: string;
@@ -30,8 +31,8 @@ export default function Checkout() {
   const [selectedShippingETA, setSelectedETA] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [alamat, setAlamat] = useState({
-    nama: "Recipient's name",
-    nomor: "(+62) 888-8888-8888",
+    nama: "Nama Penerima",
+    nomor: "+6288888888888",
     detail:
       "Jl. Moch Kahfi II Gg. Suro, Cipedak, Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta, ID 12630.",
   });
@@ -54,7 +55,7 @@ export default function Checkout() {
     if (typeof window !== "undefined") {
       const userSession = localStorage.getItem("userSession");
       setSession(userSession);
-      
+
       if (userSession) {
         try {
           const parsedUserData = JSON.parse(userSession);
@@ -116,8 +117,8 @@ export default function Checkout() {
       if (!userData?.user_id) {
         Swal.fire({
           icon: "error",
-          title: "User ID Missing",
-          text: "Unable to fetch profile. Please login first.",
+          title: "ID Pengguna Tidak Ditemukan",
+          text: "Tidak dapat mengambil profil. Silakan login terlebih dahulu.",
         });
         return;
       }
@@ -126,22 +127,22 @@ export default function Checkout() {
 
       if (profile) {
         setFormInput({
-          nama: profile.name || "Recipient's name",
+          nama: profile.name || "Nama Penerima",
           nomor: profile.phone || "(+62) 888-8888-8888",
-          detail: profile.location || "Complete address",
+          detail: profile.location || "Alamat lengkap",
         });
 
         Swal.fire({
           icon: "success",
-          title: "Profile Loaded",
-          text: "Default profile has been loaded successfully.",
+          title: "Profil Dimuat",
+          text: "Profil default telah berhasil dimuat.",
         });
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to load default profile. Please try again.",
+        text: "Gagal memuat profil default. Silakan coba lagi.",
       });
     }
   };
@@ -150,8 +151,8 @@ export default function Checkout() {
     if (!selectedMethod) {
       Swal.fire({
         icon: "warning",
-        title: "Empty Payment Method",
-        text: "Please select a payment method before proceeding!",
+        title: "Metode Pembayaran Kosong",
+        text: "Silakan pilih metode pembayaran sebelum melanjutkan!",
       });
       return;
     }
@@ -159,8 +160,8 @@ export default function Checkout() {
     if (!shippingCost) {
       Swal.fire({
         icon: "warning",
-        title: "Expedition Not Selected",
-        text: "Please select an expedition before continuing!",
+        title: "Ekspedisi Belum Dipilih",
+        text: "Silakan pilih ekspedisi sebelum melanjutkan!",
       });
       return;
     }
@@ -168,8 +169,8 @@ export default function Checkout() {
     if (products.length === 0) {
       Swal.fire({
         icon: "error",
-        title: "Empty Cart",
-        text: "There are no products in the cart for checkout",
+        title: "Keranjang Kosong",
+        text: "Tidak ada produk di keranjang untuk checkout",
       });
       return;
     }
@@ -200,10 +201,10 @@ export default function Checkout() {
     if (typeof window !== "undefined") {
       try {
         const cartSessions = JSON.parse(
-          localStorage.getItem("cartSession") || "[]"
+          localStorage.getItem("cartSession") || "[]",
         );
         const cartIndex = cartSessions.findIndex(
-          (item: any) => item.cart_id === cartId
+          (item: any) => item.cart_id === cartId,
         );
 
         if (cartIndex > -1) {
@@ -213,10 +214,7 @@ export default function Checkout() {
             total_price: price,
           };
 
-          localStorage.setItem(
-            "cartSession",
-            JSON.stringify(cartSessions)
-          );
+          localStorage.setItem("cartSession", JSON.stringify(cartSessions));
           window.dispatchEvent(new Event("storage"));
         }
       } catch (error) {
@@ -229,23 +227,23 @@ export default function Checkout() {
     <div className="">
       <Navbar />
       <div className="flex min-h-screen justify-center bg-gray-100">
-        <div className="mx-auto mb-10 mt-24 max-w-7xl rounded-lg bg-white p-6 shadow-lg">
-          <h1 className="my-10 text-center text-3xl font-bold">Check Out</h1>
+        <div className="mx-auto mb-10 mt-24 w-full max-w-7xl rounded-lg bg-white p-4 shadow-lg sm:p-6">
+          <h1 className="my-6 text-center text-2xl font-bold sm:my-10 sm:text-3xl">Checkout</h1>
 
-          <div className="grid grid-cols-2 gap-x-10 gap-y-5 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 md:gap-x-10 md:gap-y-5 lg:grid-cols-2">
             <div>
-              <div className="rounded-lg border bg-gray-50 p-6 shadow-md">
-                <h2 className="mb-4 text-2xl font-medium">Shipping address</h2>
+              <div className="rounded-lg border bg-gray-50 p-4 shadow-md sm:p-6">
+                <h2 className="mb-4 text-xl font-medium sm:text-2xl">Alamat Pengiriman</h2>
                 {!isEditing ? (
                   <div className="space-y-2">
                     <p className="font-semibold">{alamat.nama}</p>
                     <p>{alamat.nomor}</p>
-                    <p>{alamat.detail}</p>
+                    <p className="text-sm sm:text-base">{alamat.detail}</p>
                     <button
                       onClick={handleUbah}
                       className="mt-2 text-blue-500 underline hover:text-blue-700"
                     >
-                      Edit
+                      Ubah
                     </button>
                   </div>
                 ) : (
@@ -255,7 +253,7 @@ export default function Checkout() {
                         className="mb-2 block font-semibold"
                         htmlFor="nama"
                       >
-                        Recipient's name
+                        Nama Penerima
                       </label>
                       <input
                         id="nama"
@@ -267,7 +265,7 @@ export default function Checkout() {
                             nama: e.target.value,
                           }))
                         }
-                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
                       />
                     </div>
                     <div>
@@ -275,19 +273,19 @@ export default function Checkout() {
                         className="mb-2 block font-semibold"
                         htmlFor="nomor"
                       >
-                        Phone number
+                        Nomor Telepon
                       </label>
-                      <input
+                      <PhoneInput
+                        className="w-full"
+                        defaultCountry="ID"
                         id="nomor"
-                        type="text"
                         value={formInput.nomor}
-                        onChange={(e) =>
+                        onChange={(value) => {
                           setFormInput((prev) => ({
                             ...prev,
-                            nomor: e.target.value,
-                          }))
-                        }
-                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            nomor: value,
+                          }));
+                        }}
                       />
                     </div>
                     <div>
@@ -295,7 +293,7 @@ export default function Checkout() {
                         className="mb-2 block font-semibold"
                         htmlFor="detail"
                       >
-                        Complete address
+                        Alamat Lengkap
                       </label>
                       <textarea
                         id="detail"
@@ -307,22 +305,22 @@ export default function Checkout() {
                           }))
                         }
                         rows={4}
-                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
                       />
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row">
                       <button
                         onClick={handleSimpan}
                         className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow hover:bg-blue-600"
                       >
-                        Save
+                        Simpan
                       </button>
 
                       <button
                         onClick={handleDefault}
                         className="rounded-lg border border-blue-500 px-4 py-2 text-blue-500 shadow hover:bg-blue-500 hover:text-white"
                       >
-                        Default Profile
+                        Profil Default
                       </button>
                     </div>
                   </div>
@@ -330,37 +328,37 @@ export default function Checkout() {
               </div>
             </div>
 
-            <div className="row-span-3">
+            <div className="order-first lg:order-none lg:row-span-3">
               <div className="rounded-lg border bg-gray-50 p-4">
-                <h2 className="mb-4 text-2xl font-medium">Order Summary</h2>
+                <h2 className="mb-4 text-xl font-medium sm:text-2xl">Ringkasan Pesanan</h2>
                 <div className="space-y-4">
                   {products.map((product) => (
                     <div
                       key={product.cart_id}
-                      className="flex space-x-2 border-b pb-4"
+                      className="flex flex-col space-y-2 border-b pb-4 sm:flex-row sm:space-x-2 sm:space-y-0"
                     >
-                      <div className="w-24">
+                      <div className="mx-auto w-24 sm:mx-0">
                         <img
                           src={"assets" + product.image_url}
-                          alt="Product"
+                          alt="Produk"
                           className="h-[80px] w-[80px]"
                         />
                       </div>
 
                       <div className="w-full">
-                        <div className="flex justify-between">
+                        <div className="flex flex-col justify-between sm:flex-row">
                           <p className="font-semibold">{product.name}</p>
-                          <p className="ml-64 font-semibold">
+                          <p className="font-semibold">
                             Rp{product.total_price.toLocaleString("id-ID")}
                           </p>
                         </div>
 
                         <p className="text-sm text-gray-600">
-                          Variant: {product.selectedSize}
+                          Varian: {product.selectedSize}
                         </p>
 
                         <p className="mb-3 text-sm text-gray-600">
-                          Color: {product.selectedColor}
+                          Warna: {product.selectedColor}
                         </p>
 
                         <QuantitySelectorPayment
@@ -374,42 +372,32 @@ export default function Checkout() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-4">
-                  <input
-                    type="text"
-                    placeholder="Enter Voucher Code"
-                    className="mb-2 w-full rounded border p-2"
-                  />
-                  <button className="w-full rounded bg-blue-500 py-2 text-white">
-                    Apply
-                  </button>
-                </div>
                 <div className="mt-4 text-sm">
                   <hr className="my-2" />
                   <div className="flex justify-between">
-                    <span>Subtotal Products</span>
+                    <span>Subtotal Produk</span>
                     <span>Rp{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Subtotal Service</span>
+                    <span>Subtotal Layanan</span>
                     <span>Rp {SERVICE_COST.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Handling Fee</span>
+                    <span>Biaya Penanganan</span>
                     <span>Rp {HANDLING_FEE.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Shipping Costs</span>
+                    <span>Biaya Pengiriman</span>
                     <span>Rp {shippingCost.toLocaleString()}</span>
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between font-bold">
-                    <span>Total Orders</span>
+                    <span>Total Pesanan</span>
                     <span>Rp {totalOrder.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
-              <div className="row-span-4 mt-6">
+              <div className="mt-6">
                 <button
                   onClick={handleCheckoutClick}
                   className="w-full rounded-lg bg-blue-500 py-3 font-semibold text-white"
@@ -422,7 +410,9 @@ export default function Checkout() {
             <div>
               <div className="rounded-lg border bg-gray-50 p-4">
                 <div className="space-y-2">
-                  <h2 className="mb-4 text-2xl font-medium">Payment Method</h2>
+                  <h2 className="mb-4 text-xl font-medium sm:text-2xl">
+                    Metode Pembayaran
+                  </h2>
                   <div>
                     <input
                       type="radio"
@@ -432,7 +422,7 @@ export default function Checkout() {
                       value="transfer"
                       onChange={(e) => setSelectedMethod(e.target.value)}
                     />
-                    <label htmlFor="transfer-bank">Cashless</label>
+                    <label htmlFor="transfer-bank">Non Tunai</label>
                   </div>
                   <div>
                     <input
@@ -443,16 +433,14 @@ export default function Checkout() {
                       value="cod"
                       onChange={(e) => setSelectedMethod(e.target.value)}
                     />
-                    <label htmlFor="cod">Cash on Delivery</label>
+                    <label htmlFor="cod">Bayar di Tempat</label>
                   </div>
                 </div>
               </div>
 
-              {selectedMethod === "transfer" && (
-                <div className="mt-4">
-                  <DropdownShipping onShippingSelect={handleShippingSelect} />
-                </div>
-              )}
+              <div className="mt-4">
+                <DropdownShipping onShippingSelect={handleShippingSelect} />
+              </div>
             </div>
           </div>
         </div>

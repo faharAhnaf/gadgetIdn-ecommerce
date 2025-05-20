@@ -82,7 +82,11 @@ const checkPaymentStatus = async (
     const invoiceStatus = response.data.status;
     const data_payment = response.data;
 
-    Swal.fire("Please complete the payment", "Waiting for Payment!", "warning");
+    // Swal.fire(
+    //   "Silakan selesaikan pembayaran",
+    //   "Menunggu Pembayaran!",
+    //   "warning",
+    // );
 
     if (invoiceStatus === "PAID") {
       const productReferences = product_id.map((id) => doc(db, "product", id));
@@ -120,7 +124,7 @@ const checkPaymentStatus = async (
       };
 
       try {
-        Swal.fire("Waiting for the system to finish", "Please Wait", "info");
+        Swal.fire("Menunggu sistem selesai", "Mohon Tunggu", "info");
 
         const docRef = doc(db, "transaksi", data.transaksi_id);
         await setDoc(docRef, data);
@@ -132,14 +136,14 @@ const checkPaymentStatus = async (
         }
 
         const result = await Swal.fire({
-          title: "Checkout Successful",
-          text: "Want to go to invoice page?",
+          title: "Checkout Berhasil",
+          text: "Ingin ke halaman invoice?",
           icon: "success",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "Yes!",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Ya!",
+          cancelButtonText: "Batal",
         });
 
         if (result.isConfirmed) {
@@ -147,10 +151,10 @@ const checkPaymentStatus = async (
           window.location.href = "http://localhost:3000/invoice";
         }
       } catch (e) {
-        console.error("Error adding document: ", e);
+        console.error("Error menambah dokumen: ", e);
       }
     } else if (invoiceStatus === "EXPIRED" || invoiceStatus === "CANCELLED") {
-      await Swal.fire("Failed", "Payment failed or expired.", "error");
+      await Swal.fire("Gagal", "Pembayaran gagal atau kadaluarsa.", "error");
     } else {
       setTimeout(
         async () =>
@@ -175,10 +179,10 @@ const checkPaymentStatus = async (
       );
     }
   } catch (error) {
-    console.error("Error checking payment status:", error);
+    console.error("Error memeriksa status pembayaran:", error);
     await Swal.fire(
       "Error",
-      "An error occurred while checking payment status.",
+      "Terjadi kesalahan saat memeriksa status pembayaran.",
       "error",
     );
   }
@@ -219,14 +223,14 @@ export const handleCheckout = async ({
 }) => {
   if (color?.length && variant?.length) {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Are you sure you want to proceed with checkout?",
+      title: "Apakah Anda yakin?",
+      text: "Apakah Anda yakin ingin melanjutkan checkout?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, proceed!",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "Ya, lanjutkan!",
+      cancelButtonText: "Batal",
     });
 
     if (result.isConfirmed) {
@@ -258,8 +262,8 @@ export const handleCheckout = async ({
 
         if (response.data.invoice_url) {
           await Swal.fire(
-            "Success",
-            "Redirecting to payment page...",
+            "Berhasil",
+            "Mengalihkan ke halaman pembayaran...",
             "success",
           );
 
@@ -298,7 +302,7 @@ export const handleCheckout = async ({
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: "Please fill in the color and size first",
+      text: "Silakan isi warna dan ukuran terlebih dahulu",
     });
   }
 };

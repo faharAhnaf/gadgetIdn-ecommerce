@@ -3,94 +3,75 @@
 import "@/app/assets/css/home.css";
 import Navbar from "@/components/fragments/Navbar/Navbar";
 import Footer from "@/components/fragments/Footer/Footer";
-import Header from "@/components/fragments/Header/Header";
 import HeaderSection from "@/components/fragments/HeaderSection/HeaderSection";
-import EditorPick from "@/components/fragments/EditorPick/EditorPick";
-import SliderComp from "@/components/fragments/Carousel/SliderComp";
-import SliderBestProduct from "@/components/fragments/Carousel/SliderBestProduct";
+import Card from "@/components/core/Card/Card";
+import { useEffect, useState } from "react";
+import ProductPreview from "@/interfaces/product-preview";
+import { getLatestProducts } from "./api/product/latest-product";
+import searchProductsByName from "./api/search-list/product";
+import { useSearchProduct } from "../stores/search";
 
 export default function Home() {
+  const [products, setProducts] = useState<ProductPreview[]>([]);
+  const [filters, setFilters] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+  const [noItems, setNoItems] = useState(false);
+  const { text, setText } = useSearchProduct();
+
+  const handleFilterSubmit = (newFilters: any) => {
+    setFilters(newFilters);
+  };
+
+  useEffect(() => {
+    const applyFilters = async () => {
+      setLoading(true);
+      setNoItems(false);
+      const data = await searchProductsByName(text);
+      setProducts(data);
+      setLoading(false);
+    };
+
+    applyFilters();
+  }, [filters, text]);
+
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => {
+        if (products.length === 0) {
+          setNoItems(true);
+        }
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading, products]);
+
   return (
     <div>
       <Navbar></Navbar>
 
-      <Header />
-
-      <div className="flex justify-center">
+      <div className="my-36 flex justify-center lg:my-28">
         <div className="container mx-auto px-4 sm:px-5 md:px-0 lg:px-0">
           <div>
             <HeaderSection
-              title={"OUR PRODUCTS"}
-              subtitle={"Today's"}
+              title={"PRODUK KITA"}
+              subtitle={"Hari Ini"}
               link={"Ini Link"}
             />
 
-            <div className="mb-5 overflow-x-hidden">
-              <div className="mx-auto max-w-7xl">
-                <div>
-                  <SliderComp></SliderComp>
-                </div>
-              </div>
-            </div>
-
-            <HeaderSection
-              title={"EDITOR'S PICK"}
-              subtitle={"Categories"}
-              link={"Ini Link"}
-            />
-
-            <div className="mb-10">
-              <EditorPick />
-            </div>
-
-            <HeaderSection
-              title={"BEST SELLER PRODUCTS"}
-              subtitle={"Categories"}
-              link={"Ini Link"}
-            />
-
-            <div className="mb-10 overflow-x-hidden">
-              <div className="mx-auto max-w-7xl">
-                <div>
-                  <SliderBestProduct></SliderBestProduct>
-                </div>
-              </div>
-            </div>
-
-            <HeaderSection
-              title={"Our Resell World Wide"}
-              subtitle={"Best"}
-              link={"Ini Link"}
-            />
-
-            <div className="mx-auto mb-10 flex w-full flex-col items-center justify-center gap-6 rounded-lg bg-[#f6f0eb] p-8 md:flex-row">
-              <div className="flex-1 text-center md:text-left">
-                <p className="mb-4 text-justify text-sm leading-relaxed text-gray-700 md:text-base">
-                  Belanjakuy in your #1 trusted Indonesia vendor offering
-                  high-demand streetwear and electronics, allowing you to buy
-                  the best quality at very low and sell high for incredible
-                  profits. At Belanjakuy, we pride ourselves on providing
-                  exclusive access to premium products from top-tier brands,
-                  ensuring you stay ahead in the competitive reselling market.
-                  From limited-edition sneakers to the latest electronics, we
-                  curate a wide range of high-demand items to meet your business
-                  needs. With unbeatable prices and a seamless shopping
-                  experience, we empower entrepreneurs and resellers to grow
-                  their profits effortlessly. Shop with confidence and take your
-                  business to the next level with Belanjakuy!
-                </p>
-                <button className="mt-4 rounded-lg bg-gray-300 px-5 py-2 text-gray-700 shadow-md transition-shadow hover:bg-gray-400">
-                  Show More
-                </button>
-              </div>
-
-              <div className="flex-1">
-                <img
-                  src="/assets/image/best_seller.png"
-                  alt="best_seller"
-                  className="rounded-lg object-cover shadow-lg"
-                />
-              </div>
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {products.map((product, i) => {
+                return (
+                  <Card
+                    key={product.product_id}
+                    product_id={product.product_id}
+                    title={product.name}
+                    description={product.description}
+                    price={product.price}
+                    imageUrl={"assets" + product.image_url}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

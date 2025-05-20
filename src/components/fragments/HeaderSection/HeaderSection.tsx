@@ -20,11 +20,6 @@ export default function HeaderSection({
         </div>
         <h1 className="text-2xl font-semibold">{title}</h1>
       </div>
-      <Link href="/search-list">
-        <button className="text-md h-max rounded-[4px] bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600 sm:px-5 md:px-6">
-          View All
-        </button>
-      </Link>
     </div>
   );
 }

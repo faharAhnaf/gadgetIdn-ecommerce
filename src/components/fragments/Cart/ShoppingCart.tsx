@@ -100,23 +100,23 @@ export default function ShoppingCart() {
   const handleRemoveItem = async (id: string) => {
     try {
       const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "Do you really want to remove this item from your cart?",
+        title: "Apakah Anda yakin?",
+        text: "Apakah Anda benar-benar ingin menghapus item ini dari keranjang?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, remove it!",
-        cancelButtonText: "Cancel",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal",
       });
 
       if (result.isConfirmed) {
         await removeCartItem(id);
         setCartItems(cartItems.filter((item) => item.cart_id !== id));
-        Swal.fire("Success", "Item has been removed from the cart.", "success");
+        Swal.fire("Berhasil", "Item telah dihapus dari keranjang.", "success");
       }
     } catch (error) {
-      Swal.fire("Failed", "Failed to remove the item from the cart.", "error");
+      Swal.fire("Gagal", "Gagal menghapus item dari keranjang.", "error");
     }
   };
 
@@ -147,14 +147,14 @@ export default function ShoppingCart() {
 
     try {
       const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "Are you sure you want to checkout your cart?",
+        title: "Apakah Anda yakin?",
+        text: "Apakah Anda yakin ingin checkout keranjang Anda?",
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, proceed!",
-        cancelButtonText: "Cancel",
+        confirmButtonText: "Ya, lanjutkan!",
+        cancelButtonText: "Batal",
       });
 
       if (result.isConfirmed && selectedCartItems.length > 0) {
@@ -166,22 +166,22 @@ export default function ShoppingCart() {
         Swal.fire({
           icon: "warning",
           title: "Oops...",
-          text: "No items selected for checkout",
+          text: "Tidak ada item yang dipilih untuk checkout",
         });
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to proceed to checkout. Please try again.",
+        text: "Gagal melanjutkan ke checkout. Silakan coba lagi.",
       });
     }
   };
 
   return (
-    <div className="mt-[100px] flex min-h-[700px] justify-between p-8">
-      <div className="w-2/3">
-        <h1 className="mb-4 text-2xl font-semibold">Cart</h1>
+    <div className="mt-[100px] flex flex-col lg:flex-row min-h-[700px] p-4 sm:p-6 md:p-8 gap-6">
+      <div className="w-full lg:w-2/3">
+        <h1 className="mb-4 text-xl sm:text-2xl font-semibold">Keranjang</h1>
         <div className="mb-4 rounded-md p-4 shadow-md">
           <label className="flex items-center">
             <input
@@ -190,7 +190,7 @@ export default function ShoppingCart() {
               onChange={toggleSelectAll}
               className="mr-3 h-[20px] w-[20px]"
             />
-            <span className="font-medium">Select All ({cartItems.length})</span>
+            <span className="font-medium">Pilih Semua ({cartItems.length})</span>
           </label>
         </div>
 
@@ -199,58 +199,60 @@ export default function ShoppingCart() {
             <CartSkeleton key={index} />
           ))
         ) : cartItems.length === 0 ? (
-          <h1 className="text-center text-2xl font-semibold text-gray-500">
-            Not Matching Item Found
+          <h1 className="text-center text-xl sm:text-2xl font-semibold text-gray-500">
+            Tidak Ada Item yang Ditemukan
           </h1>
         ) : (
           cartItems.map((item) => (
             <div
               key={item.cart_id}
-              className="border-1 mb-5 flex items-center justify-between rounded-lg border-[#f4f1eb] px-4 py-8 shadow-md"
+              className="border-1 mb-5 flex flex-col sm:flex-row items-start sm:items-center rounded-lg border-[#f4f1eb] px-3 sm:px-4 py-4 sm:py-6 shadow-md"
             >
-              <label className="flex w-full items-start">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.includes(item.cart_id)}
-                  onChange={() => toggleSelectItem(item.cart_id)}
-                  className="mr-3 h-[20px] w-[20px]"
-                />
-                <img
-                  src={"assets" + item.product?.image_url}
-                  alt={item.product?.name}
-                  className="mr-4 h-[100px] w-[100px] rounded-md"
-                />
-                <div className="w-full pr-5">
-                  <div className="mb-2 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold">
+              <label className="flex w-full flex-col sm:flex-row items-start">
+                <div className="flex items-center mb-3 sm:mb-0">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item.cart_id)}
+                    onChange={() => toggleSelectItem(item.cart_id)}
+                    className="mr-3 h-[20px] w-[20px]"
+                  />
+                  <img
+                    src={"assets" + item.product?.image_url}
+                    alt={item.product?.name}
+                    className="mr-4 h-[80px] w-[80px] sm:h-[100px] sm:w-[100px] rounded-md"
+                  />
+                </div>
+                <div className="w-full pr-0 sm:pr-5">
+                  <div className="mb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <h2 className="text-base sm:text-lg font-semibold">
                       {item.product?.name}
                     </h2>
-                    <p className="text-md ml-5 font-semibold">
+                    <p className="text-md sm:ml-5 font-semibold mt-1 sm:mt-0">
                       Rp{item.totalPrice.toLocaleString("id-ID")}
                     </p>
                   </div>
-                  <p className="mb-5 text-justify text-gray-600">
+                  <p className="mb-3 sm:mb-5 text-justify text-sm text-gray-600">
                     {item.product!.description.length > 200
                       ? `${item.product!.description.slice(0, 200)}...`
                       : item.product!.description}
                   </p>
 
-                  <div className="mt-5 flex w-full justify-between">
-                    <div className="flex">
+                  <div className="mt-3 sm:mt-5 flex flex-col sm:flex-row w-full justify-between gap-3 sm:gap-0">
+                    <div className="flex flex-wrap gap-2">
                       <button
-                        className={`rounded-md bg-[#f9f7f3] px-4 py-2 font-semibold text-[#a7a39b]`}
+                        className={`rounded-md bg-[#f9f7f3] px-3 sm:px-4 py-1 sm:py-2 text-sm font-semibold text-[#a7a39b]`}
                       >
                         {item.selectedColor}
                       </button>
 
                       <button
-                        className={`ml-5 rounded-md bg-[#f9f7f3] px-4 py-2 font-semibold text-[#a7a39b]`}
+                        className={`rounded-md bg-[#f9f7f3] px-3 sm:px-4 py-1 sm:py-2 text-sm font-semibold text-[#a7a39b]`}
                       >
                         {item.selectedSize}
                       </button>
                     </div>
 
-                    <div className="flex">
+                    <div className="flex items-center">
                       <button
                         onClick={() => handleRemoveItem(item.cart_id)}
                         className="mr-4 text-gray-500 transition duration-300 hover:text-gray-600"
@@ -276,11 +278,11 @@ export default function ShoppingCart() {
         )}
       </div>
 
-      <div className="w-1/4 rounded-md p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold">Shopping Summary</h2>
+      <div className="w-full lg:w-1/3 rounded-md p-4 sm:p-6 shadow-md mt-4 lg:mt-0 sticky top-[100px] self-start">
+        <h2 className="mb-4 text-lg sm:text-xl font-semibold">Ringkasan Belanja</h2>
         <div className="mb-4 flex justify-between">
           <span className="text-gray-600">Total</span>
-          <span className="text-lg font-bold">
+          <span className="text-base sm:text-lg font-bold">
             Rp{total.toLocaleString("id-ID")}
           </span>
         </div>
