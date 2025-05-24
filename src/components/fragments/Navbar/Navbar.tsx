@@ -92,7 +92,7 @@ export default function Navbar() {
             {session && (
               <Link href="/invoice">
                 <p className="hover:text-blue-500 hover:duration-700">
-                  Detail Transaksi
+                  Riwayat Transaksi
                 </p>
               </Link>
             )}
@@ -190,7 +190,7 @@ export default function Navbar() {
               onClick={toggleMobileMenu}
               className="hover:text-blue-500 hover:duration-700"
             >
-              Detail Transaksi
+              Riwayat Transaksi
             </p>
           </Link>
 

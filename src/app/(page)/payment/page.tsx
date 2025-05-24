@@ -228,12 +228,16 @@ export default function Checkout() {
       <Navbar />
       <div className="flex min-h-screen justify-center bg-gray-100">
         <div className="mx-auto mb-10 mt-24 w-full max-w-7xl rounded-lg bg-white p-4 shadow-lg sm:p-6">
-          <h1 className="my-6 text-center text-2xl font-bold sm:my-10 sm:text-3xl">Checkout</h1>
+          <h1 className="my-6 text-center text-2xl font-bold sm:my-10 sm:text-3xl">
+            Checkout
+          </h1>
 
           <div className="grid gap-4 sm:gap-6 md:gap-x-10 md:gap-y-5 lg:grid-cols-2">
             <div>
               <div className="rounded-lg border bg-gray-50 p-4 shadow-md sm:p-6">
-                <h2 className="mb-4 text-xl font-medium sm:text-2xl">Alamat Pengiriman</h2>
+                <h2 className="mb-4 text-xl font-medium sm:text-2xl">
+                  Alamat Pengiriman
+                </h2>
                 {!isEditing ? (
                   <div className="space-y-2">
                     <p className="font-semibold">{alamat.nama}</p>
@@ -277,6 +281,8 @@ export default function Checkout() {
                       </label>
                       <PhoneInput
                         className="w-full"
+                        maxLength={13}
+                        limitMaxLength
                         defaultCountry="ID"
                         id="nomor"
                         value={formInput.nomor}
@@ -330,7 +336,9 @@ export default function Checkout() {
 
             <div className="order-first lg:order-none lg:row-span-3">
               <div className="rounded-lg border bg-gray-50 p-4">
-                <h2 className="mb-4 text-xl font-medium sm:text-2xl">Ringkasan Pesanan</h2>
+                <h2 className="mb-4 text-xl font-medium sm:text-2xl">
+                  Ringkasan Pesanan
+                </h2>
                 <div className="space-y-4">
                   {products.map((product) => (
                     <div

@@ -17,7 +17,7 @@ import { InvoiceData } from "@/interfaces/invoice";
 export default function InvoicePage() {
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [confirm, setConfirm] = useState<boolean | null>(null);
+  const [orderStatus, setOrderStatus] = useState<string | null>("processing");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [session, setSession] = useState<string | null>(null);
@@ -54,8 +54,8 @@ export default function InvoicePage() {
     fetchData();
   }, [session]);
 
-  const handleFilterConfirm = (filterStatus: boolean | null) => {
-    setConfirm(filterStatus);
+  const handleFilterStatus = (status: string | null) => {
+    setOrderStatus(status);
   };
 
   const handleDateChange = (date: string | null) => {
@@ -68,17 +68,21 @@ export default function InvoicePage() {
 
   const resetFilters = () => {
     setSearchTerm("");
-    setConfirm(null);
+    setOrderStatus(null);
     setSelectedDate(null);
   };
 
   const filteredInvoices = invoices.filter((invoice) => {
-    const isConfirmed = invoice.confirmed === true;
-
-    if (confirm !== null && isConfirmed !== confirm) {
-      return false;
+    let mappedStatus = invoice.status;
+    if (invoice.status === "PAID") {
+      mappedStatus = invoice.confirmed ? "COMPLETED" : "PROCESSING";
     }
-
+    // Filter berdasarkan status pesanan
+    if (orderStatus !== null) {
+      if (orderStatus !== mappedStatus.toLowerCase()) {
+        return false;
+      }
+    }
     if (
       searchTerm &&
       !invoice.products.some((product) =>
@@ -87,19 +91,17 @@ export default function InvoicePage() {
     ) {
       return false;
     }
-
     if (
       selectedDate &&
       !dayjs(invoice.created_at).isSame(dayjs(selectedDate), "day")
     ) {
       return false;
     }
-
     return true;
   });
 
-  const getButtonStyle = (status: boolean | null) => {
-    if (confirm === status) {
+  const getButtonStyle = (status: string | null) => {
+    if (orderStatus === status) {
       return "bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200";
     }
     return "bg-white hover:bg-gray-100";
@@ -149,28 +151,28 @@ export default function InvoicePage() {
                     <p className="font-medium text-gray-700">Status:</p>
                   </div>
                   <Button
-                    onClick={() => handleFilterConfirm(true)}
+                    onClick={() => handleFilterStatus("processing")}
                     variant={"outline"}
                     size="sm"
-                    className={cn(getButtonStyle(true), "rounded-full")}
+                    className={cn(getButtonStyle("processing"), "rounded-full")}
                   >
-                    Terkonfirmasi
+                    Sedang di proses
                   </Button>
                   <Button
-                    onClick={() => handleFilterConfirm(false)}
+                    onClick={() => handleFilterStatus("shipping")}
                     variant={"outline"}
                     size="sm"
-                    className={cn(getButtonStyle(false), "rounded-full")}
+                    className={cn(getButtonStyle("shipping"), "rounded-full")}
                   >
-                    Belum Terkonfirmasi
+                    Sedang dikirim
                   </Button>
                   <Button
-                    onClick={resetFilters}
+                    onClick={() => handleFilterStatus("completed")}
                     variant={"outline"}
                     size="sm"
-                    className="rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100"
+                    className={cn(getButtonStyle("completed"), "rounded-full")}
                   >
-                    Hapus Filter
+                    Pesanan selesai
                   </Button>
                 </div>
               </div>

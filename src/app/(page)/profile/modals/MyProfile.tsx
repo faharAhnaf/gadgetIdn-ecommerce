@@ -11,7 +11,9 @@ import { ChevronRight } from "lucide-react";
 interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement> | { name: string; value: string },
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | { name: string; value: string },
   ) => void;
   formData: Form;
   loading: boolean;
@@ -51,6 +53,8 @@ export default function MyProfile({
               {field === "phone" ? (
                 <PhoneInput
                   className="h-10 w-full sm:w-1/2"
+                  maxLength={13}
+                  limitMaxLength
                   defaultCountry="ID"
                   name={field}
                   id={field}
@@ -59,11 +63,21 @@ export default function MyProfile({
                     handleChange({ name: field, value });
                   }}
                 />
+              ) : field === "location" ? (
+                <textarea
+                  id={field}
+                  name={field}
+                  className="min-h-[100px] w-full resize-y rounded-lg border p-2 sm:w-1/2"
+                  value={formData[field as keyof Form]}
+                  onChange={handleChange}
+                  required
+                  placeholder="Masukkan alamat lengkap Anda"
+                />
               ) : (
                 <input
                   id={field}
                   name={field}
-                  type="text"
+                  type={field === "email" ? "email" : "text"}
                   className="h-10 w-full rounded-lg border p-2 sm:w-1/2"
                   value={formData[field as keyof Form]}
                   onChange={handleChange}

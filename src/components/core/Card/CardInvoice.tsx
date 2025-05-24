@@ -74,6 +74,22 @@ export default function CardInvoice({
     }
   };
 
+  const changeStatus =
+    status && confirmed ? "Pesanan Selesai" : "Pesanan Sedang Diproses";
+
+  const getStatusDisplay = (status: string) => {
+    switch (status.toUpperCase()) {
+      case "PROCESSING":
+        return "Sedang di proses";
+      case "SHIPPING":
+        return "Sedang dikirim";
+      case "COMPLETED":
+        return "Pesanan selesai";
+      default:
+        return status;
+    }
+  };
+
   return (
     <div className="rounded-lg border border-[#D9D9D9] shadow-md">
       <div className="flex flex-wrap items-center justify-between gap-2 bg-[#D9D9D9] px-4 py-3 sm:gap-4 sm:px-6 md:px-10 md:py-5">
@@ -97,15 +113,8 @@ export default function CardInvoice({
           <p
             className={`rounded-lg bg-[#A3D3BD] p-1.5 text-xs sm:p-2 sm:text-sm`}
           >
-            {status?.charAt(0) + status?.slice(1).toLowerCase()}
+            {changeStatus}
           </p>
-          {confirm && (
-            <p
-              className={`rounded-lg bg-[#A3D3BD] p-1.5 text-xs sm:p-2 sm:text-sm`}
-            >
-              Terkonfirmasi
-            </p>
-          )}
         </div>
       </div>
       <div className="grid lg:grid-cols-2">
@@ -181,36 +190,15 @@ export default function CardInvoice({
               Beli Lagi
             </Button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                onClick={handleConfirmed}
-                className="col-span-1 flex h-full w-full items-center justify-center rounded-full border border-gray-300 focus:border-none focus:outline-none sm:w-10 [&_svg]:size-6 sm:[&_svg]:size-8"
+            {!confirm && !loading && (
+              <Button
+                variant="outline"
+                className="w-full border-none outline-none"
+                onClick={handleConfirmTransaction}
               >
-                <Ellipsis />
-              </DropdownMenuTrigger>
-              {!confirm && !loading && (
-                <DropdownMenuContent
-                  align="end"
-                  side="right"
-                  className="m-0 p-0"
-                >
-                  <DropdownMenuLabel className="p-0">
-                    <Button
-                      variant="outline"
-                      className="w-full border-none outline-none"
-                      onClick={handleConfirmTransaction}
-                    >
-                      Konfirmasi Pesanan
-                    </Button>
-                    {loading && (
-                      <Button variant="outline" className="w-full" disabled>
-                        Memuat...
-                      </Button>
-                    )}
-                  </DropdownMenuLabel>
-                </DropdownMenuContent>
-              )}
-            </DropdownMenu>
+                Konfirmasi Pesanan
+              </Button>
+            )}
           </div>
         </div>
       </div>

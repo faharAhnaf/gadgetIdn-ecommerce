@@ -151,15 +151,15 @@ const ProfileSidebar = ({ data }: Props) => {
 
         <div className="space-y-20">
           <ul className="mt-8 space-y-6">
-            <li
+            {/* <li
               className="flex cursor-pointer items-center gap-3"
               onClick={() => router.push("/invoice")}
             >
               <Archive className="w-5" />
-              <p>Invoice</p>
-            </li>
+              <p>Riwayat Transaksi</p>
+            </li> */}
 
-            <li className="flex flex-col">
+            {/* <li className="flex flex-col">
               <button
                 type="button"
                 className={`${currentMenu === "settings" ? "active" : ""}`}
@@ -179,7 +179,7 @@ const ProfileSidebar = ({ data }: Props) => {
               </button>
 
               <ProfileAnimateDropdown currentMenu={currentMenu} />
-            </li>
+            </li> */}
 
             {data.role && (
               <li className="flex flex-col">
