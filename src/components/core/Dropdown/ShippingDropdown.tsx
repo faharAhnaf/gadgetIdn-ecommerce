@@ -29,6 +29,13 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({
       logo: "/assets/image/jnt-logo.png",
     },
     {
+      id: "jnt_cargo",
+      name: "J&T Cargo",
+      eta: "4 - 5 Hari",
+      price: "30000",
+      logo: "/assets/image/jnt-logo.png",
+    },
+    {
       id: "sicepat",
       name: "SiCepat",
       eta: "2 - 3 Hari",
@@ -36,10 +43,24 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({
       logo: "/assets/image/sicepat-logo.png",
     },
     {
+      id: "sicepat_cargo",
+      name: "SiCepat GOKIL",
+      eta: "4 - 5 Hari",
+      price: "27000",
+      logo: "/assets/image/sicepat-logo.png",
+    },
+    {
       id: "jne",
       name: "JNE",
       eta: "2 - 3 Hari",
       price: "10000",
+      logo: "/assets/image/jne-logo.png",
+    },
+    {
+      id: "jne",
+      name: "JNE Trucking",
+      eta: "4 - 5 Hari",
+      price: "25000",
       logo: "/assets/image/jne-logo.png",
     },
     {
@@ -72,7 +93,7 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({
       >
         {selectedOption
           ? `${selectedOption.name} - Rp${parseInt(selectedOption.price).toLocaleString()}`
-          : "Select Expedition"}
+          : "Pilih Ekspedisi"}
       </button>
 
       {isOpen && (
