@@ -64,7 +64,9 @@ export default function UserProfile() {
   }, [session]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement> | { name: string; value: string },
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | { name: string; value: string },
   ) => {
     const name = "target" in e ? e.target.name : e.name;
     const value = "target" in e ? e.target.value : e.value;
