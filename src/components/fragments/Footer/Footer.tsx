@@ -69,7 +69,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-gray-300 pt-4 text-center text-sm text-gray-500">
           <p>
-            &copy; {new Date().getFullYear()} BelanjaKuy. All rights reserved.
+            &copy; {new Date().getFullYear()} GadgetIDN. All rights reserved.
           </p>
         </div>
       </div>

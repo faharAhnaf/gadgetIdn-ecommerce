@@ -55,7 +55,7 @@ export default function UploadProduct() {
   const { register, handleSubmit, setValue } = useForm<Product>({
     defaultValues: {
       category: "",
-      image_url: "",
+      image: null,
       price: 0,
       quantityInStock: 0,
       name: "",
@@ -93,15 +93,13 @@ export default function UploadProduct() {
     setValue("category", type);
   };
 
-  console.log(productTypeVal);
-
   useEffect(() => {
     const storedData = localStorage.getItem("userSession");
     if (storedData) {
       const userData = JSON.parse(storedData);
       setUser(userData.user_id);
     }
-  });
+  }, []);
 
   const onSubmit: SubmitHandler<Product> = async (dataSubmit) => {
     if (!file) {
@@ -109,29 +107,14 @@ export default function UploadProduct() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    // console.log(formData.get("file"));
-
     try {
-      const response = await fetch("/api/upload-product", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload image");
-      }
-
-      const result = await response.json();
-
       await uploadDataProduct(
         dataSubmit.name,
         Number(dataSubmit.price),
         Number(dataSubmit.quantityInStock),
         dataSubmit.category,
         dataSubmit.description,
-        result.filename,
+        file,
         user,
         formVC.variants,
         formVC.colors,
@@ -151,7 +134,7 @@ export default function UploadProduct() {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-      setValue("image_url", file.name);
+      setValue("image", file);
     }
   };
 
@@ -248,7 +231,7 @@ export default function UploadProduct() {
                   Unggah Gambar
                   <input
                     type="file"
-                    {...register("image_url")}
+                    {...register("image")}
                     onChange={handleImageUpload}
                     className="hidden"
                   />

@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import {
   addDoc,
   collection,
@@ -7,6 +7,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import Swal from "sweetalert2";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default async function uploadDataProduct(
   name: string,
@@ -14,15 +15,46 @@ export default async function uploadDataProduct(
   quantityInStock: number,
   category: string,
   description: string,
-  image_url: string,
+  image: File,
   user_id: string,
   variant: string[],
   color: string[],
 ) {
-  const productCollection = collection(db, "product");
-  const userRef = doc(db, "users", user_id);
-
   try {
+    const productCollection = collection(db, "product");
+    const userRef = doc(db, "users", user_id);
+    const storageRef = ref(
+      storage,
+      `image/product/${Date.now()}-${image.name}`,
+    );
+
+    // 🔁 Upload gambar dan tunggu hingga selesai
+    const uploadURL = await new Promise<string>((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const pct = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Proses unggah ${pct}% selesai`);
+        },
+        (error) => {
+          console.error("Gagal mengunggah:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Gagal Mengunggah",
+            text: "Terjadi kesalahan saat mengunggah gambar. Silakan coba lagi.",
+          });
+          reject(error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve(downloadURL);
+        },
+      );
+    });
+
+    // ✅ Tambahkan data produk ke Firestore
     const productRef = await addDoc(productCollection, {
       product_id: "",
       name,
@@ -30,7 +62,7 @@ export default async function uploadDataProduct(
       quantityInStock,
       category,
       description,
-      image_url: `/image/product/${image_url}`,
+      image_url: uploadURL,
       user_id: userRef,
       variant,
       color,
@@ -40,24 +72,19 @@ export default async function uploadDataProduct(
 
     const productId = productRef.id;
 
-    await setDoc(
-      productRef,
-      {
-        product_id: productId,
-      },
-      { merge: true },
-    );
+    await setDoc(productRef, { product_id: productId }, { merge: true });
 
     await Swal.fire({
       icon: "success",
-      title: "Success",
-      text: `Product added successfully`,
+      title: "Berhasil",
+      text: `Produk berhasil ditambahkan`,
     });
   } catch (e) {
+    console.error("Gagal menyimpan produk:", e);
     await Swal.fire({
       icon: "error",
-      title: "Failed",
-      text: "An error occurred while adding the product. Please try again.",
+      title: "Gagal",
+      text: "Terjadi kesalahan saat menambahkan produk. Silakan coba lagi.",
     });
   }
 }

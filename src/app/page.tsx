@@ -7,9 +7,9 @@ import HeaderSection from "@/components/fragments/HeaderSection/HeaderSection";
 import Card from "@/components/core/Card/Card";
 import { useEffect, useState } from "react";
 import ProductPreview from "@/interfaces/product-preview";
-import { getLatestProducts } from "./api/product/latest-product";
 import searchProductsByName from "./api/search-list/product";
 import { useSearchProduct } from "../stores/search";
+import CardSkeleton from "@/components/core/Skeleton/CardSkeleton";
 
 export default function Home() {
   const [products, setProducts] = useState<ProductPreview[]>([]);
@@ -27,6 +27,11 @@ export default function Home() {
       setLoading(true);
       setNoItems(false);
       const data = await searchProductsByName(text);
+      if (!data || data.length === 0) {
+        setNoItems(true);
+      } else {
+        setNoItems(false);
+      }
       setProducts(data);
       setLoading(false);
     };
@@ -34,17 +39,17 @@ export default function Home() {
     applyFilters();
   }, [filters, text]);
 
-  useEffect(() => {
-    if (loading) {
-      const timer = setTimeout(() => {
-        if (products.length === 0) {
-          setNoItems(true);
-        }
-      }, 4000);
+  // useEffect(() => {
+  //   if (loading) {
+  //     const timer = setTimeout(() => {
+  //       if (products.length < 0) {
+  //         setNoItems(true);
+  //       }
+  //     }, 4000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [loading, products]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [loading, products]);
 
   return (
     <div>
@@ -60,18 +65,30 @@ export default function Home() {
             />
 
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {products.map((product, i) => {
-                return (
-                  <Card
-                    key={product.product_id}
-                    product_id={product.product_id}
-                    title={product.name}
-                    description={product.description}
-                    price={product.price}
-                    imageUrl={"assets" + product.image_url}
-                  />
-                );
-              })}
+              {loading ? (
+                Array.from({ length: 10 }).map((_, index) => (
+                  <CardSkeleton key={index} />
+                ))
+              ) : noItems ? (
+                <div className="col-span-3 text-center">
+                  <h2 className="text-2xl font-bold text-gray-700">
+                    Tidak ada produk yang ditemukan
+                  </h2>
+                </div>
+              ) : (
+                products.map((product, i) => {
+                  return (
+                    <Card
+                      key={product.product_id}
+                      product_id={product.product_id}
+                      title={product.name}
+                      description={product.description}
+                      price={product.price}
+                      imageUrl={product.image_url}
+                    />
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

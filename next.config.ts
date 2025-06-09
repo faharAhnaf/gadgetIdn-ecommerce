@@ -8,7 +8,7 @@ const withPWA = require("next-pwa")({
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["static.nike.com"], // Ganti dengan domain yang sesuai
+    domains: ["static.nike.com", "firebasestorage.googleapis.com"], // Ganti dengan domain yang sesuai
   },
   async headers() {
     return [

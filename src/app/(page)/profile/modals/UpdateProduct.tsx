@@ -60,7 +60,7 @@ export default function UpdateProduct({
   const { register, handleSubmit, setValue } = useForm<Product>({
     defaultValues: {
       category: "",
-      image_url: "",
+      image: null,
       price: 0,
       quantityInStock: 0,
       name: "",
@@ -97,12 +97,12 @@ export default function UpdateProduct({
 
       if (dataProduct) {
         setValue("category", dataProduct.category);
-        setValue("image_url", dataProduct.image_url);
+        // setValue("image", dataProduct.image_url);
         setValue("price", dataProduct.price);
         setValue("quantityInStock", dataProduct.quantityInStock);
         setValue("name", dataProduct.name);
         setValue("description", dataProduct.description);
-        setImagePreview(`/assets${dataProduct.image_url}`);
+        setImagePreview(`${dataProduct.image_url}`);
         setFormVC((prev) => ({
           ...prev,
           variants: dataProduct.variant || [],
@@ -121,9 +121,6 @@ export default function UpdateProduct({
       }
 
       const { product_id } = data;
-      const imageUrl = filename
-        ? `/image/product/${filename}`
-        : dataSubmit.image_url;
 
       await updateDataProduct(
         product_id,
@@ -132,7 +129,8 @@ export default function UpdateProduct({
         Number(dataSubmit.quantityInStock),
         dataSubmit.category,
         dataSubmit.description,
-        imageUrl,
+        dataSubmit.image,
+        data.image_url,
         formVC.variants,
         formVC.colors,
       );
@@ -152,7 +150,7 @@ export default function UpdateProduct({
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-      setValue("image_url", `/image/product/${file.name}`);
+      setValue("image", file);
 
       const formData = new FormData();
       formData.append("file", file);
@@ -274,7 +272,7 @@ export default function UpdateProduct({
                   Unggah Gambar
                   <input
                     type="file"
-                    {...register("image_url")}
+                    {...register("image")}
                     onChange={handleImageUpload}
                     className="hidden"
                   />

@@ -1,17 +1,31 @@
-export default function CardSkeleton() {
-    return (
-        <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-start h-full min-h-[425px] animate-pulse">
-            <div className="w-full h-48 bg-gray-300 rounded-md mb-4"></div>
-            
-            <div className="h-6 bg-gray-300 rounded-md w-3/4 mb-2"></div>
-            
-            <div className="h-4 bg-gray-300 rounded-md w-full mb-2"></div>
-            <div className="h-4 bg-gray-300 rounded-md w-5/6 mb-4"></div>
-            
-            <div className="flex justify-between items-center w-full mt-auto">
-                <div className="h-6 bg-gray-300 rounded-md w-1/3"></div>
-                <div className="h-10 bg-gray-300 rounded-lg w-24"></div>
-            </div>
-        </div>
-    );
-}
+"use client";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const CardSkeleton = () => {
+  return (
+    <div className="flex h-full flex-col items-start rounded-lg bg-white p-4 shadow-lg">
+      {/* Image skeleton */}
+      <div className="mb-4 w-full overflow-hidden rounded-md">
+        <Skeleton className="aspect-square w-full" />
+      </div>
+
+      {/* Title skeleton */}
+      <Skeleton className="mb-1 h-6 w-2/3" />
+
+      {/* Description skeleton - multiple lines */}
+      <div className="mb-2 w-full space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+      </div>
+
+      {/* Price and button skeleton */}
+      <div className="mt-auto flex w-full items-center justify-between">
+        <Skeleton className="h-6 w-24" />
+        <Skeleton className="h-9 w-28" />
+      </div>
+    </div>
+  );
+};
+
+export default CardSkeleton;
