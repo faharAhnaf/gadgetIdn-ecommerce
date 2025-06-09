@@ -347,7 +347,7 @@ export default function Checkout() {
                     >
                       <div className="mx-auto w-24 sm:mx-0">
                         <img
-                          src={"assets" + product.image_url}
+                          src={product.image_url}
                           alt="Produk"
                           className="h-[80px] w-[80px]"
                         />

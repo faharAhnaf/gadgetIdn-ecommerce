@@ -39,7 +39,7 @@ const ProfileSidebar = ({ data }: Props) => {
 
   useEffect(() => {
     if (data.picture) {
-      setPictureUrl(`/assets/picture/${data.picture}`);
+      setPictureUrl(data.picture);
     }
   }, [data.picture]);
 
@@ -54,28 +54,15 @@ const ProfileSidebar = ({ data }: Props) => {
 
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Gagal mengunggah gambar");
-      }
-
-      const result = await response.json();
-      setPictureUrl(`/assets/picture/${result.filename}`);
-      const profileUpdated = await updatePicture(data.user_id, result.filename);
+      const profileUpdated = await updatePicture(data.user_id, file);
       if (profileUpdated) {
         const updatedProfile: Profile = {
           ...data,
           picture: profileUpdated.picture,
         };
         setProfile(updatedProfile);
+        setPictureUrl(profileUpdated.picture);
       }
 
       setIsDialogOpen(false);

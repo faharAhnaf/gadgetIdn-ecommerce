@@ -75,7 +75,7 @@ export default function SliderComp() {
               title={product.name}
               description={product.description}
               price={product.price}
-              imageUrl={"assets" + product.image_url}
+              imageUrl={product.image_url}
             />
           ))}
     </Slider>

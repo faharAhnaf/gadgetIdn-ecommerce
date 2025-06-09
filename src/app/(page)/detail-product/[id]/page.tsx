@@ -188,7 +188,7 @@ export default function DetailProduct() {
             <div className="flex justify-center p-4 md:p-6">
               {product ? (
                 <Image
-                  src={"/assets" + product!.image_url}
+                  src={product!.image_url}
                   width={500}
                   height={500}
                   priority
@@ -280,7 +280,7 @@ export default function DetailProduct() {
             <div className="flex flex-shrink-0 items-center space-x-4">
               {product ? (
                 <img
-                  src={"/assets" + product!.image_url}
+                  src={product!.image_url}
                   alt="Detail Produk"
                   className="h-[50px] w-[50px] rounded-md border border-gray-200 object-cover"
                 />

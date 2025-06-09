@@ -128,7 +128,7 @@ export default function CardInvoice({
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
                 <div className="mx-auto sm:mx-0">
                   <Image
-                    src={`/assets${product.image_url}`}
+                    src={product.image_url}
                     width={70}
                     height={70}
                     alt="Gambar Produk"

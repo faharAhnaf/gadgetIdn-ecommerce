@@ -25,7 +25,7 @@ export default function ShoppingCart() {
     if (typeof window !== "undefined") {
       const userSession = localStorage.getItem("userSession");
       setSession(userSession);
-      
+
       if (userSession) {
         try {
           const parsedUserData = JSON.parse(userSession);
@@ -159,7 +159,10 @@ export default function ShoppingCart() {
 
       if (result.isConfirmed && selectedCartItems.length > 0) {
         if (typeof window !== "undefined") {
-          localStorage.setItem("cartSession", JSON.stringify(selectedCartItems));
+          localStorage.setItem(
+            "cartSession",
+            JSON.stringify(selectedCartItems),
+          );
         }
         router.push("/payment");
       } else if (selectedCartItems.length === 0) {
@@ -179,9 +182,9 @@ export default function ShoppingCart() {
   };
 
   return (
-    <div className="mt-[100px] flex flex-col lg:flex-row min-h-[700px] p-4 sm:p-6 md:p-8 gap-6">
+    <div className="mt-[100px] flex min-h-[700px] flex-col gap-6 p-4 sm:p-6 md:p-8 lg:flex-row">
       <div className="w-full lg:w-2/3">
-        <h1 className="mb-4 text-xl sm:text-2xl font-semibold">Keranjang</h1>
+        <h1 className="mb-4 text-xl font-semibold sm:text-2xl">Keranjang</h1>
         <div className="mb-4 rounded-md p-4 shadow-md">
           <label className="flex items-center">
             <input
@@ -190,7 +193,9 @@ export default function ShoppingCart() {
               onChange={toggleSelectAll}
               className="mr-3 h-[20px] w-[20px]"
             />
-            <span className="font-medium">Pilih Semua ({cartItems.length})</span>
+            <span className="font-medium">
+              Pilih Semua ({cartItems.length})
+            </span>
           </label>
         </div>
 
@@ -199,17 +204,17 @@ export default function ShoppingCart() {
             <CartSkeleton key={index} />
           ))
         ) : cartItems.length === 0 ? (
-          <h1 className="text-center text-xl sm:text-2xl font-semibold text-gray-500">
+          <h1 className="text-center text-xl font-semibold text-gray-500 sm:text-2xl">
             Tidak Ada Item yang Ditemukan
           </h1>
         ) : (
           cartItems.map((item) => (
             <div
               key={item.cart_id}
-              className="border-1 mb-5 flex flex-col sm:flex-row items-start sm:items-center rounded-lg border-[#f4f1eb] px-3 sm:px-4 py-4 sm:py-6 shadow-md"
+              className="border-1 mb-5 flex flex-col items-start rounded-lg border-[#f4f1eb] px-3 py-4 shadow-md sm:flex-row sm:items-center sm:px-4 sm:py-6"
             >
-              <label className="flex w-full flex-col sm:flex-row items-start">
-                <div className="flex items-center mb-3 sm:mb-0">
+              <label className="flex w-full flex-col items-start sm:flex-row">
+                <div className="mb-3 flex items-center sm:mb-0">
                   <input
                     type="checkbox"
                     checked={selectedItems.includes(item.cart_id)}
@@ -217,36 +222,36 @@ export default function ShoppingCart() {
                     className="mr-3 h-[20px] w-[20px]"
                   />
                   <img
-                    src={"assets" + item.product?.image_url}
+                    src={item.product?.image_url}
                     alt={item.product?.name}
-                    className="mr-4 h-[80px] w-[80px] sm:h-[100px] sm:w-[100px] rounded-md"
+                    className="mr-4 h-[80px] w-[80px] rounded-md sm:h-[100px] sm:w-[100px]"
                   />
                 </div>
                 <div className="w-full pr-0 sm:pr-5">
                   <div className="mb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="text-base sm:text-lg font-semibold">
+                    <h2 className="text-base font-semibold sm:text-lg">
                       {item.product?.name}
                     </h2>
-                    <p className="text-md sm:ml-5 font-semibold mt-1 sm:mt-0">
+                    <p className="text-md mt-1 font-semibold sm:ml-5 sm:mt-0">
                       Rp{item.totalPrice.toLocaleString("id-ID")}
                     </p>
                   </div>
-                  <p className="mb-3 sm:mb-5 text-justify text-sm text-gray-600">
+                  <p className="mb-3 text-justify text-sm text-gray-600 sm:mb-5">
                     {item.product!.description.length > 200
                       ? `${item.product!.description.slice(0, 200)}...`
                       : item.product!.description}
                   </p>
 
-                  <div className="mt-3 sm:mt-5 flex flex-col sm:flex-row w-full justify-between gap-3 sm:gap-0">
+                  <div className="mt-3 flex w-full flex-col justify-between gap-3 sm:mt-5 sm:flex-row sm:gap-0">
                     <div className="flex flex-wrap gap-2">
                       <button
-                        className={`rounded-md bg-[#f9f7f3] px-3 sm:px-4 py-1 sm:py-2 text-sm font-semibold text-[#a7a39b]`}
+                        className={`rounded-md bg-[#f9f7f3] px-3 py-1 text-sm font-semibold text-[#a7a39b] sm:px-4 sm:py-2`}
                       >
                         {item.selectedColor}
                       </button>
 
                       <button
-                        className={`rounded-md bg-[#f9f7f3] px-3 sm:px-4 py-1 sm:py-2 text-sm font-semibold text-[#a7a39b]`}
+                        className={`rounded-md bg-[#f9f7f3] px-3 py-1 text-sm font-semibold text-[#a7a39b] sm:px-4 sm:py-2`}
                       >
                         {item.selectedSize}
                       </button>
@@ -278,11 +283,13 @@ export default function ShoppingCart() {
         )}
       </div>
 
-      <div className="w-full lg:w-1/3 rounded-md p-4 sm:p-6 shadow-md mt-4 lg:mt-0 sticky top-[100px] self-start">
-        <h2 className="mb-4 text-lg sm:text-xl font-semibold">Ringkasan Belanja</h2>
+      <div className="sticky top-[100px] mt-4 w-full self-start rounded-md p-4 shadow-md sm:p-6 lg:mt-0 lg:w-1/3">
+        <h2 className="mb-4 text-lg font-semibold sm:text-xl">
+          Ringkasan Belanja
+        </h2>
         <div className="mb-4 flex justify-between">
           <span className="text-gray-600">Total</span>
-          <span className="text-base sm:text-lg font-bold">
+          <span className="text-base font-bold sm:text-lg">
             Rp{total.toLocaleString("id-ID")}
           </span>
         </div>
