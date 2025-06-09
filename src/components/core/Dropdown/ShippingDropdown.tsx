@@ -57,7 +57,7 @@ const ShippingDropdown: React.FC<ShippingDropdownProps> = ({
       logo: "/assets/image/jne-logo.png",
     },
     {
-      id: "jne",
+      id: "jne_trucking",
       name: "JNE Trucking",
       eta: "4 - 5 Hari",
       price: "25000",

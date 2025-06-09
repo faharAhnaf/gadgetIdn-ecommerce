@@ -148,7 +148,7 @@ const checkPaymentStatus = async (
 
         if (result.isConfirmed) {
           localStorage.removeItem("cartSession");
-          redirect("/invoice");
+          window.location.href = "/invoice";
         }
       } catch (e) {
         console.error("Error menambah dokumen: ", e);
