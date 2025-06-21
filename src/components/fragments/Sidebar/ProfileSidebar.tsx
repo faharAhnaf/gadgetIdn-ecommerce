@@ -93,52 +93,51 @@ const ProfileSidebar = ({ data }: Props) => {
 
   return (
     <div className="m-10">
-      <>
-        <div className="flex gap-4 border-b-2 py-5">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger>
-              <div className="group relative">
-                <Image
-                  src={pictureUrl || "/assets/picture/bussiness-man.png"}
-                  width={500}
-                  height={500}
-                  className="h-24 w-24 rounded-full object-cover transition duration-300 ease-in-out"
-                  alt="kosong"
-                />
+      <div className="flex gap-4 border-b-2 pb-5">
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger>
+            <div className="group relative">
+              <Image
+                src={pictureUrl || "/assets/picture/bussiness-man.png"}
+                width={500}
+                height={500}
+                className="h-24 w-24 rounded-full object-cover transition duration-300 ease-in-out"
+                alt="kosong"
+              />
 
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
-                  <span className="text-lg text-white">Perbarui Foto</span>
-                </div>
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
+                <span className="text-lg text-white">Perbarui Foto</span>
               </div>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Gambar</DialogTitle>
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3 grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="picture">Foto Profil</Label>
-                    <Input
-                      id="picture"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                    />
-                  </div>
-                  <SaveChangeButton loading={loading} className="p-2" />
-                </form>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+            </div>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Gambar</DialogTitle>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3 grid w-full max-w-sm items-center gap-1.5">
+                  <Label htmlFor="picture">Foto Profil</Label>
+                  <Input
+                    id="picture"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </div>
+                <SaveChangeButton loading={loading} className="p-2" />
+              </form>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
 
-          <div className="flex flex-col justify-center">
-            <p>{data.name}</p>
-            <p>{data.email}</p>
-          </div>
+        <div className="flex flex-col justify-center">
+          <p>{data.name}</p>
+          <p>{data.email}</p>
         </div>
+      </div>
 
-        <div className="space-y-20">
-          <ul className="mt-8 space-y-6">
-            {/* <li
+      <div className="space-y-20">
+        <ul className="mt-8 space-y-6">
+          {/* <li
               className="flex cursor-pointer items-center gap-3"
               onClick={() => router.push("/invoice")}
             >
@@ -146,7 +145,7 @@ const ProfileSidebar = ({ data }: Props) => {
               <p>Riwayat Transaksi</p>
             </li> */}
 
-            {/* <li className="flex flex-col">
+          {/* <li className="flex flex-col">
               <button
                 type="button"
                 className={`${currentMenu === "settings" ? "active" : ""}`}
@@ -168,40 +167,39 @@ const ProfileSidebar = ({ data }: Props) => {
               <ProfileAnimateDropdown currentMenu={currentMenu} />
             </li> */}
 
-            {data.role && (
-              <li className="flex flex-col">
-                <button
-                  type="button"
-                  className={`${currentMenu === "toko" ? "active" : ""}`}
-                  onClick={() => toggleMenu("toko")}
-                >
-                  <div className="flex items-center gap-3">
-                    <Store className="w-5" />
-                    <span className="text-black">Toko</span>
-                    <div
-                      className={`ml-auto ${
-                        currentMenu === "toko" ? "rotate-90" : ""
-                      } duration-300`}
-                    >
-                      <ChevronRight />
-                    </div>
+          {data.role && (
+            <li className="flex flex-col">
+              <button
+                type="button"
+                className={`${currentMenu === "toko" ? "active" : ""}`}
+                onClick={() => toggleMenu("toko")}
+              >
+                <div className="flex items-center gap-3">
+                  <Store className="w-5" />
+                  <span className="text-black">Toko</span>
+                  <div
+                    className={`ml-auto ${
+                      currentMenu === "toko" ? "rotate-90" : ""
+                    } duration-300`}
+                  >
+                    <ChevronRight />
                   </div>
-                </button>
+                </div>
+              </button>
 
-                <TokoAnimateDropdown currentMenu={currentMenu} />
-              </li>
-            )}
-
-            <li
-              className="flex cursor-pointer items-center gap-3"
-              onClick={(e) => handleLogout(e)}
-            >
-              <LogOut className="w-5" />
-              <p>Keluar</p>
+              <TokoAnimateDropdown currentMenu={currentMenu} />
             </li>
-          </ul>
-        </div>
-      </>
+          )}
+
+          <li
+            className="flex cursor-pointer items-center gap-3"
+            onClick={(e) => handleLogout(e)}
+          >
+            <LogOut className="w-5" />
+            <p>Keluar</p>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

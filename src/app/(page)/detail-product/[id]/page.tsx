@@ -202,9 +202,6 @@ export default function DetailProduct() {
 
             <div className="max-h-screen flex-1 overflow-y-auto p-4 md:max-h-[600px] md:p-6">
               <div className="mb-4 flex flex-col">
-                <span className="mb-3 max-w-min rounded-full bg-red-500 px-2 py-1 text-xs font-semibold text-white">
-                  PROMO
-                </span>
                 <h1 className="text-xl font-bold md:text-2xl">
                   {product ? product.name : <SkeletonText width="50%" />}
                 </h1>

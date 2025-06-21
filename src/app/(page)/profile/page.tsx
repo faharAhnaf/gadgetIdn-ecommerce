@@ -111,31 +111,24 @@ export default function UserProfile() {
   return (
     <>
       {session && (
-        <div>
-          <Navbar />
-          <div className="mx-auto mb-10 mt-28 grid rounded-xl border-2 lg:mx-20 lg:grid-cols-2">
-            <div className="grid w-full lg:border-r-2">
-              {isLoading ? (
-                <Skeleton />
-              ) : (
-                data && <ProfileSidebar data={data} />
-              )}
-            </div>
-            <div className="grid">
-              {pathname == "/profile" && (
-                <MyProfile
-                  handleSubmit={handleSubmit}
-                  handleChange={handleChange}
-                  formData={formData}
-                  loading={loading}
-                />
-              )}
-              {pathname == "/profile/upload-product" && <UploadProduct />}
-              {pathname == "/profile/list-product" && <ListProduct />}
-              {pathname == `/profile/list-product/${id}` && (
-                <UpdateProduct productId={id} />
-              )}
-            </div>
+        <div className="mx-auto mb-10 mt-28 grid rounded-xl border-2 lg:mx-20 lg:grid-cols-2">
+          <div className="grid w-full lg:border-r-2">
+            {isLoading ? <Skeleton /> : data && <ProfileSidebar data={data} />}
+          </div>
+          <div className="grid">
+            {pathname == "/profile" && (
+              <MyProfile
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                formData={formData}
+                loading={loading}
+              />
+            )}
+            {pathname == "/profile/upload-product" && <UploadProduct />}
+            {pathname == "/profile/list-product" && <ListProduct />}
+            {pathname == `/profile/list-product/${id}` && (
+              <UpdateProduct productId={id} />
+            )}
           </div>
         </div>
       )}

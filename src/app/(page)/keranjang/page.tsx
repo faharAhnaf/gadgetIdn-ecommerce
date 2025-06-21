@@ -7,10 +7,10 @@ import ShoppingCart from "@/components/fragments/Cart/ShoppingCart";
 
 export default function Keranjang() {
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <Navbar />
 
-      <div className="container mx-auto px-4 sm:px-5 md:px-0 lg:px-0">
+      <div className="mx-auto w-full flex-1 px-4 sm:px-6 lg:px-8">
         <ShoppingCart />
       </div>
 

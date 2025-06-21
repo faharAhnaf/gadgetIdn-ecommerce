@@ -110,7 +110,7 @@ export default function InvoicePage() {
   return (
     <>
       {session && (
-        <div className="my-24 flex min-h-screen items-center">
+        <div className="my-24 flex items-center">
           <Navbar />
           <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
             <Button

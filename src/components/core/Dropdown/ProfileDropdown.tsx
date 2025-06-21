@@ -76,7 +76,7 @@ export function ProfileDropdown() {
                 <SkeletonUserPicture />
               ) : (
                 <Image
-                  src={`${dataProfile?.picture || profile?.picture || "bussiness-man.png"}`}
+                  src={`${dataProfile?.picture || profile?.picture || "/assets/picture/bussiness-man.png"}`}
                   width={50}
                   height={50}
                   className="h-10 w-10 rounded-full object-cover transition duration-300 ease-in-out"

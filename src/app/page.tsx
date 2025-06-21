@@ -13,14 +13,9 @@ import CardSkeleton from "@/components/core/Skeleton/CardSkeleton";
 
 export default function Home() {
   const [products, setProducts] = useState<ProductPreview[]>([]);
-  const [filters, setFilters] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [noItems, setNoItems] = useState(false);
-  const { text, setText } = useSearchProduct();
-
-  const handleFilterSubmit = (newFilters: any) => {
-    setFilters(newFilters);
-  };
+  const { text } = useSearchProduct();
 
   useEffect(() => {
     const applyFilters = async () => {
@@ -37,26 +32,14 @@ export default function Home() {
     };
 
     applyFilters();
-  }, [filters, text]);
-
-  // useEffect(() => {
-  //   if (loading) {
-  //     const timer = setTimeout(() => {
-  //       if (products.length < 0) {
-  //         setNoItems(true);
-  //       }
-  //     }, 4000);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [loading, products]);
+  }, [text]);
 
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <Navbar></Navbar>
 
-      <div className="my-36 flex justify-center lg:my-28">
-        <div className="container mx-auto px-4 sm:px-5 md:px-0 lg:px-0">
+      <div className="my-36 flex flex-1 lg:my-24">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
           <div>
             <HeaderSection
               title={"PRODUK KITA"}

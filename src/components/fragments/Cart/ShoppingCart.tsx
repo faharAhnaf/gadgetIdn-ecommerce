@@ -182,9 +182,11 @@ export default function ShoppingCart() {
   };
 
   return (
-    <div className="mt-[100px] flex min-h-[700px] flex-col gap-6 p-4 sm:p-6 md:p-8 lg:flex-row">
+    <div className="my-24 flex flex-col gap-6 lg:flex-row">
       <div className="w-full lg:w-2/3">
-        <h1 className="mb-4 text-xl font-semibold sm:text-2xl">Keranjang</h1>
+        <h1 className="mb-6 text-2xl font-bold text-gray-800 sm:text-3xl">
+          Keranjang
+        </h1>
         <div className="mb-4 rounded-md p-4 shadow-md">
           <label className="flex items-center">
             <input

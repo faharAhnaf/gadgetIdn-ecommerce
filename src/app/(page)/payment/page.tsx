@@ -225,10 +225,9 @@ export default function Checkout() {
 
   return (
     <div className="">
-      <Navbar />
       <div className="flex min-h-screen justify-center bg-gray-100">
-        <div className="mx-auto mb-10 mt-24 w-full max-w-7xl rounded-lg bg-white p-4 shadow-lg sm:p-6">
-          <h1 className="my-6 text-center text-2xl font-bold sm:my-10 sm:text-3xl">
+        <div className="m-10 w-full rounded-lg bg-white p-4 shadow-lg sm:p-6">
+          <h1 className="my-3 text-center text-2xl font-bold sm:my-10 sm:text-3xl">
             Checkout
           </h1>
 

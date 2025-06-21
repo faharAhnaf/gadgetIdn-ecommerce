@@ -7,7 +7,6 @@ const searchProductsByName = async (
 ): Promise<ProductPreview[]> => {
   const productsRef = collection(db, "product");
 
-  // Ambil semua produk terlebih dahulu
   let q = query(productsRef);
 
   try {
@@ -20,7 +19,6 @@ const searchProductsByName = async (
         }) as ProductPreview,
     );
 
-    // Filter produk berdasarkan nama di sisi klien
     if (name && name.trim() !== "") {
       const searchTerm = name.toLowerCase().trim();
       products = products.filter((product) => {

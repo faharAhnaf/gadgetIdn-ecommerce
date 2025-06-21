@@ -209,7 +209,7 @@ export default function UpdateProduct({
   };
 
   return (
-    <div className="mx-auto w-full px-10">
+    <div className="mx-auto my-auto w-full px-10">
       <form onSubmit={handleSubmit(onSubmit)}>
         <ul className="mt-8 space-y-6">
           <li className="flex items-center gap-3 border-b-2 pb-5">
