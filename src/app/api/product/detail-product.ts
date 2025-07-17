@@ -1,13 +1,6 @@
 import Product from "@/interfaces/product";
 import { db } from "@/lib/firebase";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const getProductByProductId = async (
   productId: string | string[] | undefined,
@@ -26,18 +19,6 @@ export const getProductByProductId = async (
         product_id: productSnap.docs[0].id,
         ...productData,
       } as Product;
-
-      // const categoryRef = doc(db, "category", productData.category_id.id);
-      // const categorySnap = await getDoc(categoryRef);
-
-      // if (categorySnap.exists()) {
-      //   product.category = {
-      //     category_id: categorySnap.id,
-      //     ...categorySnap.data(),
-      //   } as Category;
-      // } else {
-      //   console.error("Category not found for ID:", productData.category_id.id);
-      // }
 
       return product;
     }

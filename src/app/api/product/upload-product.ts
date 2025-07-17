@@ -28,7 +28,6 @@ export default async function uploadDataProduct(
       `image/product/${Date.now()}-${image.name}`,
     );
 
-    // 🔁 Upload gambar dan tunggu hingga selesai
     const uploadURL = await new Promise<string>((resolve, reject) => {
       const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -54,7 +53,6 @@ export default async function uploadDataProduct(
       );
     });
 
-    // ✅ Tambahkan data produk ke Firestore
     const productRef = await addDoc(productCollection, {
       product_id: "",
       name,

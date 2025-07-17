@@ -10,7 +10,7 @@ import { getProductByProductId } from "@/app/api/product/detail-product";
 import Image from "next/image";
 import addCartItem from "@/app/api/cart/add-cart";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Product from "@/interfaces/product";
 import CartItem from "@/interfaces/cart-item";
 import formatRupiah from "@/utils/format-money";
@@ -34,7 +34,6 @@ export default function DetailProduct() {
   const { id } = useParams();
 
   useEffect(() => {
-    // Get user session safely
     const session =
       typeof window !== "undefined"
         ? localStorage.getItem("userSession")

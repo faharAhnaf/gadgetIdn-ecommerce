@@ -82,12 +82,6 @@ const checkPaymentStatus = async (
     const invoiceStatus = response.data.status;
     const data_payment = response.data;
 
-    // Swal.fire(
-    //   "Silakan selesaikan pembayaran",
-    //   "Menunggu Pembayaran!",
-    //   "warning",
-    // );
-
     if (invoiceStatus === "PAID") {
       const productReferences = product_id.map((id) => doc(db, "product", id));
 

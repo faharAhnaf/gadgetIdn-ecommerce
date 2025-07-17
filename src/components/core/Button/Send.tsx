@@ -7,13 +7,8 @@ type Props = {
 
 export default function Send({ onSend }: Props) {
   return (
-    <>
-      <button
-        onClick={onSend}
-        className="text-[20px] text-black self-start mt-1"
-      >
-        <FontAwesomeIcon icon={faPaperPlane} />
-      </button>
-    </>
+    <button onClick={onSend} className="mt-1 self-start text-[20px] text-black">
+      <FontAwesomeIcon icon={faPaperPlane} />
+    </button>
   );
 }

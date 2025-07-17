@@ -13,8 +13,6 @@ const updateCartItem = async (
   newQuantity: number,
   newTotalPrice: number,
 ) => {
-  // const cartRef = doc(db, "cart", id);
-
   const cartCollection = collection(db, "cart");
   const cartQuery = query(cartCollection, where("cart_id", "==", id));
   const querySnapshot = await getDocs(cartQuery);

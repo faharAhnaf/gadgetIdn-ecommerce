@@ -12,11 +12,9 @@ const updatePicture = async (userId: string, file: File) => {
   const userRef = doc(db, "users", userId);
 
   try {
-    // 🔍 Ambil data pengguna saat ini
     const userDoc = await getDoc(userRef);
     const userData = userDoc.data();
 
-    // 🗑️ Hapus gambar lama jika ada dan berupa URL Firebase Storage
     const oldPictureUrl: string | undefined = userData?.picture;
     if (
       oldPictureUrl &&
@@ -33,7 +31,6 @@ const updatePicture = async (userId: string, file: File) => {
       });
     }
 
-    // 📤 Upload gambar baru
     const storageRef = ref(storage, `image/profile/${Date.now()}-${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -52,10 +49,8 @@ const updatePicture = async (userId: string, file: File) => {
       );
     });
 
-    // 🔄 Update field `picture` di Firestore
     await updateDoc(userRef, { picture: downloadURL });
 
-    // ✅ Ambil data terbaru untuk dikembalikan
     const updatedUserDoc = await getDoc(userRef);
     const updatedUserData = updatedUserDoc.data();
 

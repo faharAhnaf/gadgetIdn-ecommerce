@@ -8,7 +8,6 @@ interface Product {
   category: string;
   quantityInStock: number;
   name: string;
-  // category?: Category;
   image: File | null;
   image_url: string;
   color: string[];

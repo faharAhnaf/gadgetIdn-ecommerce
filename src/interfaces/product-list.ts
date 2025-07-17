@@ -3,5 +3,4 @@ export default interface ProductList {
   name: string;
   category: string;
   price: number;
-  // user?: User;
 }

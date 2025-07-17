@@ -1,4 +1,3 @@
-import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
   faBell,
   faDatabase,
@@ -21,9 +20,9 @@ const ProfileAnimateDropdown = ({ currentMenu }: Props) => {
       duration={300}
       height={currentMenu === "settings" ? "auto" : 0}
     >
-      <ul className="space-y-6 mt-6">
+      <ul className="mt-6 space-y-6">
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faHouseChimney} className="w-5" />
             <div className="text-left">
               <p>Daftar Alamat</p>
@@ -32,7 +31,7 @@ const ProfileAnimateDropdown = ({ currentMenu }: Props) => {
           </button>
         </li>
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faDatabase} className="w-5" />
             <div className="text-left">
               <p>Rekening Bank</p>
@@ -41,7 +40,7 @@ const ProfileAnimateDropdown = ({ currentMenu }: Props) => {
           </button>
         </li>
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faWallet} className="w-5" />
             <div className="text-left">
               <p>Pembayaran Instan</p>
@@ -52,7 +51,7 @@ const ProfileAnimateDropdown = ({ currentMenu }: Props) => {
           </button>
         </li>
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faLock} className="w-5" />
             <div className="text-left">
               <p>Keamanan Akun</p>
@@ -63,7 +62,7 @@ const ProfileAnimateDropdown = ({ currentMenu }: Props) => {
           </button>
         </li>
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faBell} className="w-5" />
             <div className="text-left">
               <p>Notifikasi</p>
@@ -72,7 +71,7 @@ const ProfileAnimateDropdown = ({ currentMenu }: Props) => {
           </button>
         </li>
         <li>
-          <button className="flex items-center gap-3 w-full">
+          <button className="flex w-full items-center gap-3">
             <FontAwesomeIcon icon={faGlobe} className="w-5" />
             <div className="text-left">
               <p>Privasi Akun</p>

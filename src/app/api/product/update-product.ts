@@ -55,7 +55,6 @@ export default async function updateDataProduct(
         );
       });
 
-      // ❌ Hapus gambar lama
       if (oldImageURL) {
         const oldPath = getStoragePathFromURL(oldImageURL);
         if (oldPath) {
@@ -67,7 +66,6 @@ export default async function updateDataProduct(
       }
     }
 
-    // ✅ Update ke Firestore
     await updateDoc(productRef, {
       name,
       price,
@@ -95,7 +93,6 @@ export default async function updateDataProduct(
   }
 }
 
-// 🧠 Fungsi bantu: konversi downloadURL ke path storage Firebase
 function getStoragePathFromURL(url: string): string | null {
   try {
     const base = "https://firebasestorage.googleapis.com/v0/b/";

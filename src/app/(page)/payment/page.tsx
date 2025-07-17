@@ -9,6 +9,9 @@ import { handleCheckout } from "@/app/api/transaksi/transaksi";
 
 import { getProfileByUserId } from "@/app/api/profile/profile";
 import { PhoneInput } from "@/components/ui/phone-input";
+import removeCartItem from "@/app/api/cart/remove-cart";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface Product {
   cart_id: string;
@@ -50,7 +53,6 @@ export default function Checkout() {
     setIsEditing(false);
   };
 
-  // Memindahkan akses localStorage ke dalam useEffect
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userSession = localStorage.getItem("userSession");
@@ -175,25 +177,117 @@ export default function Checkout() {
       return;
     }
 
-    await handleCheckout({
-      user_id: userData?.user_id ?? "",
-      email: userData?.email ?? "",
-      recipient: alamat.nama ?? "",
-      telepon: alamat.nomor ?? "",
-      address: alamat.detail ?? "",
-      description:
-        "Terima kasih telah berbelanja di toko kami! 😊, Kami sangat menghargai kepercayaan Anda dalam memilih produk kami. Silakan selesaikan pembayaran untuk memproses pesanan Anda segera. Jangan khawatir, proses pembayaran aman dan mudah! 💳, Jika Anda mengalami kesulitan, tim kami siap membantu kapan saja. Selamat berbelanja dan semoga hari Anda menyenangkan! 🌟",
-      price: products.map((p) => p.price),
-      amount: products.map((p) => p.quantity),
-      color: products.map((p) => p.selectedColor),
-      variant: products.map((p) => p.selectedSize),
-      product_id: products.map((p) => p.product_id),
-      cart_id: products.map((p) => p.cart_id),
+    // Jika metode pembayaran adalah COD (Bayar di Tempat), langsung proses transaksi
+    if (selectedMethod === "cod") {
+      try {
+        Swal.fire({
+          title: "Memproses pesanan",
+          text: "Mohon Tunggu",
+          icon: "info",
+          allowOutsideClick: false,
+          showConfirmButton: false
+        });
 
-      shippingName: selectedShipping,
-      shippingCost: shippingCost,
-      shippingETA: selectedShippingETA,
-    });
+        const timestamp = Date.now();
+        const transaksiId = `cod-${timestamp}`;
+    
+        // Buat data transaksi untuk COD dengan format yang konsisten
+        const data = {
+          ekspedisi_id: doc(db, "ekspedisi", "Oz52qy0DaKJ5V8xmKtLd"), // Gunakan reference, bukan string
+          product_id: products.map((p) => doc(db, "product", p.product_id)), // Gunakan reference, bukan string
+          user_id: userData?.user_id ?? "",
+          recipient: alamat.nama ?? "",
+          telepon: alamat.nomor ?? "",
+          address: alamat.detail ?? "",
+          transaksi_id: transaksiId,
+    
+          payer_email: userData?.email ?? "",
+          payment_channel: "COD",
+          payment_method: "CASH_ON_DELIVERY",
+    
+          paid_amount: totalOrder, // Total harga yang harus dibayar
+          current_price: products.map((p) => p.price),
+          amount: products.map((p) => p.quantity),
+          color: products.map((p) => p.selectedColor),
+          variant: products.map((p) => p.selectedSize),
+          totalQuantity: products.reduce((sum, p) => sum + p.quantity, 0),
+    
+          shippingName: selectedShipping,
+          shippingCost: shippingCost,
+          shippingETA: selectedShippingETA,
+    
+          serviceFee: SERVICE_COST,
+          handlingFee: HANDLING_FEE,
+    
+          status: "PROCESSING", // Status awal untuk COD
+          confirmed: false, // Tambahkan properti confirmed
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+    
+        console.log("Saving COD transaction data:", data);
+        
+        // Simpan transaksi ke Firestore
+        const docRef = doc(db, "transaksi", transaksiId);
+        await setDoc(docRef, data);
+        
+        console.log("Transaction saved with ID:", transaksiId);
+    
+        // Hapus item dari keranjang
+        for (const product of products) {
+          if (product.cart_id && product.cart_id !== "") {
+            await removeCartItem(product.cart_id);
+          }
+        }
+    
+        // Hapus sesi keranjang dari localStorage
+        localStorage.removeItem("cartSession");
+    
+        // Tutup SweetAlert sebelumnya
+        Swal.close();
+    
+        // Tampilkan pesan sukses dan alihkan ke halaman invoice
+        await Swal.fire({
+          title: "Pesanan Berhasil!",
+          text: "Pesanan Anda telah berhasil dibuat. Kurir akan menghubungi Anda untuk konfirmasi dan pembayaran saat barang tiba.",
+          icon: "success",
+          confirmButtonText: "Lihat Riwayat Transaksi",
+        });
+    
+        // Alihkan ke halaman invoice dengan delay yang lebih lama
+        setTimeout(() => {
+          window.location.href = "/invoice";
+        }, 1000);
+      } catch (error) {
+        console.error("Error saat checkout COD:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: "Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.",
+        });
+      }
+    } else {
+      // Untuk metode pembayaran non-tunai, gunakan handleCheckout yang sudah ada
+      await handleCheckout({
+        user_id: userData?.user_id ?? "",
+        email: userData?.email ?? "",
+        recipient: alamat.nama ?? "",
+        telepon: alamat.nomor ?? "",
+        address: alamat.detail ?? "",
+        description:
+          "Terima kasih telah berbelanja di toko kami! 😊, Kami sangat menghargai kepercayaan Anda dalam memilih produk kami. Silakan selesaikan pembayaran untuk memproses pesanan Anda segera. Jangan khawatir, proses pembayaran aman dan mudah! 💳, Jika Anda mengalami kesulitan, tim kami siap membantu kapan saja. Selamat berbelanja dan semoga hari Anda menyenangkan! 🌟",
+        price: products.map((p) => p.price),
+        amount: products.map((p) => p.quantity),
+        color: products.map((p) => p.selectedColor),
+        variant: products.map((p) => p.selectedSize),
+        product_id: products.map((p) => p.product_id),
+        cart_id: products.map((p) => p.cart_id),
+
+        shippingName: selectedShipping,
+        shippingCost: shippingCost,
+        shippingETA: selectedShippingETA,
+      });
+    }
   };
 
   // Memindahkan akses localStorage ke dalam fungsi yang aman

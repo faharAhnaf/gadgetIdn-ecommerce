@@ -1,21 +1,14 @@
 "use client";
 import { ConfirmTransaction } from "@/app/api/transaksi/konfirmasi-transaksi";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import Product from "@/interfaces/product";
 import { cn } from "@/lib/utils";
-import { faBagShopping, faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Ellipsis } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 
 interface Props {
@@ -65,31 +58,8 @@ export default function CardInvoice({
     }
   };
 
-  const handleConfirmed = () => {
-    if (confirm) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: "Transaksi Anda Sudah Dikonfirmasi!",
-      });
-    }
-  };
-
   const changeStatus =
     status && confirmed ? "Pesanan Selesai" : "Pesanan Sedang Diproses";
-
-  const getStatusDisplay = (status: string) => {
-    switch (status.toUpperCase()) {
-      case "PROCESSING":
-        return "Sedang di proses";
-      case "SHIPPING":
-        return "Sedang dikirim";
-      case "COMPLETED":
-        return "Pesanan selesai";
-      default:
-        return status;
-    }
-  };
 
   return (
     <div className="rounded-lg border border-[#D9D9D9] shadow-md">

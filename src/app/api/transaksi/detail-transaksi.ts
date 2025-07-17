@@ -1,14 +1,7 @@
 import { InvoiceData } from "@/interfaces/invoice";
 import Product from "@/interfaces/product";
 import { db } from "@/lib/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 export async function detailInvoice({
   transaksiId,
@@ -27,13 +20,11 @@ export async function detailInvoice({
     const transactionData = transactionDoc.data();
     const productIds = transactionData.product_id;
 
-    // Validasi product_id
     if (!Array.isArray(productIds)) {
       console.error("product_id tidak valid atau bukan array:", productIds);
       return null;
     }
 
-    // Mengambil produk secara bersamaan
     const productPromises = productIds.map(async (id: any) => {
       const productRef = doc(db, "product", id.id);
       const productSnapshot = await getDoc(productRef);

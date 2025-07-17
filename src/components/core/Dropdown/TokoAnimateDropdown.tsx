@@ -1,18 +1,7 @@
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import {
-  faBell,
-  faCalendar,
-  faDatabase,
-  faFile,
-  faGlobe,
-  faHouseChimney,
-  faLock,
-  faPenToSquare,
-  faWallet,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFile, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import AnimateHeight from "react-animate-height";
 
 type Props = {

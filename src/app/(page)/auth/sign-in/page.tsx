@@ -58,7 +58,7 @@ export default function Sign_In() {
         icon: "error",
         title: "Oops...",
         text: `${error.message}`,
-        footer: '<a href="#">Kenapa saya mengalami masalah ini?</a>',
+        confirmButtonText: "OK",
       });
     }
   };

@@ -77,7 +77,6 @@ export default function InvoicePage() {
     if (invoice.status === "PAID") {
       mappedStatus = invoice.confirmed ? "COMPLETED" : "PROCESSING";
     }
-    // Filter berdasarkan status pesanan
     if (orderStatus !== null) {
       if (orderStatus !== mappedStatus.toLowerCase()) {
         return false;

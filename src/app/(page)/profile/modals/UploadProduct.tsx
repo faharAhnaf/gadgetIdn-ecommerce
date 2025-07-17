@@ -2,17 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
-  faAngleRight,
   faBriefcase,
   faCircleInfo,
   faFileCirclePlus,
-  faHeadphones,
   faHouseSignal,
-  faKeyboard,
   faLaptop,
   faMobile,
-  faPersonRunning,
-  faShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useEffect, useState } from "react";

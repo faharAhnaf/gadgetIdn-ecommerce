@@ -17,14 +17,12 @@ export default function ShoppingCart() {
   const [cartItems, setCartItems] = useState<Cart[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [session, setSession] = useState<string | null>(null);
   const [userData, setUserData] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userSession = localStorage.getItem("userSession");
-      setSession(userSession);
 
       if (userSession) {
         try {

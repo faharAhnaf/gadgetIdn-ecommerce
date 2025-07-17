@@ -2,17 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
-  faAngleRight,
   faBriefcase,
   faCircleInfo,
   faFileCirclePlus,
-  faHeadphones,
   faHouseSignal,
-  faKeyboard,
   faLaptop,
   faMobile,
-  faPersonRunning,
-  faShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -21,10 +16,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getProductByProductId } from "@/app/api/product/detail-product";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import updateDataProduct from "@/app/api/product/update-product";
-import { randomUUID } from "crypto";
 import { ChevronRight, Plus } from "lucide-react";
 import Product from "@/interfaces/product";
 
@@ -97,7 +91,6 @@ export default function UpdateProduct({
 
       if (dataProduct) {
         setValue("category", dataProduct.category);
-        // setValue("image", dataProduct.image_url);
         setValue("price", dataProduct.price);
         setValue("quantityInStock", dataProduct.quantityInStock);
         setValue("name", dataProduct.name);

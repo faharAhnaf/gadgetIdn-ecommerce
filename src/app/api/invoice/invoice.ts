@@ -30,7 +30,6 @@ export default async function invoice({
       querySnapshot.docs.map(async (docs) => {
         const transactionData = docs.data();
 
-        // Check if product_id is an array
         if (!Array.isArray(transactionData.product_id)) {
           console.log(
             "product_id is not an array:",
@@ -93,7 +92,6 @@ export default async function invoice({
       }),
     );
 
-    // Filter out any null transactions
     return transactions.filter(
       (transaction): transaction is InvoiceData => transaction !== null,
     );
